@@ -22,7 +22,7 @@ function setGroupsFeed(){
 //
 //               feedsArray.unshift(callObject);
 //               console.log("owner call at: "+ callObject.date);
-//            })
+//           })
 //         }
       })
    })
