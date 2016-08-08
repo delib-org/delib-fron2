@@ -8,7 +8,7 @@ function showTopic(topicUid){
       renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
    });
    //show footer
-   $("footer").html();
+   $("footer").html("");
 
    //show wrapper
 
