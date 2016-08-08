@@ -1,0 +1,29 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    "topics": {
+      "$topic_id": {
+        ".write": "newData.child('owner').val() === auth.uid"
+      }},
+    "groups": {
+      "$group_id": {
+        ".write": "newData.child('owner').val() === auth.uid"
+      }},
+    "questions": {
+      "$question_id": {
+        ".write": "newData.child('owner').val() === auth.uid"
+      }},
+    "options": {
+      "$option_id": {
+        ".write": "newData.child('owner').val() === auth.uid"
+      }},
+    "users": {
+      "$user_id": {
+        ".write": "$user_id === auth.uid"
+      }},
+    "chats": {
+      "$user_id": {
+        ".write": "auth != null"
+      }}
+  }
+}
