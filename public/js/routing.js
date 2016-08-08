@@ -34,7 +34,7 @@ function setUrl(type, uid){
       var typeEntity = {type: type, entity: uid};
 
       var url = domainUrl+"?"+type+"/"+uid;
-      if(locationToCut >=0) {
+      if(locationToCut >=0 && url!=currentUrl) {
         history.pushState(typeEntity, uid, url );
       } else {
         history.replaceState(typeEntity, uid, url );
