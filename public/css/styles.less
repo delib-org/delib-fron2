@@ -17,11 +17,15 @@
    //     flex-wrap: wrap;
    //todo: handle and check buttons in iPhone with:
    /*
-   -webkit-box-flexwx-grow: 1;
-   -moz-box-flex-grow: 1;
-   -webkit-flex-grow: 1;
-   -ms-flex-grow: 1;
+
+
+
+
    flex-grow: 1;
+   -webkit-flex-grow: 1;
+   -webkit-box-flex-grow: 1;
+   -moz-box-flex-grow: 1;
+   -ms-flex-grow: 1;
    */
 }
 
@@ -50,8 +54,20 @@
       width:100%;
       right:0%;
       display: flex;
+      display: -webkit-flex;
+      display: -webkit-box-flex;
+      display: -moz-box-flex;
+      display: -ms-flex;
       flex-direction: row;
+      -webkit-flex-direction: row;
+      -webkit-box-flex-direction: row;
+      -moz-box-flex-direction: row;
+      -ms-flex-direction: row;
       justify-content:space-around;
+      -webkit-justify-content:space-around;
+      -webkit-box-justify-content:space-around;
+      -moz-box-justify-content:space-around;
+      -ms-justify-content:space-around;
    }
 }
 @media screen and (min-width: 480px) {
@@ -108,15 +124,35 @@ body{
 
    direction: rtl;
    display: flex;
+   display: -webkit-flex;
+   display: -webkit-box-flex;
+   display: -moz-box-flex;
+   display: -ms-flex;
    justify-content: center;
+   -webkit-justify-content: center;
+   -webkit-box-justify-content: center;
+   -moz-box-justify-content: center;
+   -ms-justify-content: center;
 }
 
 #logo {
    background-color: @bg-main700;
    color: white;
    display: flex;
+   display: -webkit-flex;
+   display: -webkit-box-flex;
+   display: -moz-box-flex;
+   display: -ms-flex;
    justify-content: center;
+   -webkit-justify-content: center;
+   -webkit-box-justify-content: center;
+   -moz-box-justify-content: center;
+   -ms-justify-content: center;
    flex-direction: row;
+   -webkit-flex-direction: row;
+   -webkit-box-flex-direction: row;
+   -moz-box-flex-direction: row;
+   -ms-flex-direction: row;
 }
 
 #logo img {
@@ -135,8 +171,20 @@ body{
 }
 #container {
    display: flex;
+   display: -webkit-flex;
+   display: -webkit-box-flex;
+   display: -moz-box-flex;
+   display: -ms-flex;
    flex-direction: column;
+   -webkit-flex-direction: column;
+   -webkit-box-flex-direction: column;
+   -moz-box-flex-direction: column;
+   -ms-flex-direction: column;
    justify-content: space-between;
+   -webkit-justify-content: space-between;
+   -webkit-box-justify-content: space-between;
+   -moz-box-justify-content: space-between;
+   -ms-justify-content: space-between;
    height: 100%;
    position: absolute;
    top:0px;
@@ -145,9 +193,21 @@ wrapper{
 
    position: relative;
    display: flex;
+   display: -webkit-flex;
+   display: -webkit-box-flex;
+   display: -moz-box-flex;
+   display: -ms-flex;
    flex-direction: column;
+   -webkit-flex-direction: column;
+   -webkit-box-flex-direction: column;
+   -moz-box-flex-direction: column;
+   -ms-flex-direction: column;
 
    flex: 1;
+   -webkit-flex: 1;
+   -webkit-box-flex: 1;
+   -moz-box-flex: 1;
+   -ms-flex: 1;
    overflow-y:scroll;
    background-color: #dbdbdb;
    padding-top: 12px;
@@ -225,7 +285,15 @@ input {
    color: white;
 
    display: flex;
+   display: -webkit-flex;
+   display: -webkit-box-flex;
+   display: -moz-box-flex;
+   display: -ms-flex;
    flex-direction: column;
+   -webkit-flex-direction: column;
+   -webkit-box-flex-direction: column;
+   -moz-box-flex-direction: column;
+   -ms-flex-direction: column;
 }
 
 
@@ -268,13 +336,29 @@ input {
 
 .multiOptionsContainer{
    display: flex;
+   display: -webkit-flex;
+   display: -webkit-box-flex;
+   display: -moz-box-flex;
+   display: -ms-flex;
    flex-direction: row;
+   -webkit-flex-direction: row;
+   -webkit-box-flex-direction: row;
+   -moz-box-flex-direction: row;
+   -ms-flex-direction: row;
    justify-content:space-around;
+   -webkit-justify-content:space-around;
+   -webkit-box-justify-content:space-around;
+   -moz-box-justify-content:space-around;
+   -ms-justify-content:space-around;
 
 }
 
 .multiOptionsDiv{
    flex-grow: 1;
+   -webkit-flex-grow: 1;
+   -webkit-box-flex-grow: 1;
+   -moz-box-flex-grow: 1;
+   -ms-flex-grow: 1;
 
    padding: 7px;
    text-align: center;
