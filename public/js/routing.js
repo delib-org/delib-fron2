@@ -34,7 +34,11 @@ function setUrl(type, uid){
       var typeEntity = {type: type, entity: uid};
 
       var url = domainUrl+"?"+type+"/"+uid;
-      history.pushState(typeEntity, uid, url );
+      if(locationToCut >=0) {
+        history.pushState(typeEntity, uid, url );
+      } else {
+        history.replaceState(typeEntity, uid, url );
+      }
    }
 };
 
@@ -124,7 +128,7 @@ function showEntities(entity, uid){
          showMain(uid);
          break;
       default:
-         showPublicGroups();
+         showMain("public");
    }
 };
 
