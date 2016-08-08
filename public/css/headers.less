@@ -1,3 +1,18 @@
+.clearfix {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    // Fixes Opera/contenteditable bug:
+    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
 header {
     /*  display: table-row;*/
     height: 100px;
@@ -26,22 +41,35 @@ header {
 }
 
 #headerMenu {
-    display: table-row;
     width: 100%;
     height: 50px;
-    display: flex;
     justify-content: space-between;
     background-color: @bg-main700;
+    /*clearfix hack for floated headerMenuBtn*/
+    *zoom: 1;
+    &:before,
+    &:after {
+      display: table;
+      content: "";
+      // Fixes Opera/contenteditable bug:
+      // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+      line-height: 0;
+    }
+    &:after {
+      clear: both;
+    }
 }
 
 .headerMenuBtn {
+    box-sizing: border-box;
     color: white;
     text-align: center;
     text-decoration: none;
     border-right: 1px solid #cb4a4a;
-    width: 100%;
+    width: 14.285%; /* 100 / 7 */
     height: 50px;
     background-color: @bg-main700;
+    float: right;
     i {
         position: relative;
         top: 50%;

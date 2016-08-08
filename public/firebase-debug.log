@@ -24,3 +24,16 @@
 [warn] !  No Firebase project directory detected. Serving static content from C:\delib-fron2\public
 [info] 
 [info] Server listening at: http://localhost:5000
+[debug] ----------------------------------------------------------------------
+[debug] Command:      /usr/bin/nodejs /usr/local/bin/firebase serve
+[debug] CLI Version:  3.0.4
+[debug] Platform:     linux
+[debug] Node Version: v4.2.6
+[debug] Time:         Mon Aug 08 2016 21:13:33 GMT+0300 (IDT)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[info] Starting Firebase development server...
+[info] 
+[warn] ⚠  No Firebase project directory detected. Serving static content from /home/yosef/delib/delib2/public
+[info] 
+[info] Server listening at: http://localhost:5000
