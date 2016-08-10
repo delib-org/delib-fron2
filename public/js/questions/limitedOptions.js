@@ -28,8 +28,10 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
 
       var preContext = new Array();
-      var optionsObject = preContext;
+      var optionsObject = new Object();
+
       options.forEach(function(option){
+         optionsObject[option.key]= {uuid: option.key, title: option.val().title, votes: option.val().votes,color: option.val().color};
 
          DB.child("options/"+option.key).once("value", function(optionData) {
 
@@ -49,7 +51,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
          bgColor: "#ded9d9",
          size: 'medium'
       });
-
+      console.dir(optionsObject);
       adjustHighetLimitedOptions(optionsObject);
 
       listenToLimitedOptions(optionsObject, questionDB);
@@ -132,6 +134,9 @@ function listenToLimitedOptions (optionsObject, questionDB){
 }
 
 function adjustHighetLimitedOptions(optionsObject){
+
+   console.dir(optionsObject);
+
    //look for max votes
    var maxVotes = 20;
    for (i in optionsObject){
