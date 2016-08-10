@@ -66,10 +66,10 @@
       <script src="js/options/SCRUBoptions.js"></script>
 
       <script src="js/login.js"></script>
-      <script src="js/feedNotifications/logic.js"></script>
-      <script src="js/feedNotifications/pushNotifications.js"></script>
-      <script src="js/feedNotifications/feed.js"></script>
-      <script src="js/feedNotifications/feed2.js"></script>
+<!--      <script src="js/feedNotifications/logic.js"></script>-->
+<!--      <script src="js/feedNotifications/pushNotifications.js"></script>-->
+<!--      <script src="js/feedNotifications/feed.js"></script>-->
+<!--      <script src="js/feedNotifications/feed2.js"></script>-->
    </head>
 
 
@@ -467,7 +467,7 @@ Tow options
       <div class="cardsTopicsSubmenu">
          <div class="cardsTopicsSubmenuDots clickables" onclick=openOptionMenu('{{optionUid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
          <div></div>
-         <div id=optionMenu{{optionUid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editOption('{{questionUid}}','{{optionUid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+         <div id=optionMenu{{optionUid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editOption('{{optionUid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
          </div>
       <div id={{optionUid}}voteCount>בעד: {{votes}}</div>
          </div>
@@ -503,7 +503,7 @@ Tow options
       <!-- footer for edit multiOptions -->
       <script type="text/x-handlebars-template" id="editMultiOptionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
-<div class="footer-btn material-ripple action" onclick=editMultiOptionToDB('{{questionUid}}','{{optionUid}}')><span>אישור</span></div>
+<div class="footer-btn material-ripple action" onclick=editMultiOptionToDB('{{optionUid}}')><span>אישור</span></div>
       </script>
       <!-- footer ---->
       <!--    Info   -->

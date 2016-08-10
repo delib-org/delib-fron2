@@ -5,7 +5,6 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
       //adjust the votes to a counting of votes
       DB.child("questions/"+questionUid+"/simpleVoting").once("value", function(voters){
 
-         console.log("adjust the votes to a counting of votes")
          var counts = new Object();
          //get all options
          DB.child("questions/"+questionUid+"/options").once("value", function(options){
@@ -27,25 +26,24 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
       })
 
-      var optionsObject = new Object();
-      options.forEach(function(option){
-         //         if (color == undefined){
-         //            var color = getRandomColor();
-         //            DB.child("questions/"+questionUid+"/options/"+option.key).update({color:color});
-         //         }
-         optionsObject[option.key]= {uuid: option.key, title: option.val().title, votes: option.val().votes,color: option.val().color};
-      })
 
       var preContext = new Array();
+      var optionsObject = preContext;
+      options.forEach(function(option){
 
-      for (i in optionsObject){
-         preContext.push({questionUuid: questionUid ,uuid: optionsObject[i].uuid, title: optionsObject[i].title, votes: optionsObject[i].votes , color: optionsObject[i].color});
-      };
-      var context = {options: preContext};
-      console.dir(context);
+         DB.child("options/"+option.key).once("value", function(optionData) {
 
-      renderTemplate("#simpleVote-tmpl", context, "wrapper");
-      renderTemplate("#simpleVoteBtns-tmpl", context, "footer");
+            preContext.push({uuid: option.key, votes: option.val().votes, title: optionData.val().title, color: optionData.val().color});
+
+            var context = {options: preContext};
+
+            renderTemplate("#simpleVote-tmpl", context, "wrapper");
+            renderTemplate("#simpleVoteBtns-tmpl", context, "footer");
+
+         })
+      });
+
+
 
       $(".voteBtn").ePulse({
          bgColor: "#ded9d9",
