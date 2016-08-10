@@ -1,8 +1,8 @@
 + route to home(all kinds), chats
-- re write "back"
++ re write "back"
 + create showChat()
 + setUrl (question: how to write url to ny entity)
-- fix counting
-- setting colors?
-- voteSimple doplicte problem
++ fix counting
++ setting colors?
++ voteSimple doplicte problem
 

@@ -35,7 +35,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
          DB.child("options/"+option.key).once("value", function(optionData) {
 
-            preContext.push({uuid: option.key, votes: option.val().votes, title: optionData.val().title, color: optionData.val().color});
+            preContext.push({questionUid: questionUid, uuid: option.key, votes: option.val().votes, title: optionData.val().title, color: optionData.val().color});
 
             var context = {options: preContext};
 
@@ -72,6 +72,8 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 }
 
 function voteSimple(questionUid, optionUid){
+
+   console.log(questionUid);
 
    $("#info").hide(400);
    var optionUidStr = JSON.stringify(optionUid);
