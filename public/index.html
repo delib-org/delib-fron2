@@ -1,110 +1,113 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <title>דליב: מחליטים ביחד</title>
-    <meta charset="utf-8">
+   <head>
+      <title>דליב: מחליטים ביחד</title>
+      <meta charset="utf-8">
 
-    <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/handlebars-v4.0.5.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+      <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
 
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <!-- Material Ripple JS -->
-    <link rel="stylesheet" href="css/ripple.min.css">
-    <script src="js/jquery-ui.min.js"></script>
-    <script src="js/jquery-epulse.min.js"></script>
+      <!--      less Js-->
+      <link rel="stylesheet/less" type="text/css" href="css/styles.less" />
+      <script src="js/less.js-master/dist/less.js" type="text/javascript"></script>
+      <!--      less Js-->
+
+      <script type="text/javascript" src="js/handlebars-v4.0.5.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+      <!-- Material Ripple JS -->
+      <link rel="stylesheet" href="css/ripple.min.css">
+      <script src="js/jquery-ui.min.js"></script>
+      <script src="js/jquery-epulse.min.js"></script>
 
 
-    <link rel="stylesheet" href="css/font-awesome-4.6.1/css/font-awesome.min.css">
-    <!--    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">-->
+      <link rel="stylesheet" href="css/font-awesome-4.6.1/css/font-awesome.min.css">
+      <!--    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">-->
 
-    <link rel="manifest" href="manifest.json">
+      <link rel="manifest" href="manifest.json">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    <link href='https://fonts.googleapis.com/css?family=Alef:400,700' rel='stylesheet' type='text/css'>
-
-    <!--      less Js-->
-    <link rel="stylesheet/less" type="text/css" href="css/styles.less" />
-    <script src="js/less.js-master/dist/less.js" type="text/javascript"></script>
-    <!--      less Js-->
-
-     <!--     temp-->
-<!--     <script src="js/feedNotifications/feed2.js"></script>-->
-    <!-- templates -->
-    <script src="templates/functions.js"></script>
-
-    <!-- templates -->
-
-    <script src="js/app.js"></script>
-    <script src="js/routing.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/generalFunctions.js"></script>
-
-    <script src="js/groups/group.js"></script>
-    <script src="js/groups/addGroup.js"></script>
-    <script src="js/groups/editGroup.js"></script>
-    <script src="js/groups/mainScreen.js"></script>
-    <script src="js/groups/member.js"></script>
-
-    <script src="js/topics/topic.js"></script>
-    <script src="js/topics/addTopic.js"></script>
-    <script src="js/topics/editTopic.js"></script>
-
-    <script src="js/questions/question.js"></script>
-    <script src="js/questions/addQuestion.js"></script>
-    <script src="js/questions/limitedOptions.js"></script>
-    <script src="js/questions/editQuestion.js"></script>
-    <script src="js/questions/multiOptions.js"></script>
-    <script src="js/questions/option.js"></script>
-
-    <script src="js/login.js"></script>
-    <script src="js/feedNotifications/logic.js"></script>
-    <script src="js/feedNotifications/pushNotifications.js"></script>
-    <script src="js/feedNotifications/feed.js"></script>
-     <script src="js/feedNotifications/feed2.js"></script>
-  </head>
+      <link href='https://fonts.googleapis.com/css?family=Alef:400,700' rel='stylesheet' type='text/css'>
 
 
 
-  <body dir="rtl">
-    <!--    <div id="logo"><img src="img/logo.png"></div>-->
-    <div id="container" style="height:100%">
-      <header>
-        <div id="headerTitle"></div>
-        <div id="headerBreadCrumbs"></div>
-        <div id="headerMenu"></div>
-      </header>
+      <!--     temp-->
+      <!--     <script src="js/feedNotifications/feed2.js"></script>-->
+      <!-- templates -->
+      <script src="templates/functions.js"></script>
 
-      <wrapper></wrapper>
-      <footer></footer>
-    </div>
+      <!-- templates -->
+
+      <script src="js/app.js"></script>
+      <script src="js/routing.js"></script>
+      <script src="js/chat.js"></script>
+      <script src="js/generalFunctions.js"></script>
+
+      <script src="js/groups/group.js"></script>
+      <script src="js/groups/addGroup.js"></script>
+      <script src="js/groups/editGroup.js"></script>
+      <script src="js/groups/mainScreen.js"></script>
+      <script src="js/groups/member.js"></script>
+
+      <script src="js/topics/topic.js"></script>
+      <script src="js/topics/addTopic.js"></script>
+      <script src="js/topics/editTopic.js"></script>
+
+      <script src="js/questions/question.js"></script>
+      <script src="js/questions/addQuestion.js"></script>
+      <script src="js/questions/limitedOptions.js"></script>
+      <script src="js/questions/editQuestion.js"></script>
+      <script src="js/questions/multiOptions.js"></script>
+      <script src="js/questions/option.js"></script>
+
+      <script src="js/login.js"></script>
+      <script src="js/feedNotifications/logic.js"></script>
+      <script src="js/feedNotifications/pushNotifications.js"></script>
+      <script src="js/feedNotifications/feed.js"></script>
+      <script src="js/feedNotifications/feed2.js"></script>
+   </head>
 
 
-    <div id="info" hidden></div>
-    <div id="loginScreen"></div>
+
+   <body dir="rtl">
+      <!--    <div id="logo"><img src="img/logo.png"></div>-->
+      <div id="container" style="height:100%">
+         <header>
+            <div id="headerTitle"></div>
+            <div id="headerBreadCrumbs"></div>
+            <div id="headerMenu"></div>
+         </header>
+
+         <wrapper></wrapper>
+         <footer></footer>
+      </div>
+
+
+      <div id="info" hidden></div>
+      <div id="loginScreen"></div>
 
 
 
-    <!-- ****************** Templates ****************     -->
-    <!-- meta templates-->
-    <!--      headers -->
+      <!-- ****************** Templates ****************     -->
+      <!-- meta templates-->
+      <!--      headers -->
 
-    <script type="text/x-handlebars-template" id="LogoHeaderTitle-tmpl">
+      <script type="text/x-handlebars-template" id="LogoHeaderTitle-tmpl">
 <center>דליב: מחליטים ביחד</center>
-    </script>
+      </script>
 
 
 
 
-    <script type="text/x-handlebars-template" id="headerBreadCrumbs-tmpl">
+      <script type="text/x-handlebars-template" id="headerBreadCrumbs-tmpl">
 
 <span>url > sub > sub</span>
 
-    </script>
+      </script>
 
-    <script type="text/x-handlebars-template" id="headerMenu-tmpl">
+      <script type="text/x-handlebars-template" id="headerMenu-tmpl">
 
 <div class="material-ripple clickables headerMenuBtn" onclick="showMain('public')"><i class="fa fa-home fa-2x"></i></div>
 <div class="material-ripple clickables headerMenuBtn" onclick="someFunction()"><i class="fa fa-info-circle fa-2x"></i></div>
@@ -114,69 +117,69 @@
 <div id="globalNotificationsSub" class="material-ripple clickables headerMenuBtn" onclick="setGlobalNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
 <div id="isMembership" class="material-ripple clickables headerMenuBtn" onclick="membership()"><i class="fa fa-heart fa-2x"></i></div>
 
-    </script>
+      </script>
 
-    <!--    footer groups buttons-->
-    <script type="text/x-handlebars-template" id="mainFooter-tmpl">
+      <!--    footer groups buttons-->
+      <script type="text/x-handlebars-template" id="mainFooter-tmpl">
 <div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
 <div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
-    </script>
+      </script>
 
-    <!--    cards-->
-    <script type="text/x-handlebars-template" id="cards-tmpl">
+      <!--    cards-->
+      <script type="text/x-handlebars-template" id="cards-tmpl">
 {{#each groups}}
 <div id={{uuid}} class="card">
-  <img src={{imgUrl}}>
-  <h4>{{type}} : {{title}}</h4>
-  <p>תיאור: {{description}}</p>
-  <hr>
-      </div>
+   <img src={{imgUrl}}>
+   <h4>{{type}} : {{title}}</h4>
+   <p>תיאור: {{description}}</p>
+   <hr>
+         </div>
 {{/each}}
-    </script>
+      </script>
 
-    <script type="text/x-handlebars-template" id="groupsGeneral-tmpl">
+      <script type="text/x-handlebars-template" id="groupsGeneral-tmpl">
 {{#each groups}}
 <div id={{uuid}}_Div class="card">
-  <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
-    <h4>קבוצה: {{title}}</h4>
-    <p>תיאור: {{description}}</p>
-      </div>
-      </div>
+   <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
+      <h4>קבוצה: {{title}}</h4>
+      <p>תיאור: {{description}}</p>
+         </div>
+         </div>
 {{/each}}
 <button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
-    </script>
-    <script type="text/x-handlebars-template" id="groups_member-tmpl">
+      </script>
+      <script type="text/x-handlebars-template" id="groups_member-tmpl">
 {{#each groups}}
 <div id={{uuid}}_Div class="card">
-  <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
-    <h4>קבוצה: {{title}}</h4>
-    <p>תיאור: {{description}}</p>
-      </div>
-      </div>
+   <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
+      <h4>קבוצה: {{title}}</h4>
+      <p>תיאור: {{description}}</p>
+         </div>
+         </div>
 {{/each}}
 <button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
-    </script>
+      </script>
 
-    <script type="text/x-handlebars-template" id="groups_owner-tmpl">
+      <script type="text/x-handlebars-template" id="groups_owner-tmpl">
 {{#each groups}}
 <div id={{uuid}}_Div class="card">
-  <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
-    <h4>קבוצה: {{title}}</h4>
-    <p>תיאור: {{description}}</p>
-      </div>
-  <div class="cardsTopicsSubmenu">
-    <div class="cardsTopicsSubmenuDots clickables" onclick=openGroupMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
-    <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editGroup('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
-      </div>
-      </div>
+   <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
+      <h4>קבוצה: {{title}}</h4>
+      <p>תיאור: {{description}}</p>
+         </div>
+   <div class="cardsTopicsSubmenu">
+      <div class="cardsTopicsSubmenuDots clickables" onclick=openGroupMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+      <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editGroup('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+         </div>
+         </div>
 {{/each}}
 <button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
-    </script>
+      </script>
 
-    <!--- Login ------->
+      <!--- Login ------->
 
-    <script type="text/x-han    dlebars-template" id="login-tmpl">
+      <script type="text/x-han    dlebars-template" id="login-tmpl">
 <!--
         <div class="card" style="height: 100%">
             <h4>התחברות</h4>
@@ -185,7 +188,7 @@
                     <input type="email" placeholder="email"><br>
                     <input type="password" placeholder="password"><br>
                     <input type="button" onclick="loginMe()" value="התחברות">
-      </label><br>
+         </label><br>
 
                 <label>התחברות חברתית:<br>
                     <input type="button" onclick="facebookLogin()" value="Facebook"><br>
@@ -193,8 +196,8 @@
                     <input type="button" onclick="loginMeAnonymus()" value="התחברות אנונימית"><br>
                     <input type="button" onclick="signout()" value="Sign out"><br>
                     <input type="button"  id="fcmPushNotiificationsBtn" value="Subscribe" onclick="sefFcmPushNotiifications()" type="button"><br>
-      </label>
-      </div>
+         </label>
+         </div>
 -->
             <div class="card login" style="height: 100%; width:auto">
                 <h4>התחברות</h4>
@@ -204,14 +207,14 @@
                     <p>התחברות עם שם משתמש וסיסמה</p>
                     <label>אימייל
                         <input type="email">
-      </label>
+         </label>
                     <br>
                     <label>סיסמה
                         <input type="password">
-      </label>
+         </label>
                     <br>
                     <button onclick="loginMe()">התחברות</button>
-      </div>
+         </div>
                 -->
 
                 <div id="login-social">
@@ -222,145 +225,145 @@
                     <!--
                                <div>
                                    <button class="btn-signout" onclick="signout()" >התנתקות</button>
-      </div>
+         </div>
                     -->
 
                     <!-- <button id="fcmPushNotiificationsBtn" value="Subscribe" onclick="sefFcmPushNotiifications()" type="button">Subscribe</button>-->
-      </div>
-      </div>
-    </script>
+         </div>
+         </div>
+      </script>
 
 
-    <!-- *************   group page *************-->
+      <!-- *************   group page *************-->
 
-    <!-- header    -->
-    <script type="text/x-handlebars-template" id="groupHeaderTitle-tmpl">
+      <!-- header    -->
+      <script type="text/x-handlebars-template" id="groupHeaderTitle-tmpl">
 קבוצה: <span>{{group}}</span>
-    </script>
+      </script>
 
-    <!-- topics   -->
-    <script type="text/x-handlebars-template" id="groupPage-tmpl">
+      <!-- topics   -->
+      <script type="text/x-handlebars-template" id="groupPage-tmpl">
 {{#each groups}}
 <div id={{uuid}} class="card">
-  <div class="groupDescription clickables" onclick="showTopic('{{uuid}}')">
-    <h4>נושא: {{title}}</h4>
-    <p>תיאור: {{description}}</p>
-      </div>
-  <div class="cardsTopicsSubmenu" >
-    <div class="cardsTopicsSubmenuDots clickables" onclick=openTopicMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
-    <div id=topicMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" style="display:none" onclick=editTopic('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
-      </div>
-      </div>
+   <div class="groupDescription clickables" onclick="showTopic('{{uuid}}')">
+      <h4>נושא: {{title}}</h4>
+      <p>תיאור: {{description}}</p>
+         </div>
+   <div class="cardsTopicsSubmenu" >
+      <div class="cardsTopicsSubmenuDots clickables" onclick=openTopicMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+      <div id=topicMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" style="display:none" onclick=editTopic('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+         </div>
+         </div>
 {{/each}}
 <button id="btnAddTopic" class="action btnAddEntity" onclick="showAddTopicScreen()"><i class="fa fa-plus" aria-hidden="true"></button>
-    </script>
+      </script>
 
 
-    <!--    create group page-->
-    <script type="text/x-handlebars-template" id="createGroup-tmpl">
+      <!--    create group page-->
+      <script type="text/x-handlebars-template" id="createGroup-tmpl">
 <div class="addEntityDiv">
-  <form>
-    <input id="createGroupName" name="name" placeholder="שם הקבוצה">
-    <br>
-    <textarea id="createGroupDescription" class="inputErea" name="description" placeholder="תיאור הקבוצה"></textarea>
-    <br>
-    <input type="radio" class="radioInput" name="type" value="public" checked><span> פתוחה</span>
-    <br>
-    <input type="radio" class="radioInput" name="type" value="close"> סגורה
-    <br>
-    <input type="radio" class="radioInput" name="type" value="secret"> סודית
-      </form>
-      </div>
-    </script>
+   <form>
+      <input id="createGroupName" name="name" placeholder="שם הקבוצה">
+      <br>
+      <textarea id="createGroupDescription" class="inputErea" name="description" placeholder="תיאור הקבוצה"></textarea>
+      <br>
+      <input type="radio" class="radioInput" name="type" value="public" checked><span> פתוחה</span>
+      <br>
+      <input type="radio" class="radioInput" name="type" value="close"> סגורה
+      <br>
+      <input type="radio" class="radioInput" name="type" value="secret"> סודית
+         </form>
+         </div>
+      </script>
 
-    <script type="text/x-handlebars-template" id="createGroupFooter-tmpl">
+      <script type="text/x-handlebars-template" id="createGroupFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="addNewGroup()"><span>אישור</span></div>
-    </script>
+      </script>
 
-    <!--    edit group footer-->
-    <script type="text/x-handlebars-template" id="editGroupFooter-tmpl">
+      <!--    edit group footer-->
+      <script type="text/x-handlebars-template" id="editGroupFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="updateGroupToDB('{{groupUid}}')"><span>אישור</span></div>
-    </script>
+      </script>
 
-    <!-- *************   Topic page *************-->
-    <!-- header    -->
-    <script type="text/x-handlebars-template" id="topicHeaderTitle-tmpl">
+      <!-- *************   Topic page *************-->
+      <!-- header    -->
+      <script type="text/x-handlebars-template" id="topicHeaderTitle-tmpl">
 נושא: <span>{{topic}}</span>
-    </script>
+      </script>
 
-    <!-- Questions    -->
-    <script type="text/x-handlebars-template" id="topicPage-tmpl">
+      <!-- Questions    -->
+      <script type="text/x-handlebars-template" id="topicPage-tmpl">
 {{#each questions}}
 <div id={{uuid}} class="card">
-  <div class="groupDescription clickables" onclick=showQuestion('{{uuid}}')>
-    <h4>שאלה: {{title}}</h4>
-    <p>תיאור: {{description}}</p>
-      </div>
-  <div class="cardsTopicsSubmenu">
-    <div class="cardsTopicsSubmenuDots clickables" onclick=openTopicMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
-    <div></div>
-    <div id=questionMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" style="display:none" onclick=editQuestion('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
-      </div>
-      </div>
+   <div class="groupDescription clickables" onclick=showQuestion('{{uuid}}')>
+      <h4>שאלה: {{title}}</h4>
+      <p>תיאור: {{description}}</p>
+         </div>
+   <div class="cardsTopicsSubmenu">
+      <div class="cardsTopicsSubmenuDots clickables" onclick=openTopicMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+      <div></div>
+      <div id=questionMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" style="display:none" onclick=editQuestion('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+         </div>
+         </div>
 {{/each}}
 <button id="btnAddQuestion" class="action btnAddEntity" onclick="newQuestion()"><i class="fa fa-plus" aria-hidden="true"></button>
-    </script>
+      </script>
 
-    <!--    create topic page-->
+      <!--    create topic page-->
 
-    <script type="text/x-handlebars-template" id="createTopic-tmpl">
+      <script type="text/x-handlebars-template" id="createTopic-tmpl">
 <div class="addEntityDiv">
-  <form>
-    <input id="createTopicName" name="name" placeholder="שם נושא">
-    <br>
-    <textarea id="createTopicDescription" class="inputErea" name="description" placeholder="תיאור נושא"></textarea>
-      </form>
-      </div>
-    </script>
+   <form>
+      <input id="createTopicName" name="name" placeholder="שם נושא">
+      <br>
+      <textarea id="createTopicDescription" class="inputErea" name="description" placeholder="תיאור נושא"></textarea>
+         </form>
+         </div>
+      </script>
 
-    <script type="text/x-handlebars-template" id="createTopicFooter-tmpl">
+      <script type="text/x-handlebars-template" id="createTopicFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="addNewTopic()"><span>אישור</span></div>
-    </script>
+      </script>
 
-    <!--- Edit topic Page ---->
+      <!--- Edit topic Page ---->
 
-    <script type="text/x-handlebars-template" id="editTopicFooter-tmpl">
+      <script type="text/x-handlebars-template" id="editTopicFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="sendTopicToDB('{{topicUid}}')"><span>אישור</span></div>
-    </script>
+      </script>
 
-    <!-- *************   Question page *************-->
-    <!-- header    -->
-    <script type="text/x-handlebars-template" id="questionHeaderTitle-tmpl">
+      <!-- *************   Question page *************-->
+      <!-- header    -->
+      <script type="text/x-handlebars-template" id="questionHeaderTitle-tmpl">
 שאלה:<span>{{question}}</span>
-    </script>
+      </script>
 
-    <!--    create Question page-->
-    <script type="text/x-handlebars-template" id="createQuestion-tmpl">
+      <!--    create Question page-->
+      <script type="text/x-handlebars-template" id="createQuestion-tmpl">
 <div class="addEntityDiv">
-  <form>
-    <input id="createQuestionName" name="name" placeholder="שם שאלה" value='{{questionTitle}}'>
-    <br>
-    <textarea id="createQuestionDescription" class="inputErea" name="description" placeholder="תיאור השאלה">{{questionDescription}}</textarea>
-    <br>
-    <input type="radio" class="radioInput" name="type" value="limitedOptions" checked><span> מעט אופציות</span>
-    <br>
-    <input type="radio" class="radioInput" name="type" value="multiOptions"> ריבוי אופציות
-    <br>
+   <form>
+      <input id="createQuestionName" name="name" placeholder="שם שאלה" value='{{questionTitle}}'>
+      <br>
+      <textarea id="createQuestionDescription" class="inputErea" name="description" placeholder="תיאור השאלה">{{questionDescription}}</textarea>
+      <br>
+      <input type="radio" class="radioInput" name="type" value="limitedOptions" checked><span> מעט אופציות</span>
+      <br>
+      <input type="radio" class="radioInput" name="type" value="multiOptions"> ריבוי אופציות
+      <br>
 
-      </form>
-  <hr>
-  <div id="questionOptions">
-      </div>
-      </div>
-    </script>
+         </form>
+   <hr>
+   <div id="questionOptions">
+         </div>
+         </div>
+      </script>
 
-    <!--  question options  -->
-    <!-- For against     -->
-    <script type="text/x-handlebars-template" id="questionOptionsForAgainst-tmpl">
+      <!--  question options  -->
+      <!-- For against     -->
+      <script type="text/x-handlebars-template" id="questionOptionsForAgainst-tmpl">
 <label>הסבר בעד</label>
 <br>
 <textarea id="proExplain" class="inputErea" name="description" placeholder="הסבירו מדוע לתמוך" style="box-shadow: 0px 0px 20px green"></textarea>
@@ -368,8 +371,8 @@
 <label>הסבר נגד</label>
 <br>
 <textarea id="conExplain" class="inputErea" name="description" placeholder="הסבירו מדוע להתנגד" style="box-shadow: 0px 0px 20px red"></textarea>
-    </script>
-    <!--
+      </script>
+      <!--
 Tow options
 <script type="text/x-handlebars-template" id="questionOptionsTwoOptions-tmpl">
 <label>אופציה א'</label><br>
@@ -380,167 +383,167 @@ Tow options
 <textarea id="optionDescription2" class="inputErea" name="description" placeholder="הסבר">{{descriptionText2}}</textarea>
 </script>
 -->
-    <!--  Limited options  -->
-    <script type="text/x-handlebars-template" id="questionOptionsLimitedOptions-tmpl">
+      <!--  Limited options  -->
+      <script type="text/x-handlebars-template" id="questionOptionsLimitedOptions-tmpl">
 <label>מספר האופציות:</label>
 <div id="numberOfOptions" class="multiOptionsContainer clickables">
-  <div id="numberOfOptions2" class="multiOptionsDiv" onclick="setNumberOfOptions(2)">2</div>
-  <div id="numberOfOptions3" class="multiOptionsDiv" onclick="setNumberOfOptions(3)">3</div>
-  <div id="numberOfOptions4" class="multiOptionsDiv" onclick="setNumberOfOptions(4)">4</div>
-  <div id="numberOfOptions5" class="multiOptionsDiv" onclick="setNumberOfOptions(5)">5</div>
-  <div id="numberOfOptions6" class="multiOptionsDiv" onclick="setNumberOfOptions(6)">6</div>
-  <div id="numberOfOptions7" class="multiOptionsDiv" onclick="setNumberOfOptions(7)">7</div>
-  <div id="numberOfOptions8" class="multiOptionsDiv" onclick="setNumberOfOptions(8)">8</div>
-      </div>
+   <div id="numberOfOptions2" class="multiOptionsDiv" onclick="setNumberOfOptions(2)">2</div>
+   <div id="numberOfOptions3" class="multiOptionsDiv" onclick="setNumberOfOptions(3)">3</div>
+   <div id="numberOfOptions4" class="multiOptionsDiv" onclick="setNumberOfOptions(4)">4</div>
+   <div id="numberOfOptions5" class="multiOptionsDiv" onclick="setNumberOfOptions(5)">5</div>
+   <div id="numberOfOptions6" class="multiOptionsDiv" onclick="setNumberOfOptions(6)">6</div>
+   <div id="numberOfOptions7" class="multiOptionsDiv" onclick="setNumberOfOptions(7)">7</div>
+   <div id="numberOfOptions8" class="multiOptionsDiv" onclick="setNumberOfOptions(8)">8</div>
+         </div>
 <div id="optionsForLimitedOptions"></div>
-    </script>
-    <!--   options for Limited options -->
-    <script type="text/x-handlebars-template" id="questionOption-tmpl">
+      </script>
+      <!--   options for Limited options -->
+      <script type="text/x-handlebars-template" id="questionOption-tmpl">
 {{#each options}}
 <div id={{optionOrder}}_optionOrder>
-<label>אפשרות</label>
-<br>
-<input type="text" id={{optionUid}}_limitedOptions placeholder="שם האופציה" value='{{title}}'>
-<textarea id={{optionUid}}_limitedOptionsDesc class="inputErea" name="description" placeholder="הסבר">{{description}}</textarea>
-</div> {{/each}}
-    </script>
+   <label>אפשרות</label>
+   <br>
+   <input type="text" id={{optionUid}}_limitedOptions placeholder="שם האופציה" value='{{title}}'>
+   <textarea id={{optionUid}}_limitedOptionsDesc class="inputErea" name="description" placeholder="הסבר">{{description}}</textarea>
+         </div> {{/each}}
+      </script>
 
-    <!--  question footer  -->
+      <!--  question footer  -->
 
-    <script type="text/x-handlebars-template" id="createQuestionFooter-tmpl">
+      <script type="text/x-handlebars-template" id="createQuestionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="addNewQuestion()"><span>אישור</span></div>
-    </script>
+      </script>
 
-    <!--  question edit footer  -->
+      <!--  question edit footer  -->
 
-    <script type="text/x-handlebars-template" id="editQuestionFooter-tmpl">
+      <script type="text/x-handlebars-template" id="editQuestionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick=updateQuestion('{{uuid}}')><span>אישור</span></div>
-    </script>
+      </script>
 
-    <!-- simpleVoting wrapper -->
-    <script type="text/x-handlebars-template" id="simpleVote-tmpl">
+      <!-- simpleVoting wrapper -->
+      <script type="text/x-handlebars-template" id="simpleVote-tmpl">
 <div class="simpleVoteWrapper1">
-  <div class="simpleVoteWrapper2">
-    {{#each options}}
-    <div id={{uuid}}_div class="simpleVotingBar">
-      <span>{{votes}}</span>
-      </div>
-    {{/each}}
-      </div>
-      </div>
-     </script>
-<!-- simple voting buttons -->
-<script type="text/x-handlebars-template" id="simpleVoteBtns-tmpl">
-            <div id="limitedOptionsVoteBtns">
+   <div class="simpleVoteWrapper2">
+      {{#each options}}
+      <div id={{uuid}}_div class="simpleVotingBar">
+         <span>{{votes}}</span>
+         </div>
+      {{/each}}
+         </div>
+         </div>
+      </script>
+      <!-- simple voting buttons -->
+      <script type="text/x-handlebars-template" id="simpleVoteBtns-tmpl">
+<div id="limitedOptionsVoteBtns">
 
-                <div class="voteBtnContainer">
-                    {{#each options}}
-                    <div class="voteBtn clickables material-ripple" onclick="voteSimple('{{questionUuid}}','{{uuid}}')" id={{uuid}}_btn><span>{{title}}</span></div>
-                    {{/each}}
-      </div>
-      </div>
+   <div class="voteBtnContainer">
+      {{#each options}}
+      <div class="voteBtn clickables material-ripple" onclick="voteSimple('{{questionUuid}}','{{uuid}}')" id={{uuid}}_btn><span>{{title}}</span></div>
+      {{/each}}
+         </div>
+         </div>
 
-    </script>
+      </script>
 
-    <!-- multioptions -->
-    <script type="text/x-handlebars-template" id="multiOption-tmpl">
+      <!-- multioptions -->
+      <script type="text/x-handlebars-template" id="multiOption-tmpl">
 <div class="card multiOptionCard" id={{optionUid}}Div>
-  <div class="mainOption">
-    <div class="optionVisualId" style=background-color:{{optionColor}}></div>
-    <div class="optionDetails">
-      <div class="titleOption">{{title}}</div>
-      <div class="descriptionOption  ellipsis-text">{{description}}</div>
-      </div>
-    <div class="interactionOption"></div>
-    <div class="voteUpOption clickables" onclick=voteUpOption('{{questionUid}}','{{optionUid}}')><img src={{userVote}} id={{optionUid}}voteImg></div>
-    <div class="talkOption"></div>
-      </div>
-  <div class="footerOption">
-    <div class="cardsTopicsSubmenu">
-      <div class="cardsTopicsSubmenuDots clickables" onclick=openOptionMenu('{{optionUid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
-      <div></div>
-      <div id=optionMenu{{optionUid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editOption('{{questionUid}}','{{optionUid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
-      </div>
-    <div id={{optionUid}}voteCount>בעד: {{votes}}</div>
-      </div>
-      </div>
-    </script>
+   <div class="mainOption">
+      <div class="optionVisualId" style=background-color:{{optionColor}}></div>
+      <div class="optionDetails">
+         <div class="titleOption">{{title}}</div>
+         <div class="descriptionOption  ellipsis-text">{{description}}</div>
+         </div>
+      <div class="interactionOption"></div>
+      <div class="voteUpOption clickables" onclick=voteUpOption('{{questionUid}}','{{optionUid}}')><img src={{userVote}} id={{optionUid}}voteImg></div>
+      <div class="talkOption"></div>
+         </div>
+   <div class="footerOption">
+      <div class="cardsTopicsSubmenu">
+         <div class="cardsTopicsSubmenuDots clickables" onclick=openOptionMenu('{{optionUid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+         <div></div>
+         <div id=optionMenu{{optionUid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editOption('{{questionUid}}','{{optionUid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+         </div>
+      <div id={{optionUid}}voteCount>בעד: {{votes}}</div>
+         </div>
+         </div>
+      </script>
 
-    <!-- multi options footer --->
+      <!-- multi options footer --->
 
-    <script type="text/x-handlebars-template" id="multiOptionsFooter-tmpl">
+      <script type="text/x-handlebars-template" id="multiOptionsFooter-tmpl">
 <!--        <div class="multiOptionsFooter">-->
 <div class="footer-btn clickables" id="optionsRefresh" onclick=showMultiOptions('{{questionUid}}')><i class="fa fa-refresh" aria-hidden="true"></i></div>
 <div class="footer-btn clickables" id="addOption" onclick=addMultiOption('{{questionUid}}')><i class="fa fa-plus" aria-hidden="true"></i></div>
 <!--        </div>-->
-    </script>
+      </script>
 
-    <!--        add multi options-->
+      <!--        add multi options-->
 
-    <script type="text/x-handlebars-template" id="createMultiOption-tmpl">
+      <script type="text/x-handlebars-template" id="createMultiOption-tmpl">
 <div class="addEntityDiv">
-  <form>
-    <input id="createMultiOptionName" name="name" placeholder="שם האפשרות">
-    <br>
-    <textarea id="createMultiOptionDescription" class="inputErea" name="description" placeholder="תיאור האפשרות"></textarea>
-      </form>
-      </div>
-    </script>
+   <form>
+      <input id="createMultiOptionName" name="name" placeholder="שם האפשרות">
+      <br>
+      <textarea id="createMultiOptionDescription" class="inputErea" name="description" placeholder="תיאור האפשרות"></textarea>
+         </form>
+         </div>
+      </script>
 
-    <script type="text/x-handlebars-template" id="createMultiOptionFooter-tmpl">
+      <script type="text/x-handlebars-template" id="createMultiOptionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick=addMultiOptionToDB('{{questionUid}}')><span>אישור</span></div>
-    </script>
+      </script>
 
-    <!-- footer for edit multiOptions -->
-    <script type="text/x-handlebars-template" id="editMultiOptionFooter-tmpl">
+      <!-- footer for edit multiOptions -->
+      <script type="text/x-handlebars-template" id="editMultiOptionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick=editMultiOptionToDB('{{questionUid}}','{{optionUid}}')><span>אישור</span></div>
-    </script>
-    <!-- footer ---->
-    <!--    Info   -->
-    <script type="text/x-handlebars-template" id="optionsInfo-tmpl">
+      </script>
+      <!-- footer ---->
+      <!--    Info   -->
+      <script type="text/x-handlebars-template" id="optionsInfo-tmpl">
 <div class="infoTitle">
-  <h4>{{title}}</h4></div>
+   <h4>{{title}}</h4></div>
 <div class="infoDescription">
-  <h5>{{description}}</h5></div>
+   <h5>{{description}}</h5></div>
 <div class="infoExplanation">{{explanation}}</div>
-    </script>
-  </body>
+      </script>
+   </body>
 
-  <!--  Chats  -->
+   <!--  Chats  -->
    <script type="text/x-handlebars-template" id="chatsHeader-tmpl">
-      <span>{{entityType}}(שיחה): {{title}}</span>
+<span>{{entityType}}(שיחה): {{title}}</span>
    </script>
-  <script type="text/x-handlebars-template" id="chats-tmpl">
+   <script type="text/x-handlebars-template" id="chats-tmpl">
 <div class="chatContainer">
-  <div class="chatMessages">
-    <p>Hello</p>
-    <p>Hello</p>
-    </div>
-  <div class="chatInput">
-    <textarea placeholder="כתבו משהו" style="width:98%"></textarea>
-    </div>
-    </div>
-  </script>
+   <div class="chatMessages">
+      <p>Hello</p>
+      <p>Hello</p>
+      </div>
+   <div class="chatInput">
+      <textarea placeholder="כתבו משהו" style="width:98%"></textarea>
+      </div>
+      </div>
+   </script>
 
-  <script type="text/x-handlebars-template" id="chatInput-tmpl">
+   <script type="text/x-handlebars-template" id="chatInput-tmpl">
 
-    <div class="chatInput">
-      <textarea id="chatInputTxt" placeholder="כתבו משהו" style="width:98%"></textarea>
-      <button onclick="addChatMessagePre()">אישור</button>
-    </div>
+<div class="chatInput">
+   <textarea id="chatInputTxt" placeholder="כתבו משהו" style="width:98%"></textarea>
+   <button onclick="addChatMessagePre()">אישור</button>
+      </div>
 
-  </script>
+   </script>
 
-  <script type="text/x-handlebars-template" id="chatMessage-tmpl">
+   <script type="text/x-handlebars-template" id="chatMessage-tmpl">
 <div class="message" id={{messageId}}>
-  <div class="messageAuthor">{{author}}</div>
-  <div class="messageDate">{{time}}</div>
-  <div class="messageText">{{text}}</div>
-    </div>
-  </script>
+   <div class="messageAuthor">{{author}}</div>
+   <div class="messageDate">{{time}}</div>
+   <div class="messageText">{{text}}</div>
+      </div>
+   </script>
 
 </html>
