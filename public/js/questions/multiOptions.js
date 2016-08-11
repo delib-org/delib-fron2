@@ -1,5 +1,3 @@
-
-
 function showMultiOptions(questionUid){
 
    var optionsPosition = new Array();
@@ -11,6 +9,8 @@ function showMultiOptions(questionUid){
 
    //show footer
    renderTemplate("#multiOptionsFooter-tmpl",{questionUid: questionUid}, "footer");
+   
+   //show wrapper
    $("wrapper").html("");
 
    var indexDiv = 0;
