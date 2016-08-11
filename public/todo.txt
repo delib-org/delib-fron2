@@ -6,4 +6,6 @@
 - setting colors?
 + voteSimple doplicte problem
 - delete: option, question, topic, group
+- ft:opt - solve line breaks
+- ft:opt - setactive enttit and routing
 
