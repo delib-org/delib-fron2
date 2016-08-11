@@ -60,13 +60,15 @@
       <script src="js/questions/limitedOptions.js"></script>
       <script src="js/questions/editQuestion.js"></script>
       <script src="js/questions/multiOptions.js"></script>
-      <script src="js/questions/option.js"></script>
+      <script src="js/questions/options/option.js"></script>
 
       <script src="js/login.js"></script>
+<!--
       <script src="js/feedNotifications/logic.js"></script>
       <script src="js/feedNotifications/pushNotifications.js"></script>
       <script src="js/feedNotifications/feed.js"></script>
       <script src="js/feedNotifications/feed2.js"></script>
+-->
    </head>
 
 
@@ -448,7 +450,7 @@ Tow options
       <!-- multioptions -->
       <script type="text/x-handlebars-template" id="multiOption-tmpl">
 <div class="card multiOptionCard" id={{optionUid}}Div>
-   <div class="mainOption">
+   <div class="mainOption clickables" onclick=showOption('{{questionUid}}','{{optionUid}}')>
       <div class="optionVisualId" style=background-color:{{optionColor}}></div>
       <div class="optionDetails">
          <div class="titleOption">{{title}}</div>
@@ -542,5 +544,19 @@ Tow options
    <div class="messageText">{{text}}</div>
       </div>
    </script>
+
+    <!--   Options -->
+
+   <script type="text/x-handlebars-template" id="optionHeaderTitle-tmpl">
+      <center>אפשרות: {{title}}</center>
+   </script>
+
+   <script type="text/x-handlebars-template" id="optionFooter-tmpl">
+<div id="backToquestionBtn" class="footer-btn material-ripple" onclick="showEntities('questions','{{questionUid}}')"><span>חזרה לשאלה</span></div>
+      </script>
+
+   <script type="text/x-handlebars-template" id="optionWrapper-tmpl">
+<div id="{{optionUid}}DivOpt" contenteditable="true" onkeyup="updateOptionDescription('questions','{{questionUid}}')">{{description}}</div>
+      </script>
 
 </html>

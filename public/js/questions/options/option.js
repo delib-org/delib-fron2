@@ -1,3 +1,19 @@
+function showOption(questionUid, optionUid){
+
+   //show header
+   DB.child("questions/"+questionUid+"/options/"+optionUid+"/title").once("value", function(titleInDB){
+      renderTemplate("#optionHeaderTitle-tmpl", {title:titleInDB.val()}, "#headerTitle")
+   })
+
+   //show footer
+   renderTemplate("#optionFooter-tmpl", {questionUid:questionUid}, "footer");
+
+   //show wrapper
+   DB.child("questions/"+questionUid+"/options/"+optionUid+"description").on("value", function(descriptionDB){
+      renderTemplate("#optionWrapper-tmpl", {questionUid:questionUid, optionUid:optionUid, description:description})
+   })
+}
+
 //create option
 function createOption(questionUid, title, description, explanation){
 
