@@ -69,20 +69,6 @@ function showGroup(groupUid){
    DB.child("groups/"+groupUid+"/topics").on("value",groupCallback);
 
    setActiveEntity("groups", groupUid, "value", groupCallback);
-
-   //   if (back == undefined){back = false}
-
-   //   userUpdates = DB.child("users/"+userUuid+"/entityNotifications/"+activeEntity.entity+"/"+activeEntity.uid);
-   //
-   //   userUpdates.once('value', function(data) {
-   //      userUpdatesSet = data.child("ownerCalls").exists();
-   //   });
-
-
-
-   //   if(!back){
-   //      setUrl("group", groupUid);
-   //   }
 }
 
 
