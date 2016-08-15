@@ -76,7 +76,8 @@ subsManager.isFeedSet = function (isOwnerCall) {
     // debugger;
     if(isOwnerCall == undefined)
         isOwnerCall= false;
-    
+
+    // if active entity is Main
     if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
         return;
 
@@ -93,7 +94,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
 
         case "groups":
             // get in only if on a group entity and function is called from the ownerCall box
-            if (isOwnerCall ) {
+            if (isOwnerCall) {
                 userFeed.once('value', function(dataSnapshot) {
 
                     subsManager.feedUpdatesSet = dataSnapshot.child("OwnerCalls").exists();

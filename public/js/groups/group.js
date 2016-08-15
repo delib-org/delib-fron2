@@ -18,7 +18,7 @@ function showGroup(groupUid){
 
       isMembership();
    }).then(function(rendered) {
-      activeEntity.rendered = rendered;
+      subsManager.isUpdatesSet();
    });
 
 
@@ -71,7 +71,7 @@ function showGroup(groupUid){
 
    //show wrapper
    DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
-   setAcitveEntity("groups", groupUid, "value", showGroupCallback);
+   setActiveEntity("groups", groupUid, "value", showGroupCallback);
 
 
    if(!back){

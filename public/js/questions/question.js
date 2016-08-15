@@ -22,6 +22,8 @@ function showQuestion(questionUid){
       default:
         showLimitedOptionsQuestion(questionUid, numberOfOptions);
     }
+  }).then(function(rendered) {
+    subsManager.isUpdatesSet();
   });
 
 

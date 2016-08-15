@@ -31,6 +31,8 @@ function showMain(groupsCluster){
          showPublicGroups();
          $("#publicBtn").css("border", "4px solid rgba(44, 44, 44, 0.65)");
    };
+
+   subsManager.isUpdatesSet();
 }
 
 function showMemberGroups(){

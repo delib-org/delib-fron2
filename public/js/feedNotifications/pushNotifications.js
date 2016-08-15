@@ -55,12 +55,12 @@ function pushNotification(EntityData, entityType, messagesSent) {
     else {
         var notification;
         console.log(EntityData.val(), entityType );
-        if (entityType == "chats") {
+        if (entityType === "chats") {
             notification = new Notification(EntityData.val().title, {
                 icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
                 body: messagesSent + " הודעות חדשות"
             });
-        } else if(entityType == "ownerCalls") {
+        } else if(entityType === "ownerCalls") {
             notification = new Notification("קריאת מנהל מ"+EntityData.val().title, {
                 icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
                 body: messagesSent

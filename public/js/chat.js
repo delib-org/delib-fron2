@@ -7,7 +7,7 @@ function showChat(){
 
    clearChat();
 
-   setAcitveEntity("chats", chatUid);
+   setActiveEntity("chats", chatUid);
 
    var chatUid = activeEntity.uid;
    var entityType = activeEntity.entity;
@@ -17,6 +17,8 @@ function showChat(){
       var entityTypeLocal = entityTypeToHebrew(entityType);
       renderTemplate("#chatsHeader-tmpl",{entityType:entityTypeLocal, title:dataSnapshot.val().title },"#headerTitle");
 
+   }).then(function(rendered) {
+      subsManager.isUpdatesSet();
    });
 
    //show footer

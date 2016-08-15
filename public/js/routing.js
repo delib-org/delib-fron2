@@ -130,5 +130,6 @@ function showEntities(entity, uid){
       default:
          showMain("public");
    }
+
 };
 

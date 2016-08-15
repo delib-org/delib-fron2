@@ -30,7 +30,7 @@ $(function(){
    var currentUrl = getUrl();
    startingUrl = currentUrl;
    routTo(currentUrl);
-
+    console.log("rout to.. app.js");
    listenToAuth();
 
 
@@ -40,15 +40,16 @@ $(function(){
 
    $(window).on('popstate', function() {
 
+      console.log("rout to.. popstate");
       var currentUrl = getUrl();
       var back = true;
       routTo(currentUrl,back);
     
     });
-    
-    renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
-    renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
-    renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
+    //
+    // renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
+    // renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
+    // renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
     
     listenToAuth();
 });

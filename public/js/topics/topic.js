@@ -6,7 +6,10 @@ function showTopic(topicUid){
       var title = dataSnapshot.val().title;
       renderTemplate("#topicHeaderTitle-tmpl", {topic: title}, "#headerTitle");
       renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
+   }).then(function(rendered) {
+      subsManager.isUpdatesSet();
    });
+   
    //show footer
    $("footer").html("");
 

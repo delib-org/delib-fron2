@@ -39,6 +39,7 @@ function listenToAuth(){
        console.log("user is login an redirected");
 //       routTo(startingUrl);
 
+      console.log("logddddd");
     } else {
       // No user is signed in.
       console.log("No user is signed in.");
