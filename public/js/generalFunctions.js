@@ -34,23 +34,23 @@ function parseDate(dateInMillisec){
 }
 
 
-function setAcitveEntity (newEntity, newUid, newEventType, newCallback){
-   var previuosEntity = activeEntity.entity;
-   var previuosUid = activeEntity.uid;
-   var previuosEventType = activeEntity.eventType;
-   var previuosCallback = activeEntity.callback;
-
-   if (isNotEmpty(previuosUid) && previuosEntity !== "chats") {
-      DB.child(previuosEntity+"/"+previuosUid).off();
-   }
-
-   activeEntity.entity = newEntity;
-   activeEntity.uid = newUid;
-   activeEntity.eventType = newEventType;
-   activeEntity.callback = newCallback;
-
-   subsManager.isUpdatesSet();
-}
+//function setAcitveEntity (newEntity, newUid, newEventType, newCallback){
+//   var previuosEntity = activeEntity.entity;
+//   var previuosUid = activeEntity.uid;
+//   var previuosEventType = activeEntity.eventType;
+//   var previuosCallback = activeEntity.callback;
+//
+//   if (isNotEmpty(previuosUid) && previuosEntity !== "chats") {
+//      DB.child(previuosEntity+"/"+previuosUid).off();
+//   }
+//
+//   activeEntity.entity = newEntity;
+//   activeEntity.uid = newUid;
+//   activeEntity.eventType = newEventType;
+//   activeEntity.callback = newCallback;
+//
+//   subsManager.isUpdatesSet();
+//}
 
 function animateHeader(){
    $("header").hide();
