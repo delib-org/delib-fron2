@@ -17,6 +17,8 @@ function showGroup(groupUid){
       $("footer").html("");
 
       isMembership();
+   }).then(function(rendered) {
+      activeEntity.rendered = rendered;
    });
 
 

@@ -163,7 +163,7 @@ subsManager.setNotifications = function(isOwnerCall) {
 };
 
 subsManager.isNotificationsSet = function (isOwnerCall) {
-    debugger;
+    // debugger;
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
@@ -171,7 +171,7 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
         return;
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
-    debugger;
+    // debugger;
     switch (activeEntity.entity) {
         case "chats":
             userNotifications.once('value', function(dataSnapshot) {
@@ -208,7 +208,7 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
         // // NEEDED: ownerCall box, and an on/off button
     } else {
         $("#notificationsSub").css("color", inactiveColor);
-
+        console.log("inactive notifications!");
         // if(isOwnerCall)
         // // NEEDED: ownerCall box, and an on/off button
     }

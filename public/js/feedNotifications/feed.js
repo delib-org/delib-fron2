@@ -73,14 +73,14 @@ subsManager.setFeed = function(isOwnerCall) {
 };
 
 subsManager.isFeedSet = function (isOwnerCall) {
-    debugger;
+    // debugger;
     if(isOwnerCall == undefined)
         isOwnerCall= false;
     
     if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
         return;
 
-    debugger;
+    // debugger;
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
 
     switch (activeEntity.entity) {
@@ -119,7 +119,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
         // // NEEDED: ownerCall box, and an on/off button
     } else {
         $("#feedSub").css("color", inactiveColor);
-
+        console.log("inactive feed!");
         // if(isOwnerCall)
         // // NEEDED: ownerCall box, and an on/off button
     }
