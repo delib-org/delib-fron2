@@ -1,14 +1,42 @@
 //create new topic
 function showTopic(topicUid){
 
-   //show header
-   DB.child("topics/"+topicUid).once("value", function(dataSnapshot){
+   if (back == undefined){back = false}
+
+   // userUpdates = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid);
+   //
+   // userUpdates.once('value', function(data) {
+   //   userUpdatesSet = data.child("globalNotifications").exists();
+   // });
+
+   if (!back){
+      setUrl("topic", topicUid);
+   }
+
+   var showTopicCallback = function(dataSnapshot){
+
       var title = dataSnapshot.val().title;
       renderTemplate("#topicHeaderTitle-tmpl", {topic: title}, "#headerTitle");
       renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
+<<<<<<< HEAD
    });
    //show footer
    $("footer").html("");
+=======
+
+      $("footer").html();
+
+   };
+
+   setAcitveEntity("topics", topicUid, "value", showTopicCallback);
+   //show questions in topic
+   DB.child("topics/"+topicUid).once("value", showTopicCallback);
+   showTopicQuestions (topicUid);
+
+
+
+}
+>>>>>>> master
 
    //show wrapper
 
@@ -34,6 +62,7 @@ function showTopic(topicUid){
                   var title = data.val().title;
                   var description = data.val().description;
 
+
                   preContext = {
                      uuid: question.key,
                      title: title,
@@ -52,41 +81,15 @@ function showTopic(topicUid){
                }
 
                i++;
-            })
-
-         })
+            });
+         });
       } else {renderTemplate("#topicPage-tmpl",{}, "wrapper");}
    };
-
-   DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
-
-   setActiveEntity("topics", topicUid, "value", topicCallback);
-
-
-
-   //   if (back == undefined){back = false}
-
-   // userUpdates = DB.child("users/"+userUuid+"/entityNotifications/"+activeEntity.entity+"/"+activeEntity.uid);
    //
-   // userUpdates.once('value', function(data) {
-   //   userUpdatesSet = data.child("globalNotifications").exists();
-   // });
-
-   //   if (!back){
-   //      setUrl("topic", topicUid);
-   //   }
-
-   // getLocalNotifications();
-
-   //    console.dir(userEntityNotificationsExists);
+   // DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
    //
-   // if (userUpdatesSet) {
-   //   $("#globalNotificationsSub").css("color", activeColor);
-   // } else {
-   //   $("#globalNotificationsSub").css("color", inactiveColor);
-   // }
+   // setActiveEntity("topics", topicUid, "value", topicCallback);
 
-}
 
 
 

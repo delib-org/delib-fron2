@@ -2,25 +2,26 @@ function showGroup(groupUid){
 
    //show header
 
-   DB.child("groups/"+groupUid).once("value",function(dataSnapshot){
+   //show footer&header
+
+   DB.child("groups/"+groupUid).once("value", function(dataSnapshot){
+      //show header
       var title = dataSnapshot.val().title;
       renderTemplate("#groupHeaderTitle-tmpl", {group: title}, "#headerTitle");
       renderTemplate("#headerMenu-tmpl", {chatUid: groupUid, entityType: "groups"}, "#headerMenu");
+
       //    getLocalNotifications();
-      //      if (userUpdatesSet) {
-      //         $("#globalNotificationsSub").css("color", activeColor);
-      //      } else {
-      //         $("#globalNotificationsSub").css("color", inactiveColor);
-      //      }
+      
+
+      //show footer
+      $("footer").html("");
 
       isMembership();
    });
 
-   //show footer
-   $("footer").html("");
 
-   //show wrapper
-   var groupCallback = function(topics){
+   var showGroupCallback = function(topics){
+
 
       if(topics.exists()){
 
@@ -30,7 +31,7 @@ function showGroup(groupUid){
 
          var i = 1;
 
-         topics.forEach(function(topic){
+         topics.forEach(function(topic){  
 
             DB.child("topics/"+topic.key).once("value", function(data){
 
@@ -66,25 +67,21 @@ function showGroup(groupUid){
       }
    };
 
-   DB.child("groups/"+groupUid+"/topics").on("value",groupCallback);
-
-   setActiveEntity("groups", groupUid, "value", groupCallback);
-
-   //   if (back == undefined){back = false}
-
-   //   userUpdates = DB.child("users/"+userUuid+"/entityNotifications/"+activeEntity.entity+"/"+activeEntity.uid);
-   //
-   //   userUpdates.once('value', function(data) {
-   //      userUpdatesSet = data.child("ownerCalls").exists();
-   //   });
+   //show wrapper
+   DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
+   setAcitveEntity("groups", groupUid, "value", showGroupCallback);
 
 
+   if(!back){
+      setUrl("group", groupUid);
+   }
 
-   //   if(!back){
-   //      setUrl("group", groupUid);
-   //   }
 }
 
 
 //show group topics
-
+//function showGroupTopics(groupUid){
+//   //get group topics
+//
+//   DB.child("groups/"+ groupUid.toString()+"/topics").on("value",
+//}

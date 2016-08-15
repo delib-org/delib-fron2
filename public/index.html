@@ -29,7 +29,12 @@
 
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
+<<<<<<< HEAD
       <link href='https://fonts.googleapis.com/css?family=Alef:400,700' rel='stylesheet' type='text/css'>
+=======
+    <!-- templates -->
+    <script src="templates/functions.js"></script>
+>>>>>>> master
 
 
 
@@ -113,8 +118,8 @@
 <div class="material-ripple clickables headerMenuBtn" onclick="someFunction()"><i class="fa fa-info-circle fa-2x"></i></div>
 <div class="material-ripple clickables headerMenuBtn" onclick="showChat()"><i class="fa fa-comments-o fa-2x"></i></div>
 <div class="material-ripple clickables headerMenuBtn" onclick="someFunction()"><i class="fa fa-share-alt fa-2x"></i></div>
-<div id="feedSubscribe" class="material-ripple clickables headerMenuBtn" onclick="setLocalNotifications()"><i class="fa fa-globe fa-2x"></i></div>
-<div id="globalNotificationsSub" class="material-ripple clickables headerMenuBtn" onclick="setGlobalNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
+<div id="feedSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setFeed()"><i class="fa fa-globe fa-2x"></i></div>
+<div id="notificationsSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
 <div id="isMembership" class="material-ripple clickables headerMenuBtn" onclick="membership()"><i class="fa fa-heart fa-2x"></i></div>
 
       </script>

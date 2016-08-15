@@ -266,5 +266,8 @@ var memberContext = new Object();
 //
 //}
 
-
-
+function goHome(){
+  $("#notificationsSub").css("color", inactiveColor)
+  showPublicGroups();
+  renderTemplate("#LogoHeaderTitle-tmpl",{}, "#headerTitle");
+}
