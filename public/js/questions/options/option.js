@@ -67,7 +67,7 @@ function createOption(questionUid, title, description, explanation){
    if(title == "" || title == undefined){
       console.log("Eror: title = "+ title);
    } else {
-      DB.child("questions/"+questionUid+"/options").push({title: title, description: description, explanation: explanation, color:color});
+      DB.child("questions/"+questionUid+"/options").push({title: title, description: description, explanation: explanation, color:color, ownerUid: userUuid});
    }
 }
 
