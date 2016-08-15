@@ -1,4 +1,4 @@
-function getUrl(){
+function getUrl(){  
    var currentUrl = window.location.href;
    var locationToCut = currentUrl.indexOf("?");
    currentUrl = currentUrl.substring(locationToCut+1);
@@ -11,15 +11,15 @@ function routTo(currentUrl, back){
    if (back == undefined){back = false};
 
    var slashPostion = currentUrl.indexOf("/");
-//   var currentType = sessionStorage.getItem("_entityType");
-//   var currentEntity = sessionStorage.getItem("_currentEntity");
+   //   var currentType = sessionStorage.getItem("_entityType");
+   //   var currentEntity = sessionStorage.getItem("_currentEntity");
 
    var currentType = currentUrl.slice(0,slashPostion);
    var currentEntity = currentUrl.slice(slashPostion+1);
 
    showEntities(currentType, currentEntity);
 
-};
+}
 
 function setUrl(type, uid){
    //get domain
@@ -130,5 +130,6 @@ function showEntities(entity, uid){
       default:
          showMain("public");
    }
+
 };
 

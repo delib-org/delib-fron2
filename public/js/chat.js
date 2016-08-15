@@ -7,6 +7,8 @@ function showChat(){
 
    clearChat();
 
+   setActiveEntity("chats", chatUid);
+
    var chatUid = activeEntity.uid;
    var entityType = activeEntity.entity;
 
@@ -15,8 +17,8 @@ function showChat(){
       var entityTypeLocal = entityTypeToHebrew(entityType);
       renderTemplate("#chatsHeader-tmpl",{entityType:entityTypeLocal, title:dataSnapshot.val().title },"#headerTitle");
 
-      DB.child("chats/"+chatUid).update({title: "("+entityTypeLocal+") "+ dataSnapshot.val().title})
-
+   }).then(function(rendered) {
+      subsManager.isUpdatesSet();
    });
 
    //show footer
@@ -24,50 +26,42 @@ function showChat(){
 
    //listen to enter from input
    $("#chatInputTxt").keypress(function (e) {
-      if (e.keyCode == 13) {
+      if (e.keyCode == 13) 
          e.preventDefault();
 
-         addChatMessagePre(chatUid,entityType);
-      }
-   });
+  //get chat messages
+  // DB.child("chats/"+chatUid).off();
+  DB.child("chats/"+chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", function(chats){
+    if(chats.exists()) {
+       var text = chats.val().text;
+       var time = parseDate(chats.val().dateAdded);
+       var author = chats.val().userName;
 
-   //get chat messages
 
-   var chatCallback = function(chats){
-      if(chats.exists()){
-         var text = chats.val().text;
-         var time =  parseDate(chats.val().dateAdded);
-         var author = chats.val().userName;
+       //get chat messages
+       DB.child("chats/" + chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
 
-         var context = {text:text, time: time, author:author};
-         appendTemplate("#chatMessage-tmpl", context, "wrapper");
+       var chatsCallback = function (chats) {
 
-         $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
-      }
+          if (chats.exists()) {
+             var text = chats.val().text;
+             var time = parseDate(chats.val().dateAdded);
+             var author = chats.val().userName;
 
-      if (userUpdatesSet) {
-         $("#globalNotificationsSub").css("color", activeColor);
-      } else {
-         $("#globalNotificationsSub").css("color", inactiveColor);
-      }
-   };
+             var context = {text: text, time: time, author: author};
+             appendTemplate("#chatMessage-tmpl", context, "wrapper");
 
-   DB.child("chats/"+chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatCallback);
+             $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
+          }
 
-   setActiveEntity("chats", chatUid, "child_added", chatCallback);
+       }
+    }
+  });
 
-   //Notifications
+   entitiesCallbacks.chats.callback = chatsCallback;
+   entitiesCallbacks.chats.eventType = "child_added";
 
-   userUpdates = DB.child("users/"+userUuid+"/entityNotifications/"+activeEntity.entity+"/"+activeEntity.uid);
-
-   userUpdates.once('value', function(data) {
-
-      userUpdatesSet = data.child("/globalNotifications").exists();
-
-      if(userUpdatesSet)
-         DB.child("users/"+userUuid+"/chatInboxes/"+chatUid).set(0);
-
-   });
+});
 }
 
 
@@ -97,4 +91,8 @@ function addChatMessagePre(chatUid, entityType){
    addChatMessage(chatUid, userUuid, inputValue, entityType);
    $("#chatInputTxt").val("");
 }
+
+
+
+
 

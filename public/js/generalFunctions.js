@@ -34,7 +34,23 @@ function parseDate(dateInMillisec){
 }
 
 
-
+//function setAcitveEntity (newEntity, newUid, newEventType, newCallback){
+//   var previuosEntity = activeEntity.entity;
+//   var previuosUid = activeEntity.uid;
+//   var previuosEventType = activeEntity.eventType;
+//   var previuosCallback = activeEntity.callback;
+//
+//   if (isNotEmpty(previuosUid) && previuosEntity !== "chats") {
+//      DB.child(previuosEntity+"/"+previuosUid).off();
+//   }
+//
+//   activeEntity.entity = newEntity;
+//   activeEntity.uid = newUid;
+//   activeEntity.eventType = newEventType;
+//   activeEntity.callback = newCallback;
+//
+//   subsManager.isUpdatesSet();
+//}
 
 function animateHeader(){
    $("header").hide();
@@ -82,6 +98,17 @@ function entityTypeToHebrew (entityType){
          return undefined;
    }
 }
-
+//
+// function setActiveEntity(entity, uid){
+//
+//    //close previous entity
+//    DB.(activeEntity.entity+"/"+activeEntity.uid).off(activeEntity.eventType, activeEntity.callback);
+//    //store new entity
+//    activeEntity.uid = uid;
+//    activeEntity.entity = entity;
+//    activeEntity.callback = entitiesCallbacks.chats.callback;
+//    activeEntity.eventType = entitiesCallbacks.chats.eventType;
+//
+// }
 
 

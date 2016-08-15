@@ -6,7 +6,10 @@ function showTopic(topicUid){
       var title = dataSnapshot.val().title;
       renderTemplate("#topicHeaderTitle-tmpl", {topic: title}, "#headerTitle");
       renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
+   }).then(function(rendered) {
+      subsManager.isUpdatesSet();
    });
+   
    //show footer
    $("footer").html("");
 
@@ -61,31 +64,6 @@ function showTopic(topicUid){
    DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
 
    setActiveEntity("topics", topicUid, "value", topicCallback);
-
-
-
-   //   if (back == undefined){back = false}
-
-   // userUpdates = DB.child("users/"+userUuid+"/entityNotifications/"+activeEntity.entity+"/"+activeEntity.uid);
-   //
-   // userUpdates.once('value', function(data) {
-   //   userUpdatesSet = data.child("globalNotifications").exists();
-   // });
-
-   //   if (!back){
-   //      setUrl("topic", topicUid);
-   //   }
-
-   // getLocalNotifications();
-
-   //    console.dir(userEntityNotificationsExists);
-   //
-   // if (userUpdatesSet) {
-   //   $("#globalNotificationsSub").css("color", activeColor);
-   // } else {
-   //   $("#globalNotificationsSub").css("color", inactiveColor);
-   // }
-
 }
 
 
