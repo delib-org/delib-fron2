@@ -24,7 +24,7 @@ This project is an integral part of the "Kol Ha'am"(voice of the people) and the
 
 ## Installation
 
-EDIT:Provide code examples and explanations of how to get the project.
+[Run local server](https://firebase.google.com/docs/web/setup#run_a_local_web_server_for_development)
 
 
 ## License
