@@ -163,6 +163,7 @@ subsManager.setNotifications = function(isOwnerCall) {
 };
 
 subsManager.isNotificationsSet = function (isOwnerCall) {
+    debugger;
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
@@ -170,7 +171,7 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
         return;
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
-
+    debugger;
     switch (activeEntity.entity) {
         case "chats":
             userNotifications.once('value', function(dataSnapshot) {
