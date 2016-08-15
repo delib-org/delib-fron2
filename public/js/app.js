@@ -1,6 +1,5 @@
 $(function(){
 
-<<<<<<< HEAD
 //   if ('serviceWorker' in navigator) {
 //      console.log('Service Worker is supported');
 //      navigator.serviceWorker.register('../delib-service-worker.js').then(function() {
@@ -16,23 +15,7 @@ $(function(){
 
    //start ripple effect
    $(".footer-btn").ePulse({
-=======
-    // if ('serviceWorker' in navigator) {
-    //   console.log('Service Worker is supported');
-    //   navigator.serviceWorker.register('../delib-service-worker.js').then(function() {
-    //      return navigator.serviceWorker.ready;
-    //   }).then(function(serviceWorkerRegistration) {
-    //      SWreg = serviceWorkerRegistration;
-    //      // fcmNotificationsBtn.disabled = false;
-    //      console.log('Service Worker is ready :^)', SWreg);
-    //   }).catch(function(error) {
-    //      console.log('Service Worker Error :^(', error);
-    //   });
-    // }
-    
-    //start ripple effect
-    $(".footer-btn").ePulse({
->>>>>>> master
+
       bgColor: "#ded9d9",
       size: 'medium'
     
@@ -41,7 +24,7 @@ $(function(){
       bgColor: "#ded9d9",
       size: 'medium'
 
-<<<<<<< HEAD
+        
    });
 
    var currentUrl = getUrl();
@@ -56,16 +39,7 @@ $(function(){
    //routTo(currentUrl, false);
 
    $(window).on('popstate', function() {
-=======
-    });
-    
-    var currentUrl = getUrl();
-    
-    
-    routTo(currentUrl, false);
-    //  showPublicGroups();
-    $(window).on('popstate', function() {
->>>>>>> master
+
       var currentUrl = getUrl();
       var back = true;
       routTo(currentUrl,back);
