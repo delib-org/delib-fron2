@@ -62,12 +62,14 @@
       <script src="js/questions/limitedOptions.js"></script>
       <script src="js/questions/editQuestion.js"></script>
       <script src="js/questions/multiOptions.js"></script>
-      <script src="js/questions/option.js"></script>
+      <script src="js/questions/options/option.js"></script>
 
       <script src="js/login.js"></script>
-      <script src="js/feedNotifications/logic.js"></script>
-      <script src="js/feedNotifications/pushNotifications.js"></script>
-      <script src="js/feedNotifications/feed.js"></script>
+
+      <!--<script src="js/feedNotifications/logic.js"></script>-->
+      <!--<script src="js/feedNotifications/pushNotifications.js"></script>-->
+      <!--<script src="js/feedNotifications/feed.js"></script>-->
+
    </head>
 
 
@@ -179,7 +181,6 @@
       </script>
 
       <!--- Login ------->
-
       <script type="text/x-han    dlebars-template" id="login-tmpl">
 <!--
         <div class="card" style="height: 100%">
@@ -190,7 +191,6 @@
                     <input type="password" placeholder="password"><br>
                     <input type="button" onclick="loginMe()" value="התחברות">
          </label><br>
-
                 <label>התחברות חברתית:<br>
                     <input type="button" onclick="facebookLogin()" value="Facebook"><br>
                     <input type="button" onclick="googleLogin()" value="Google"><br>
@@ -451,7 +451,7 @@ Tow options
       <!-- multioptions -->
       <script type="text/x-handlebars-template" id="multiOption-tmpl">
 <div class="card multiOptionCard" id={{optionUid}}Div>
-   <div class="mainOption">
+   <div class="mainOption clickables" onclick=showOption('{{questionUid}}','{{optionUid}}')>
       <div class="optionVisualId" style=background-color:{{optionColor}}></div>
       <div class="optionDetails">
          <div class="titleOption">{{title}}</div>
@@ -473,7 +473,6 @@ Tow options
       </script>
 
       <!-- multi options footer --->
-
       <script type="text/x-handlebars-template" id="multiOptionsFooter-tmpl">
 <!--        <div class="multiOptionsFooter">-->
 <div class="footer-btn clickables" id="optionsRefresh" onclick=showMultiOptions('{{questionUid}}')><i class="fa fa-refresh" aria-hidden="true"></i></div>
@@ -546,5 +545,19 @@ Tow options
    <div class="messageText">{{text}}</div>
       </div>
    </script>
+
+    <!--   Options -->
+
+   <script type="text/x-handlebars-template" id="optionHeaderTitle-tmpl">
+      <center>אפשרות: {{title}}</center>
+   </script>
+
+   <script type="text/x-handlebars-template" id="optionFooter-tmpl">
+<div id="backToquestionBtn" class="footer-btn material-ripple" onclick="showEntities('questions','{{questionUid}}')"><span>חזרה לשאלה</span></div>
+      </script>
+
+   <script type="text/x-handlebars-template" id="optionWrapper-tmpl">
+<div id="{{optionUid}}DivOpt" class="card" contenteditable="true" >{{breaklines description}}</div>
+      </script>
 
 </html>
