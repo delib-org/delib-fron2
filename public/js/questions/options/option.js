@@ -12,35 +12,31 @@ function showOption(questionUid, optionUid){
    DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(optionDB){
 
       var description = optionDB.val().description;
+      //description = description Handlebars.reg
       //      var writer = optionDB.val().writer;
+      //description = replaceAll(description, "<br>","/r/n");
 
       renderTemplate("#optionWrapper-tmpl", {questionUid:questionUid, optionUid:optionUid, description:description}, "wrapper")
    })
 
-   $("#"+optionUid+"DivOpt").keypress(function(e) {
-//      console.log(e.keyCode);
-      var c = String.fromCharCode(e.which);
-      console.log("key: "+ c);
+   $("#"+optionUid+"DivOpt").keyup(function(e) {
+//
+      var description = $("#"+optionUid+"DivOpt").html();
+      console.log("text: "+description);
 
-      var description = $("#"+optionUid+"DivOpt").text();
-      description = description+c;
-      if (e.keyCode == 13){
-         description = description+"\n"
-         console.log("enter: "+description);
-      }
-      console.log(description);
+
       DB.child("questions/"+questionUid+"/options/"+optionUid).update({description:description, writer: userUuid});
-
-
    });
 
    //update wrapper
    DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", function(optionDB){
 
-      var description = optionDB.val().description;
+      var descriptionFromDB = optionDB.val().description;
       var writer = optionDB.val().writer;
+
       if (writer != userUuid){
-         $("#"+optionUid+"DivOpt").html(description);
+         console.log("write")
+         $("#"+optionUid+"DivOpt").html(descriptionFromDB);
       }
    })
 
