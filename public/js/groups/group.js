@@ -69,7 +69,7 @@ function showGroup(groupUid){
       }
    };
 
-<<<<<<< HEAD
+
    //show wrapper
    DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
    setActiveEntity("groups", groupUid, "value", showGroupCallback);
@@ -79,11 +79,7 @@ function showGroup(groupUid){
       setUrl("group", groupUid);
    }
 
-=======
-   DB.child("groups/"+groupUid+"/topics").on("value",groupCallback);
 
-   setActiveEntity("groups", groupUid, "value", groupCallback);
->>>>>>> ftr-option2
 }
 
 
