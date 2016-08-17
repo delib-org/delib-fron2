@@ -6,11 +6,11 @@ function membership(){
 
       if (isMembership.val()){
         DB.child("users/"+userUuid+"/membership/"+groupUid).remove();
-        DB.child("users/"+userUuid+"/entityNotifications/groups/"+groupUid+"/ownerCalls").remove();
+        DB.child("users/"+userUuid+"/updates/groups/"+groupUid+"/ownerCalls").remove();
         $("#isMembership").css("color",inactiveColor);
       } else {
         DB.child("users/"+userUuid+"/membership/"+groupUid).set(true);
-        DB.child("users/"+userUuid+"/entityNotifications/groups/"+groupUid+"/ownerCalls").set(true);
+        DB.child("users/"+userUuid+"/updates/groups/"+groupUid+"/ownerCalls").set(true);
         $("#isMembership").css("color",activeColor);
       }
     } else {

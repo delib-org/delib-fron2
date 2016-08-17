@@ -15,20 +15,22 @@ $(function(){
 
    //start ripple effect
    $(".footer-btn").ePulse({
+
       bgColor: "#ded9d9",
       size: 'medium'
 
-   });
-   $(".headerMenuBtn").ePulse({
+    });
+    $(".headerMenuBtn").ePulse({
       bgColor: "#ded9d9",
       size: 'medium'
+
 
    });
 
    var currentUrl = getUrl();
    startingUrl = currentUrl;
    routTo(currentUrl);
-
+    console.log("rout to.. app.js");
    listenToAuth();
 
 
@@ -37,20 +39,27 @@ $(function(){
    //routTo(currentUrl, false);
 
    $(window).on('popstate', function() {
+
+      console.log("rout to.. popstate");
       var currentUrl = getUrl();
       var back = true;
       routTo(currentUrl,back);
 
-   });
+    });
+    //
+    // renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
+    // renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
+    // renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
 
-
-})
+    listenToAuth();
+});
 
 // Global General Variables and Constants
 
 var userUuid;
 var startingUrl;
 var activeEntity = new Object();
+var entitiesCallbacks = new Object();
 var firstRun = true;
 const subEntity = {
 	groups: "topics"
@@ -68,8 +77,23 @@ const toHebrew = {
 var inactiveColor = "#5f1f1f";
 var activeColor = "white";
 // Updates Variables and Constants
-var userUpdates;
-var userUpdatesSet;
+
+var subsManager = {
+    isUpdatesSet: function(){
+        this.isFeedSet();
+        this.isNotificationsSet();
+
+    },
+    setFeed: function(){},
+    isFeedSet: function(){},
+    setNotifications: function(){},
+    isNotificationsSet: function(){},
+    userFeed: null,
+    feedIsSet: false,
+    userNotifications: null,
+    notificationsIsSet: false
+};
+
 var mostUpdatedContent = null;
 // Feed
 var feedQueue = [];

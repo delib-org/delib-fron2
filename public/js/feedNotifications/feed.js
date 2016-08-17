@@ -1,43 +1,128 @@
-//------Feed List-------
+//------subsManager: Feed-------//
 
-// function setFeed(){
-//
-//     var userFeed = DB.child("users/"+userUuid+"/entityNotifications/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
-//
-//     userFeed.once("value", function(dataSnapshot) {
-//
-//         if (dataSnapshot.val() == true) {
-//             userFeed.child("newSubEntity").remove();
-//             $("#feedSubscribe").css("color", inactiveColor);
-//
-//         } else {
-//             userFeed.child("newSubEntity").set(true);
-//             $("#feedSubscribe").css("color", activeColor);
-//         }
-//     });
-// }
+subsManager.setFeed = function(isOwnerCall) {
+    if(isOwnerCall == undefined)
+        isOwnerCall= false;
 
-// function showfeed(){
-//
-//             var entity = entityNotifications.key;
-//             var curSubEntity = entityOwns[entity];
-//
-//             //for each registerd notification set "on"
-//             jQuery.each(entityNotifications.val(), function(uid, active){
-//                 //        console.log("entity: "+entity+", uid: "+ uid + ", active: "+ active);
-//                 if(active){  //activate path
-//
-//                     console.log("on path: "+ entity+"/"+uid+"/"+curSubEntity);
-//                     DB.child(entity+"/"+uid+"/"+curSubEntity).on("child_added", function(entityUpdate){
-//
-//                         console.log("child added: "+ entityUpdate.key );
-//
-//                     });
-//                 } else {   //diactivate path
-//                     console.log("off path: "+ entity+"/"+uid+"/"+curSubEntity);
-//                     DB.child(entity+"/"+uid+"/"+curSubEntity).off();
-//                 }
-//             })
-//
-// }
+    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+        return;
 
+    var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
+
+    switch (activeEntity.entity) {
+        case "chats":
+            userFeed.once("value", function(dataSnapshot) {
+
+                if (dataSnapshot.child("chats").exists()) {
+                    userFeed.child("chats").remove();
+                    $("#feedSub").css("color", inactiveColor);
+
+                    // remove inbox only if not registered to anything else
+                    if(!subsManager.notificationsIsSet)
+                        DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).remove();
+
+                } else {
+                    userFeed.child("chats").set(true);
+
+                    // initialize only if not registered to anything else (use existing inbox)
+                    if(!subsManager.notificationsIsSet)
+                        DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).set(0);
+                    $("#feedSub").css("color", activeColor);
+                }
+            });
+            break;
+
+        case "groups":
+
+            // get in only if on a group entity and function is called from the ownerCall box
+            if (isOwnerCall ) {
+                userFeed.once("value", function(dataSnapshot) {
+                    if (dataSnapshot.child("OwnerCalls").exists()) {
+                        userFeed.child("OwnerCalls").remove();
+                        // $("#feedSub").css("color", inactiveColor);
+                        // NEEDED: ownerCall box, and an on/off button
+
+                    } else {
+                        userFeed.child("OwnerCalls").set(true);
+                        // $("#feedSub").css("color", activeColor);
+                        // NEEDED: ownerCall box, and an on/off button
+                    }
+                });
+
+                // no need to keep on checking if were inside a group.
+                break;
+            }
+
+        // if not an owner call inside a group, keep the fall..
+        // please DO NOT put a break; statement here..
+
+        default:
+
+            userFeed.once("value", function(dataSnapshot) {
+                if (dataSnapshot.child("newSubEntity").exists()) {
+                    userFeed.child("newSubEntity").remove();
+                    $("#feedSub").css("color", inactiveColor);
+
+                } else {
+                    userFeed.child("newSubEntity").set(true);
+                    $("#feedSub").css("color", activeColor);
+                }
+            });
+
+    }
+};
+
+subsManager.isFeedSet = function (isOwnerCall) {
+    // debugger;
+    if(isOwnerCall == undefined)
+        isOwnerCall= false;
+
+    // if active entity is Main
+    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+        return;
+
+    // debugger;
+    var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
+
+    switch (activeEntity.entity) {
+        case "chats":
+            userFeed.once('value', function(dataSnapshot) {
+
+                subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
+            });
+            break;
+
+        case "groups":
+            // get in only if on a group entity and function is called from the ownerCall box
+            if (isOwnerCall) {
+                userFeed.once('value', function(dataSnapshot) {
+
+                    subsManager.feedUpdatesSet = dataSnapshot.child("OwnerCalls").exists();
+                });
+                // no need to keep on checking if were inside a group.
+                break;
+            }
+
+        // if not an owner call inside a group, keep the fall..
+        // please DO NOT put a break; statement here..
+
+        default:
+            userFeed.once('value', function(dataSnapshot) {
+
+                subsManager.feedUpdatesSet = dataSnapshot.child("newSubEntity").exists();
+            });
+    }
+
+    if (subsManager.feedUpdatesSet) {
+        $("#feedSub").css("color", activeColor);
+
+        // if(isOwnerCall)
+        // // NEEDED: ownerCall box, and an on/off button
+    } else {
+        $("#feedSub").css("color", inactiveColor);
+        console.log("inactive feed!");
+        // if(isOwnerCall)
+        // // NEEDED: ownerCall box, and an on/off button
+    }
+
+};

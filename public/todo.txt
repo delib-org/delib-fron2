@@ -2,7 +2,10 @@
 - re write "back"
 + create showChat()
 + setUrl (question: how to write url to ny entity)
-- fix counting
++ fix counting
 - setting colors?
-- voteSimple doplicte problem
++ voteSimple doplicte problem
+- delete: option, question, topic, group
+- ft:opt - solve line breaks
+- ft:opt - setactive enttit and routing
 
