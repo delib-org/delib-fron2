@@ -1,11 +1,14 @@
 + route to home(all kinds), chats
-- re write "back"
++ re write "back"
 + create showChat()
 + setUrl (question: how to write url to ny entity)
 + fix counting
-- setting colors?
++ setting colors?
 + voteSimple doplicte problem
 - delete: option, question, topic, group
-- ft:opt - solve line breaks
+- ft:opt - set correct height
 - ft:opt - setactive enttit and routing
+- solve: vote send to option
+- solve line break
+- send ajar flexbox example
 

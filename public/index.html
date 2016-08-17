@@ -451,9 +451,9 @@ Tow options
       <!-- multioptions -->
       <script type="text/x-handlebars-template" id="multiOption-tmpl">
 <div class="card multiOptionCard" id={{optionUid}}Div>
-   <div class="mainOption clickables" onclick=showOption('{{questionUid}}','{{optionUid}}')>
+   <div class="mainOption clickables" >
       <div class="optionVisualId" style=background-color:{{optionColor}}></div>
-      <div class="optionDetails">
+      <div class="optionDetails" onclick=showOption('{{questionUid}}','{{optionUid}}')>
          <div class="titleOption">{{title}}</div>
          <div class="descriptionOption  ellipsis-text">{{description}}</div>
          </div>
@@ -557,7 +557,7 @@ Tow options
       </script>
 
    <script type="text/x-handlebars-template" id="optionWrapper-tmpl">
-<div id="{{optionUid}}DivOpt" class="card" contenteditable="true" >{{breaklines description}}</div>
+<div id="{{optionUid}}DivOpt" class="card" contenteditable="true" >{{{description}}}</div>
       </script>
 
 </html>

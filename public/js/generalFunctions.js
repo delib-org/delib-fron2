@@ -33,6 +33,10 @@ function parseDate(dateInMillisec){
 
 }
 
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}
+
 function animateHeader(){
    $("header").hide();
    $("header").show(400);
