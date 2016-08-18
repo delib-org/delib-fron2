@@ -1,17 +1,19 @@
 function showOption(questionUid, optionUid){
-
+   console.log("showOption: "+questionUid, optionUid)
    //show header
    DB.child("questions/"+questionUid+"/options/"+optionUid+"/title").once("value", function(titleInDB){
       renderTemplate("#optionHeaderTitle-tmpl", {title:titleInDB.val()}, "#headerTitle")
    })
 
+   renderTemplate("#headerMenu-tmpl", {chatUid: optionUid, entityType: "options"}, "#headerMenu");
+
    //show footer
    renderTemplate("#optionFooter-tmpl", {questionUid:questionUid}, "footer");
 
    //show wrapper
-   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(optionDB){
+   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
 
-      var description = optionDB.val().description;
+      var description = dataSnapshot.val().description;
 
       renderTemplate("#optionWrapper-tmpl", {questionUid:questionUid, optionUid:optionUid, description:description}, "wrapper")
    })
@@ -38,7 +40,9 @@ function showOption(questionUid, optionUid){
       }
    }
 
-   DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption)
+   DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption);
+
+
 
    //setActive entity
    DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){

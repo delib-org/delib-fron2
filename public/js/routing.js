@@ -129,6 +129,7 @@ function showEntities(entity, uid){
          DB.child("options/"+uid).once("value", function(dataSnapshot){
             var questionUid = dataSnapshot.val().questionUid;
             var optionUid = dataSnapshot.val().optionUid;
+            console.log(questionUid, optionUid);
             showOption(questionUid,optionUid);
          })
          break;
