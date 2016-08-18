@@ -9,14 +9,13 @@ function updatesListener() {
     // turn off previous listener
     DB.child("users/"+userUuid+"/updates").off();
 
-    // listene to Updates
+    // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
         // search inside entities
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
             entityUpdates.forEach(function (entityUpdate) {
 
-// debugger;
                 var isNewSubEntityReg = {
                     feed: entityUpdate.child('feed/newSubEntity').exists(),
                     notifications: entityUpdate.child('notifications/newSubEntity').exists()
@@ -42,12 +41,12 @@ function updatesListener() {
                     DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added', function (ownerCall) {
 
                         if (mostUpdatedContent == null) {
-                            mostUpdatedContent = entityAddedUid;
+                            mostUpdatedContent = ownerCall;
                             console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                         }
-                        else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 300)
+                        else if (mostUpdatedContent.val().dateAdded < ownerCall.val().dateAdded - 400)
                         {
-                            mostUpdatedContent = entityAddedUid;
+                            mostUpdatedContent = ownerCall;
                             console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                         }
                         else
@@ -55,10 +54,10 @@ function updatesListener() {
 
                             DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
                                 if(isOwnerCallReg.notifications)
-                                    pushNotification(actualContent, "ownerCalls", ownerCall.val().description);
+                                    pushNotification(actualContent, "ownerCalls", ownerCall.val().callText);
 
                                 if(isOwnerCallReg.feed)
-                                    feedBuilder(actualContent,"ownerCalls", ownerCall.val().description);
+                                    feedBuilder(actualContent, "ownerCalls", ownerCall.val().callText);
                             });
                     });
                 }
@@ -85,7 +84,7 @@ function updatesListener() {
                                 return;
 
                             if (isNewSubEntityReg.notifications)
-                                // if(!(activeEntity.entity == entityUpdates.key && activeEntity.uid == e0ntityUpdate.key))
+                                // if(!(activeEntity.entity == entityUpdates.key && activeEntity.uid == entityUpdate.key))
                                     pushNotification(actualContent, subEntity[entityUpdates.key]);
 
                             if (isNewSubEntityReg.feed)
@@ -110,6 +109,18 @@ function updatesListener() {
                                     if (chatEntityContent == null)
                                         return;
 
+                                    if (mostUpdatedContent == null) {
+                                        mostUpdatedContent = lastMessage;
+                                        console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                    }
+                                    else if (mostUpdatedContent.val().dateAdded < lastMessage.val().dateAdded - 400)
+                                    {
+                                        mostUpdatedContent = lastMessage;
+                                        console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                    }
+                                    else
+                                        return;
+
                                     // create a temporary messagesSentInc to hold inboxMessages.val()
                                     var messagesSentInc;
 
@@ -132,8 +143,8 @@ function updatesListener() {
                                     if (messagesSentInc % 5 ===  0) {
                                         if (isChatReg.notifications)
                                             pushNotification(chatEntityContent, "chats", messagesSentInc);
-                                        // if (isChatReg.feed)
-                                            // feedBuilder(chatEntityContent,"chats", messagesSentInc);
+                                        if (isChatReg.feed)
+                                            feedBuilder(chatEntityContent,"chats", messagesSentInc);
                                     }
                                 }
                             });
@@ -149,15 +160,24 @@ function updatesListener() {
 
 
 // feed builder
-function feedBuilder (entityDatum, entityType, messagesSentInc) {
+function feedBuilder (entityDatum, entityType, variation) {
 
     switch (entityType) {
         case "chats":
-            feedQueue[entityDatum] = {
+            feedQueue.push( {
                     roomName: entityDatum.val().title,
-                    chatMessagesCounter: messagesSentInc,
+                    chatMessagesCounter: variation,
                     date: entityDatum.val().dateAdded
-            };
+            });
+
+            break;
+
+        case "ownerCalls":
+            feedQueue.push( {
+                roomName: entityDatum.val().title,
+                callText: variation,
+                date: entityDatum.val().dateAdded
+            });
 
             break;
 

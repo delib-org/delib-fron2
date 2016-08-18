@@ -84,7 +84,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    setUrl(newEntity, newUid);
    if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions" || newEntity == "chats"){
       DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
-         var entetisTranslate = {groups: "קהילה" , topics: "נושא" , questions: "שאלה", chats: "שיחה" }
+         var entetisTranslate = {groups: "קהילה" , topics: "נושא" , questions: "שאלה", chats: "שיחה" };
 
          document.title = "דליב: "+entetisTranslate[newEntity] + " - " +dataSnapshot.val().title
       })
