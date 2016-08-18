@@ -3,6 +3,7 @@ function updatesListener() {
     function regFalsify(regObject) {
         if (!(regObject.feed || regObject.notifications))
             regObject = false;
+        return regObject;
     }
 
     // turn off previous listener
@@ -15,6 +16,7 @@ function updatesListener() {
             // search inside entity
             entityUpdates.forEach(function (entityUpdate) {
 
+// debugger;
                 var isNewSubEntityReg = {
                     feed: entityUpdate.child('feed/newSubEntity').exists(),
                     notifications: entityUpdate.child('notifications/newSubEntity').exists()
@@ -30,20 +32,24 @@ function updatesListener() {
                     notifications: entityUpdate.child('notifications/chat').exists()
                 };
 
-                regFalsify(isOwnerCallReg);
-                regFalsify(isNewSubEntityReg);
-                regFalsify(isChatReg);
+                isOwnerCallReg = regFalsify(isOwnerCallReg);
+                isNewSubEntityReg = regFalsify(isNewSubEntityReg);
+                isChatReg = regFalsify(isChatReg);
 
 
                 // if subscribed to ownerCalls
                 if (isOwnerCallReg) {
                     DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added', function (ownerCall) {
 
-                        //needs to be mostUpdatedContent.key as chats
-                        if(mostUpdatedContent == null)
-                            mostUpdatedContent = ownerCall;
-                        else if (mostUpdatedContent.dateAdded < ownerCall.dateAdded)
-                            mostUpdatedContent = ownerCall;
+                        if (mostUpdatedContent == null) {
+                            mostUpdatedContent = entityAddedUid;
+                            console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                        }
+                        else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 300)
+                        {
+                            mostUpdatedContent = entityAddedUid;
+                            console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                        }
                         else
                             return;
 
@@ -62,26 +68,28 @@ function updatesListener() {
                 if (isNewSubEntityReg) {
                     DB.child(entityUpdates.key + "/" + entityUpdate.key + "/" + subEntity[entityUpdates.key]).orderByChild('dateAdded').limitToLast(1).on('child_added', function (entityAddedUid) {
                         DB.child(subEntity[entityUpdates.key] + "/" + entityAddedUid.key).once('value', function (actualContent) {
+                            // debugger;
 
+                            console.log("actualContent: " + entityAddedUid.val().dateAdded);
 
-                            console.log(mostUpdatedContent.val());
-                            console.log(actualContent.val());
-                            console.log(Number(mostUpdatedContent.val().dateAdded) < Number(entityAddedUid.val().dateAdded));
-
-
-                            if (mostUpdatedContent == null)
-                                mostUpdatedContent = actualContent;
-                            else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded)
-                                mostUpdatedContent = actualContent;
+                            if (mostUpdatedContent == null) {
+                                mostUpdatedContent = entityAddedUid;
+                                console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                            }
+                            else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 400)
+                            {
+                                mostUpdatedContent = entityAddedUid;
+                                console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                            }
                             else
                                 return;
 
                             if (isNewSubEntityReg.notifications)
-                                pushNotification(actualContent, subEntity[entityUpdates.key]);
+                                // if(!(activeEntity.entity == entityUpdates.key && activeEntity.uid == e0ntityUpdate.key))
+                                    pushNotification(actualContent, subEntity[entityUpdates.key]);
 
                             if (isNewSubEntityReg.feed)
-                                feedBuilder(actualContent,"chats", ownerCall.val().description);
-
+                                feedBuilder(actualContent, entityUpdates.key);
 
                         }); //.catch(function (error) { console.log(error, "no entity path") })
                     });
@@ -124,8 +132,8 @@ function updatesListener() {
                                     if (messagesSentInc % 5 ===  0) {
                                         if (isChatReg.notifications)
                                             pushNotification(chatEntityContent, "chats", messagesSentInc);
-                                        if (isChatReg.feed)
-                                            feedBuilder(chatEntityContent,"chats", messagesSentInc);
+                                        // if (isChatReg.feed)
+                                            // feedBuilder(chatEntityContent,"chats", messagesSentInc);
                                     }
                                 }
                             });
@@ -141,11 +149,11 @@ function updatesListener() {
 
 
 // feed builder
-function feedBuilder (entityDatum, subEntityType, messagesSentInc) {
+function feedBuilder (entityDatum, entityType, messagesSentInc) {
 
-    switch (subEntityType) {
+    switch (entityType) {
         case "chats":
-                feedJson[entityDatum] = {
+            feedQueue[entityDatum] = {
                     roomName: entityDatum.val().title,
                     chatMessagesCounter: messagesSentInc,
                     date: entityDatum.val().dateAdded
@@ -161,11 +169,14 @@ function feedBuilder (entityDatum, subEntityType, messagesSentInc) {
             });
 
             // if feedVolume got to 20, also remove last feed in feedQueue
-            if(Object.keys(feedQueue).length >= feedVolume)
+            if(Object.keys(feedQueue).length >= feedVolume + 1)
                 feedQueue.pop();
 
             break;
     }
+
+
+    console.dir(feedQueue);
 }
 
 

@@ -93,7 +93,7 @@ subsManager.setNotifications = function(isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == undefined || activeEntity.uid == undefined)
+    if(activeEntity.entity == 'main')
         return;
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
@@ -130,6 +130,9 @@ subsManager.setNotifications = function(isOwnerCall) {
             if (isOwnerCall) {
                 userNotifications.once("value", function(dataSnapshot) {
                     if (dataSnapshot.child("OwnerCalls").exists()) {
+
+                        // turn off newSubEntity listener
+                        // DB.child(activeEntity.entity + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entity]).off('child_added');
                         userNotifications.child("OwnerCalls").remove();
                         // $("#notificationsSub").css("color", inactiveColor);
                         // NEEDED: ownerCall box, and an on/off button
@@ -151,7 +154,17 @@ subsManager.setNotifications = function(isOwnerCall) {
         default:
             userNotifications.once("value", function(dataSnapshot) {
                 if (dataSnapshot.child("newSubEntity").exists()) {
-                    userNotifications.child("newSubEntity").remove();
+
+                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                    //===================================================//
+                        DB.child(activeEntity.entity + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entity]).off('child_added');
+                        userNotifications.child("newSubEntity").remove();
+                    //===================================================//
+
+                    // first line shuts down a specific node listener, even if the listener used also for feed
+                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                    // same applies to the opposite.
+
                     $("#notificationsSub").css("color", inactiveColor);
 
                 } else {
@@ -167,8 +180,10 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+    if(activeEntity.entity == 'main') {
+        $("#notificationsSub").css("color", inactiveColor);
         return;
+    }
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
     // debugger;
