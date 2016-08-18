@@ -16,7 +16,7 @@ function showOption(questionUid, optionUid){
       var description = dataSnapshot.val().description;
 
       renderTemplate("#optionWrapper-tmpl", {questionUid:questionUid, optionUid:optionUid, description:description}, "wrapper")
-   })
+   });
 
    $("#"+optionUid+"DivOpt").keyup(function(e) {
       //
