@@ -6,3 +6,4 @@ node_modules
 database.rules.json
 firebase.json
 public/firebase-debug.log
+todo.txt

@@ -11,8 +11,6 @@ function routTo(currentUrl, back){
    if (back == undefined){back = false};
 
    var slashPostion = currentUrl.indexOf("/");
-   //   var currentType = sessionStorage.getItem("_entityType");
-   //   var currentEntity = sessionStorage.getItem("_currentEntity");
 
    var currentType = currentUrl.slice(0,slashPostion);
    var currentEntity = currentUrl.slice(slashPostion+1);
@@ -126,6 +124,13 @@ function showEntities(entity, uid){
          break;
       case "main":
          showMain(uid);
+         break;
+      case "options":
+         DB.child("options/"+uid).once("value", function(dataSnapshot){
+            var questionUid = dataSnapshot.val().questionUid;
+            var optionUid = dataSnapshot.val().optionUid;
+            showOption(questionUid,optionUid);
+         })
          break;
       default:
          showMain("public");
