@@ -14,7 +14,7 @@ subsManager.setFeed = function(isOwnerCall) {
             userFeed.once("value", function(dataSnapshot) {
 
                 if (dataSnapshot.child("chats").exists()) {
-
+    
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                     //===================================================//

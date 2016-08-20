@@ -97,7 +97,7 @@ var subsManager = {
 var mostUpdatedContent = null;
 // Feed
 var feedQueue = [];
-const feedVolume = 3;
+const feedVolume = 10;
 // Initialize Firebase
 var config = {
 	apiKey: "AIzaSyBEumZUTCL3Jc9pt7_CjiSVTxmz9aMqSvo"

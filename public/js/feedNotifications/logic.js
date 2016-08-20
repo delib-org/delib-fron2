@@ -40,6 +40,8 @@ function updatesListener() {
                 if (isOwnerCallReg) {
                     DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added', function (ownerCall) {
 
+                        // ==== regulation chunk ==== //
+                        // will make sure we will get the latest whatever..
                         if (mostUpdatedContent == null) {
                             mostUpdatedContent = ownerCall;
                             console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
@@ -51,6 +53,7 @@ function updatesListener() {
                         }
                         else
                             return;
+                        // ===============
 
                             DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
                                 if(isOwnerCallReg.notifications)
@@ -71,6 +74,8 @@ function updatesListener() {
 
                             console.log("actualContent: " + entityAddedUid.val().dateAdded);
 
+                            // ==== regulation chunk ==== //
+                            // will make sure we will get the latest whatever..
                             if (mostUpdatedContent == null) {
                                 mostUpdatedContent = entityAddedUid;
                                 console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
@@ -82,6 +87,7 @@ function updatesListener() {
                             }
                             else
                                 return;
+                            // ===============
 
                             if (isNewSubEntityReg.notifications)
                                 // if(!(activeEntity.entity == entityUpdates.key && activeEntity.uid == entityUpdate.key))
@@ -109,6 +115,8 @@ function updatesListener() {
                                     if (chatEntityContent == null)
                                         return;
 
+                                    // ==== regulation chunk ==== //
+                                    // will make sure we will get the latest whatever..
                                     if (mostUpdatedContent == null) {
                                         mostUpdatedContent = lastMessage;
                                         console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
@@ -120,6 +128,7 @@ function updatesListener() {
                                     }
                                     else
                                         return;
+                                    // ===============
 
                                     // create a temporary messagesSentInc to hold inboxMessages.val()
                                     var messagesSentInc;
