@@ -1,0 +1,36 @@
+{
+  "rules":{
+    "groups":{
+			".read":true,
+        "$group":{
+          ".write":true
+        }
+    },
+      "topics":{
+        ".read":true,
+        ".write":true
+      },
+      "questions":{
+				".read":true,
+        "$question":{
+          "options":{
+            "$option":{
+              ".read":true,
+                 ".write":"(auth.uid !== null) && (auth.uid === data.child('ownerUid').val())"
+            }
+          }
+        }
+      },
+      "users":{
+        ".read":true,
+        ".write":true
+      },
+      "options":{
+        "$option":{
+          ".read":true,
+            ".write":true
+        }
+      }
+      
+	}
+}
