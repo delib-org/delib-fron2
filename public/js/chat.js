@@ -36,7 +36,7 @@ function showChat(){
        var text = chats.val().text;
        var time = parseDate(chats.val().dateAdded);
        var author = chats.val().userName;
-
+ //ssd
 
        //get chat messages
        DB.child("chats/" + chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
