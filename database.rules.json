@@ -1,0 +1,21 @@
+{
+  "rules": {
+    ".read": "auth !== null",
+    ".write": "auth !== null",
+
+    "groups": {
+      "$group_id": {
+        "owner": {
+          ".write": "data.val() == auth.uid"
+        }
+      }
+    },
+    "users": {
+      ".read": "auth !== null",
+      ".write": false,
+      "$user_id": {
+        ".write": "$user_id === auth.uid"
+      }
+    }
+  }
+}

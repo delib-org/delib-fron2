@@ -3,7 +3,5 @@ node_modules
 .idea/workspace.xml
 .idea/*
 .firebaserc
-database.rules.json
-firebase.json
 public/firebase-debug.log
 todo.txt
