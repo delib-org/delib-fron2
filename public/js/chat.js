@@ -45,11 +45,11 @@ function showChat(){
          $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
       }
 
-//      if (userUpdatesSet) {
-//         $("#globalNotificationsSub").css("color", activeColor);
-//      } else {
-//         $("#globalNotificationsSub").css("color", inactiveColor);
-//      }
+      if (userUpdatesSet) {
+         $("#globalNotificationsSub").css("color", activeColor);
+      } else {
+         $("#globalNotificationsSub").css("color", inactiveColor);
+      }
    };
 
    DB.child("chats/"+chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatCallback);
@@ -69,6 +69,22 @@ function showChat(){
 
    });
 }
+
+
+function addChatMessage(chatUid, userUid, text, entityType){
+
+   if (text != "") {
+
+      //get user name
+      DB.child("users/"+userUid).once("value", function(user) {
+         var userName = user.val().name;
+
+         DB.child("chats/"+chatUid).push({dateAdded: firebase.database.ServerValue.TIMESTAMP, user: userUid, userName:userName, text: text, chatUid: chatUid,entityType: entityType });
+
+      })
+   }
+}
+
 
 
 function addChatMessage(chatUid, userUid, text, entityType){
