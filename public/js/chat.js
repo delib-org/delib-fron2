@@ -45,11 +45,11 @@ function showChat(){
          $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
       }
 
-      if (userUpdatesSet) {
-         $("#globalNotificationsSub").css("color", activeColor);
-      } else {
-         $("#globalNotificationsSub").css("color", inactiveColor);
-      }
+//      if (userUpdatesSet) {
+//         $("#globalNotificationsSub").css("color", activeColor);
+//      } else {
+//         $("#globalNotificationsSub").css("color", inactiveColor);
+//      }
    };
 
    DB.child("chats/"+chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatCallback);
