@@ -5,3 +5,4 @@ node_modules
 .firebaserc
 database.rules.json
 public/firebase-debug.log
+todo.txt

@@ -5,10 +5,11 @@
 + fix counting
 + setting colors?
 + voteSimple doplicte problem
-- delete: option, question, topic, group
-- ft:opt - set correct height
++ delete: option, question, topic, group
++ ft:opt - set correct height
 - ft:opt - setactive enttit and routing
-- solve: vote send to option
-- solve line break
-- send ajar flexbox example
++ solve: vote send to option
++ solve line break
++ send ajar flexbox example
+- clean css
 
