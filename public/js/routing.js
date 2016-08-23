@@ -48,10 +48,13 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    var previuosCallback = activeEntity.callback;
    var previuosTurnOffFunction = activeEntity.turnOffFunction;
 
+
    if (previuosEntity != "main"){
       if (previuosEventType != ""){
          if (isNotEmpty(previuosUid)){
-            DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previuosCallback);
+            for (var i=0 ;i++; i<10)
+               DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previuosCallback);
+            console.log(previuosEntity, previuosUid, previuosEventType);
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }

@@ -24,6 +24,7 @@ function showGroup(groupUid){
 
    var showGroupCallback = function(topics){
 
+      console.log("group is called, off dysfunc.");
 
       if(topics.exists()){
 

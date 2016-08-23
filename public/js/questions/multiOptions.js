@@ -17,6 +17,7 @@ function showMultiOptions(questionUid){
 
    var multiOptionsCallback = function(option){
 
+      console.log("question is called, off dysfunc.");
       var optionUid = option.key;
       var description = option.val().description;
       description = replaceAll(description, "<br>", ". ");
