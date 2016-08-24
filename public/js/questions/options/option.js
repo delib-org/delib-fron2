@@ -1,26 +1,25 @@
 function showOption(questionUid, optionUid){
-
+   console.log("showOption: "+questionUid, optionUid)
    //show header
    DB.child("questions/"+questionUid+"/options/"+optionUid+"/title").once("value", function(titleInDB){
       renderTemplate("#optionHeaderTitle-tmpl", {title:titleInDB.val()}, "#headerTitle")
    })
 
+   renderTemplate("#headerMenu-tmpl", {chatUid: optionUid, entityType: "options"}, "#headerMenu");
+
    //show footer
    renderTemplate("#optionFooter-tmpl", {questionUid:questionUid}, "footer");
 
    //show wrapper
-   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(optionDB){
+   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
 
-      var description = optionDB.val().description;
-      //description = description Handlebars.reg
-      //      var writer = optionDB.val().writer;
-      //description = replaceAll(description, "<br>","/r/n");
+      var description = dataSnapshot.val().description;
 
       renderTemplate("#optionWrapper-tmpl", {questionUid:questionUid, optionUid:optionUid, description:description}, "wrapper")
-   })
+   });
 
    $("#"+optionUid+"DivOpt").keyup(function(e) {
-//
+      //
       var description = $("#"+optionUid+"DivOpt").html();
       console.log("text: "+description);
 
@@ -29,7 +28,8 @@ function showOption(questionUid, optionUid){
    });
 
    //update wrapper
-   DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", function(optionDB){
+
+   var updateWrapperOption = function(optionDB){
 
       var descriptionFromDB = optionDB.val().description;
       var writer = optionDB.val().writer;
@@ -38,7 +38,18 @@ function showOption(questionUid, optionUid){
          console.log("write")
          $("#"+optionUid+"DivOpt").html(descriptionFromDB);
       }
+   }
+
+   DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption);
+
+
+
+   //setActive entity
+   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
+      var optionKey = dataSnapshot.val().optionKey;
+      setActiveEntity("options", optionKey, "value", updateWrapperOption);
    })
+
 
 }
 
@@ -63,7 +74,11 @@ function createOption(questionUid, title, description, explanation){
    if(title == "" || title == undefined){
       console.log("Eror: title = "+ title);
    } else {
-      DB.child("questions/"+questionUid+"/options").push({title: title, description: description, explanation: explanation, color:color, ownerUid: userUuid});
+      var optionUidDB = DB.child("questions/"+questionUid+"/options").push({title: title, description: description, explanation: explanation, color:color, ownerUid: userUuid});
+
+      var optionKeyDB = DB.child("options").push({questionUid: questionUid, optionUid: optionUidDB.key});
+
+      DB.child("questions/"+questionUid+"/options/"+optionUidDB.key).update({optionKey: optionKeyDB.key});
    }
 }
 

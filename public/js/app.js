@@ -30,7 +30,7 @@ $(function(){
    var currentUrl = getUrl();
    startingUrl = currentUrl;
    routTo(currentUrl);
-    console.log("rout to.. app.js");
+
    listenToAuth();
 
 

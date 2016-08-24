@@ -131,24 +131,3 @@ function setNewQuestionToDB (title, description, type){
    return questionId;
 }
 
-//function listenToOptionsInput(numberOfOptions){
-//
-//   for( i=1; i< numberOfOptions+1; i++){
-//      $("#optionName"+i).keyup(function(e){
-//         var dinput = this.value;
-//         var id = e.currentTarget.id;
-//         var optionNumber = id.substr(-1);
-//         optionsTempInput["option"+optionNumber].title = dinput;
-//      })
-//   }
-//
-//   for( i=1; i< numberOfOptions+1; i++){
-//      $("#optionDescription"+i).keyup(function(e){
-//         var dinput = this.value;
-//         var id = e.currentTarget.id;
-//         var optionNumber = id.substr(-1);
-//         optionsTempInput["option"+optionNumber].description = dinput;
-//         console.log("input: "+ dinput);
-//      })
-//   }
-//}
