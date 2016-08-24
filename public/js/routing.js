@@ -8,7 +8,7 @@ function getUrl(){
 
 function routTo(currentUrl, back){
 
-   if (back == undefined){back = false};
+   if (back == undefined){back = false}
 
    var slashPostion = currentUrl.indexOf("/");
 
@@ -78,13 +78,18 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
    activeEntity.turnOffFunction = turnOffFunction;
+   activeEntity.previuosEntity = previuosEntity;
 
    setUrl(newEntity, newUid);
+
    if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions" || newEntity == "chats"){
       DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
-         var entetisTranslate = {groups: "קהילה" , topics: "נושא" , questions: "שאלה", chats: "שיחה" };
 
-         document.title = "דליב: "+entetisTranslate[newEntity] + " - " +dataSnapshot.val().title
+         console.log(dataSnapshot.val());
+         if (newEntity == "chats")
+            document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().entity.title;
+         else
+            document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       })
    } else {
       document.title = "דליב (ראשי) : מחליטים ביחד";
