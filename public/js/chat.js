@@ -7,15 +7,16 @@ function showChat(){
 
    clearChat();
 
-   setActiveEntity("chats", chatUid);
 
    var chatUid = activeEntity.uid;
+   setActiveEntity("chats", chatUid);
    var entityType = activeEntity.entity;
 
    //show Header
    DB.child(entityType+"/"+chatUid).once("value", function(dataSnapshot){
+      console.log(entityType, chatUid);
       var entityTypeLocal = entityTypeToHebrew(entityType);
-      renderTemplate("#chatsHeader-tmpl",{entityType:entityTypeLocal, title:dataSnapshot.val().title },"#headerTitle");
+      renderTemplate("#chatsHeader-tmpl",{entityType:entityTypeLocal, title: dataSnapshot.val().title },"#headerTitle");
 
    }).then(function(rendered) {
       subsManager.isUpdatesSet();
@@ -30,16 +31,8 @@ function showChat(){
          e.preventDefault();
 
   //get chat messages
-  // DB.child("chats/"+chatUid).off();
   DB.child("chats/"+chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", function(chats){
     if(chats.exists()) {
-       var text = chats.val().text;
-       var time = parseDate(chats.val().dateAdded);
-       var author = chats.val().userName;
-
-
-       //get chat messages
-       DB.child("chats/" + chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
 
        var chatsCallback = function (chats) {
 
@@ -53,13 +46,13 @@ function showChat(){
 
              $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
           }
+       };
 
-       }
+       //get chat messages
+       DB.child("chats/" + chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
     }
   });
 
-   entitiesCallbacks.chats.callback = chatsCallback;
-   entitiesCallbacks.chats.eventType = "child_added";
 
 });
 }
