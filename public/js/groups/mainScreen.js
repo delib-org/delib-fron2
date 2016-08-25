@@ -202,9 +202,9 @@ function listenToOwned_MemberGroups (role){
       };
 
       //update groups details every time the user changes his groups
-      userDB.child("role").orderByValue().equalTo(role).on("value", groupsOwnedMemberCallback);
+      var onObject = userDB.child("role").orderByValue().equalTo(role).on("value", groupsOwnedMemberCallback);
 
-      setActiveEntity("main", "owned", "value", groupsOwnedMemberCallback);
+      setActiveEntity("main", "owned", "value", groupsOwnedMemberCallback, onObject);
 
    } else {console.log("type of role is not recognized")}
 }

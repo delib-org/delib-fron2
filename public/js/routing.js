@@ -48,17 +48,19 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    var previuosEventType = activeEntity.eventType;
    var previuosCallback = activeEntity.callback;
    var previuosTurnOffFunction = activeEntity.turnOffFunction;
+   var previousNewOnObject = activeEntity.onObject;
 
    if (previuosEntity != "main"){
-      if (previuosEventType != ""){
-         if (isNotEmpty(previuosUid)){
-            for (var i=0 ;i++; i<10)
-               DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previuosCallback);
+      if (previuosEventType != undefined){
+         if (previuosUid != undefined){
+            // for (var i=0 ;i++; i<10)
+               DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previousNewOnObject);
+            console.log(previuosEntity, previuosUid, previuosEventType);
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }
       } else {
-         previuosTurnOffFunction();
+         // previuosTurnOffFunction();
       }
    } else {
       switch (previuosUid){
@@ -81,6 +83,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    activeEntity.callback = newCallback;
    activeEntity.turnOffFunction = turnOffFunction;
    activeEntity.previuosEntity = previuosEntity;
+   activeEntity.onObject = newOnObject;
 
    setUrl(newEntity, newUid);
 
