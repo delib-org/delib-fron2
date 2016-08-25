@@ -41,21 +41,22 @@ function setUrl(type, uid){
    }
 };
 
-function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffFunction){
+function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff){
    // debugger;
    var previuosEntity = activeEntity.entity;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
    var previuosCallback = activeEntity.callback;
-   var previuosTurnOffFunction = activeEntity.turnOffFunction;
-   var previousNewOnObject = activeEntity.onObject;
+   var previuosTurnOff = activeEntity.turnOff;
+   // var previousNewOnObject = activeEntity.onObject;
 
    if (previuosEntity != "main"){
       if (previuosEventType != undefined){
          if (previuosUid != undefined){
             // for (var i=0 ;i++; i<10)
-               DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previousNewOnObject);
-            console.log(previuosEntity, previuosUid, previuosEventType);
+               // DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previousNewOnObject);
+               previuosTurnOff();
+            console.log(previuosEntity, previuosUid, previuosEventType, turnOff);
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }
@@ -81,21 +82,21 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
-   activeEntity.turnOffFunction = turnOffFunction;
+   activeEntity.turnOff = turnOff;
    activeEntity.previuosEntity = previuosEntity;
-   activeEntity.onObject = newOnObject;
+   // activeEntity.onObject = newOnObject;
 
    setUrl(newEntity, newUid);
 
    if (newEntity == "chats")
       DB.child(previuosEntity+"/"+newUid).once("value", function (dataSnapshot){
-         console.log(dataSnapshot.val());
+         // console.log(dataSnapshot.val());
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       });
    
    if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions"){
       DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
-         console.log(dataSnapshot.val());
+         // console.log(dataSnapshot.val());
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       })
    } else {

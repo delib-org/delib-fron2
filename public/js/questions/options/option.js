@@ -40,14 +40,17 @@ function showOption(questionUid, optionUid){
       }
    }
 
-   var onObject = DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption);
+   DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption);
 
+   var turnOff = function () {
+      DB.child("questions/"+questionUid+"/options/"+optionUid).off("value", updateWrapperOption);
+   };
 
 
    //setActive entity
    DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
       var optionKey = dataSnapshot.val().optionKey;
-      setActiveEntity("options", optionKey, "value", updateWrapperOption, onObject);
+      setActiveEntity("options", optionKey, "value", updateWrapperOption, turnOff);
    })
 
 
