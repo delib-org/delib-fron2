@@ -4,7 +4,7 @@ subsManager.setFeed = function(isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+    if(activeEntity.entity == 'main')
         return;
 
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
@@ -14,7 +14,19 @@ subsManager.setFeed = function(isOwnerCall) {
             userFeed.once("value", function(dataSnapshot) {
 
                 if (dataSnapshot.child("chats").exists()) {
+    
+
+                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                    //===================================================//
+
+                    DB.child("chats/" + activeEntity.uid + "/OwnerCalls").off('child_added');
                     userFeed.child("chats").remove();
+                    //===================================================//
+
+                    // first line shuts down a specific node listener, even if the listener used also for feed
+                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                    // same applies to the opposite.
+
                     $("#feedSub").css("color", inactiveColor);
 
                     // remove inbox only if not registered to anything else
@@ -35,10 +47,20 @@ subsManager.setFeed = function(isOwnerCall) {
         case "groups":
 
             // get in only if on a group entity and function is called from the ownerCall box
-            if (isOwnerCall ) {
+            if (isOwnerCall) {
                 userFeed.once("value", function(dataSnapshot) {
                     if (dataSnapshot.child("OwnerCalls").exists()) {
-                        userFeed.child("OwnerCalls").remove();
+
+                        // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                        //===================================================//
+                            DB.child(activeEntity.entity + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
+                            userFeed.child("OwnerCalls").remove();
+                        //===================================================//
+
+                        // first line shuts down a specific node listener, even if the listener used also for feed
+                        // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                        // same applies to the opposite.
+
                         // $("#feedSub").css("color", inactiveColor);
                         // NEEDED: ownerCall box, and an on/off button
 
@@ -60,7 +82,17 @@ subsManager.setFeed = function(isOwnerCall) {
 
             userFeed.once("value", function(dataSnapshot) {
                 if (dataSnapshot.child("newSubEntity").exists()) {
-                    userFeed.child("newSubEntity").remove();
+
+                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                    //===================================================//
+                        DB.child(activeEntity.entity + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entity]).off('child_added');
+                        userFeed.child("newSubEntity").remove();
+                    //===================================================//
+
+                    // first line shuts down a specific node listener, even if the listener used also for feed
+                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                    // same applies to the opposite.
+                    
                     $("#feedSub").css("color", inactiveColor);
 
                 } else {
@@ -78,9 +110,11 @@ subsManager.isFeedSet = function (isOwnerCall) {
         isOwnerCall= false;
 
     // if active entity is Main
-    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+    if(activeEntity.entity == 'main') {
+        $("#feedSub").css("color", inactiveColor);
         return;
-
+    }
+    
     // debugger;
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
 

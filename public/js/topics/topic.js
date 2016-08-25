@@ -62,9 +62,13 @@ function showTopic(topicUid){
       } else {renderTemplate("#topicPage-tmpl",{}, "wrapper");}
    };
 
-   var onObject = DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
-
-   setActiveEntity("topics", topicUid, "value", topicCallback, onObject);
+   DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
+   
+   var turnOff = function () {
+      DB.child("topics/"+ topicUid.toString()+"/questions").off("value", topicCallback);
+   };
+   
+   setActiveEntity("topics", topicUid, "value", topicCallback, turnOff);
 
 }
 

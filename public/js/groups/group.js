@@ -72,8 +72,15 @@ function showGroup(groupUid){
 
 
    //show wrapper
-   var onObject = DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
-   setActiveEntity("groups", groupUid, "value", showGroupCallback, onObject);
+   counter++;
+   console.log("got into group "+counter+ "times");
+   DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
+   
+   var turnOff = function () {
+      DB.child("groups/"+groupUid+"/topics").off("value", showGroupCallback);
+   };
+   
+   setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
 
 
    if(!back){

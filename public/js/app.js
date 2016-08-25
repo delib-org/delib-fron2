@@ -59,7 +59,6 @@ $(function(){
 var userUuid;
 var startingUrl;
 var activeEntity = new Object();
-var entitiesCallbacks = new Object();
 var firstRun = true;
 const subEntity = {
 	groups: "topics"
@@ -97,7 +96,7 @@ var subsManager = {
 var mostUpdatedContent = null;
 // Feed
 var feedQueue = [];
-const feedVolume = 20;
+const feedVolume = 10;
 // Initialize Firebase
 var config = {
 	apiKey: "AIzaSyBEumZUTCL3Jc9pt7_CjiSVTxmz9aMqSvo"

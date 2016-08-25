@@ -43,7 +43,7 @@ function fcmUnsubscribe() {
   });
 }
 
-function pushNotification(EntityData, entityType, messagesSent) {
+function pushNotification(EntityData, entityType, variation) {
 
     if (!Notification) {
         alert('Desktop notifications not available in your browser. Try Chrome.');
@@ -58,12 +58,12 @@ function pushNotification(EntityData, entityType, messagesSent) {
         if (entityType === "chats") {
             notification = new Notification(EntityData.val().title, {
                 icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                body: messagesSent + " הודעות חדשות"
+                body: variation + " הודעות חדשות"
             });
         } else if(entityType === "ownerCalls") {
             notification = new Notification("קריאת מנהל מ"+EntityData.val().title, {
                 icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                body: messagesSent
+                body: variation
             });
         } else {
             notification = new Notification(EntityData.val().title, {
@@ -93,7 +93,7 @@ subsManager.setNotifications = function(isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == undefined || activeEntity.uid == undefined)
+    if(activeEntity.entity == 'main')
         return;
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
@@ -104,9 +104,18 @@ subsManager.setNotifications = function(isOwnerCall) {
             userNotifications.once("value", function(dataSnapshot) {
 
                 if (dataSnapshot.child("chats").exists()) {
-                    userNotifications.child("chats").remove();
+
+                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                    //===================================================//
+                        DB.child("chats/" + activeEntity.uid + "/OwnerCalls").off('child_added');
+                        userNotifications.child("chats").remove();
+                    //===================================================//
+
+                    // first line shuts down a specific node listener, even if the listener used also for feed
+                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                    // same applies to the opposite.
+                    
                     $("#notificationsSub").css("color", inactiveColor);
-                    // firstRun = false;
 
                     // remove inbox only if not registered to anything else
                     if(!subsManager.feedIsSet)
@@ -130,7 +139,17 @@ subsManager.setNotifications = function(isOwnerCall) {
             if (isOwnerCall) {
                 userNotifications.once("value", function(dataSnapshot) {
                     if (dataSnapshot.child("OwnerCalls").exists()) {
-                        userNotifications.child("OwnerCalls").remove();
+
+                        // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                        //===================================================//
+                            DB.child(activeEntity.entity + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
+                            userNotifications.child("OwnerCalls").remove();
+                        //===================================================//
+
+                        // first line shuts down a specific node listener, even if the listener used also for feed
+                        // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                        // same applies to the opposite.
+                        
                         // $("#notificationsSub").css("color", inactiveColor);
                         // NEEDED: ownerCall box, and an on/off button
 
@@ -151,7 +170,17 @@ subsManager.setNotifications = function(isOwnerCall) {
         default:
             userNotifications.once("value", function(dataSnapshot) {
                 if (dataSnapshot.child("newSubEntity").exists()) {
-                    userNotifications.child("newSubEntity").remove();
+
+                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                    //===================================================//
+                        DB.child(activeEntity.entity + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entity]).off('child_added');
+                        userNotifications.child("newSubEntity").remove();
+                    //===================================================//
+
+                    // first line shuts down a specific node listener, even if the listener used also for feed
+                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                    // same applies to the opposite.
+
                     $("#notificationsSub").css("color", inactiveColor);
 
                 } else {
@@ -167,8 +196,10 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+    if(activeEntity.entity == 'main') {
+        $("#notificationsSub").css("color", inactiveColor);
         return;
+    }
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
     // debugger;
