@@ -105,9 +105,9 @@ function showMultiOptions(questionUid){
       })
    };
 
-   DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
+   var onObject = DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
 
-   setActiveEntity("questions",questionUid, "child_added", multiOptionsCallback);
+   setActiveEntity("questions",questionUid, "child_added", multiOptionsCallback, onObject);
 }
 
 function voteUpOption(questionUid, optionUid){

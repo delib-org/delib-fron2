@@ -40,26 +40,27 @@ function setUrl(type, uid){
    }
 };
 
-function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffFunction){
+function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffFunction, newOnObject){
 
+   debugger;
    var previuosEntity = activeEntity.entity;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
    var previuosCallback = activeEntity.callback;
    var previuosTurnOffFunction = activeEntity.turnOffFunction;
-
+   var previousNewOnObject = activeEntity.onObject;
 
    if (previuosEntity != "main"){
-      if (previuosEventType != ""){
-         if (isNotEmpty(previuosUid)){
-            for (var i=0 ;i++; i<10)
-               DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previuosCallback);
+      if (previuosEventType != undefined){
+         if (previuosUid != undefined){
+            // for (var i=0 ;i++; i<10)
+               DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previousNewOnObject);
             console.log(previuosEntity, previuosUid, previuosEventType);
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }
       } else {
-         previuosTurnOffFunction();
+         // previuosTurnOffFunction();
       }
    } else {
       switch (previuosUid){
@@ -81,6 +82,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
    activeEntity.turnOffFunction = turnOffFunction;
+   activeEntity.onObject = newOnObject;
 
    setUrl(newEntity, newUid);
    if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions" || newEntity == "chats"){

@@ -72,8 +72,8 @@ function showGroup(groupUid){
 
 
    //show wrapper
-   DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
-   setActiveEntity("groups", groupUid, "value", showGroupCallback);
+   var onObject = DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
+   setActiveEntity("groups", groupUid, "value", showGroupCallback, onObject);
 
 
    if(!back){
