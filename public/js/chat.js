@@ -5,12 +5,13 @@ function clearChat(){
 
 function showChat() {
 
+   // debugger;
    clearChat();
 
    var headerContent ={};
    var chatUid = activeEntity.uid;
    var chatsCallback = function (chats) {
-
+      // debugger;
       if (chats.exists()) {
          var text = chats.val().text;
          var time = parseDate(chats.val().dateAdded);
@@ -23,45 +24,39 @@ function showChat() {
       }
    };
 
-
-   DB.child(activeEntity.previuosEntity + "/" + chatUid).once('value', function(actualContent) {
       DB.child("chats/" + chatUid).once('value',function(snapshot) {
-
          // console.log('chat entity content',activeEntity.entity ,activeEntity.previuosEntity, chatUid, actualContent);
-
-         if (snapshot.exists())
+         if (snapshot.exists()){
             headerContent = snapshot.val().entity;
-         else {
-            headerContent = {
-               entityType: entityTypeToHebrew(activeEntity.previuosEntity),
-               title: actualContent.val().title
-            };
-            console.log(headerContent);
-            DB.child("chats/" + chatUid + "/entity").set(headerContent);
+            setActiveEntity("chats", chatUid, "child_added", chatsCallback);
          }
-
+         else {
+            setActiveEntity("chats", chatUid, "child_added", chatsCallback);
+            DB.child(activeEntity.previuosEntity + "/" + chatUid).once('value', function(actualContent) {
+               headerContent = {
+                  entityType: entityTypeToHebrew(activeEntity.previuosEntity),
+                  title: actualContent.val().title
+               };
+               console.log(headerContent);
+               DB.child("chats/" + chatUid + "/entity").set(headerContent);
+            })
+         }
 
          // header rendering
          renderTemplate("#chatsHeader-tmpl",headerContent,"#headerTitle");
          //show footer
          renderTemplate("#chatInput-tmpl",{},"footer");
-      });
    }).then(function() {
 
-      setActiveEntity("chats", chatUid, "child_added", chatsCallback);
-      console.log('chat entity content',activeEntity.entity ,activeEntity.previuosEntity);
       //show Header and build chat for the first time
       DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).once("value", function(dataSnapshot) {
-
          // actual chat builder
          chatsCallback(dataSnapshot);
-
       }).then(function(rendered) {
          subsManager.isUpdatesSet();
       });
 
-      DB.child("chats/"+chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
-
+      DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
 
       //listen to enter from input
       $("#chatInputTxt").keypress(function (e) {

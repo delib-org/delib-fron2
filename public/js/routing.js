@@ -8,6 +8,7 @@ function getUrl(){
 
 function routTo(currentUrl, back){
 
+   // debugger;
    if (back == undefined){back = false}
 
    var slashPostion = currentUrl.indexOf("/");
@@ -41,7 +42,7 @@ function setUrl(type, uid){
 };
 
 function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffFunction){
-
+   // debugger;
    var previuosEntity = activeEntity.entity;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
@@ -51,7 +52,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    if (previuosEntity != "main"){
       if (previuosEventType != ""){
          if (isNotEmpty(previuosUid)){
-            DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previuosCallback);
+            for (var i=0 ;i++; i<10)
+               DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previuosCallback);
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }
@@ -82,14 +84,16 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
 
    setUrl(newEntity, newUid);
 
-   if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions" || newEntity == "chats"){
-      DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
-
+   if (newEntity == "chats")
+      DB.child(previuosEntity+"/"+newUid).once("value", function (dataSnapshot){
          console.log(dataSnapshot.val());
-         if (newEntity == "chats")
-            document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().entity.title;
-         else
-            document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
+         document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
+      });
+   
+   if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions"){
+      DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
+         console.log(dataSnapshot.val());
+         document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       })
    } else {
       document.title = "דליב (ראשי) : מחליטים ביחד";
