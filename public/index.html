@@ -127,6 +127,8 @@
 <div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
 <div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
+<div id="ownedBtn" class="footer-btn material-ripple" onclick="showAddGroup()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+<!--<i id="ownedBtn" onclick="showAddGroup()" class="footer-btn material-ripple fa fa-plus fa-2x" aria-hidden="true"></i>-->
       </script>
 
       <!--    cards-->
@@ -150,7 +152,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
+
       </script>
       <script type="text/x-handlebars-template" id="groups_member-tmpl">
 {{#each groups}}
@@ -161,7 +163,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
+
       </script>
 
       <script type="text/x-handlebars-template" id="groups_owner-tmpl">
@@ -177,7 +179,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
+
       </script>
 
       <!--- Login ------->
@@ -256,7 +258,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddTopic" class="action btnAddEntity" onclick="showAddTopicScreen()"><i class="fa fa-plus" aria-hidden="true"></button>
+<!--<button id="btnAddTopic" class="action btnAddEntity" onclick="showAddTopicScreen()"><i class="fa fa-plus" aria-hidden="true"></button>-->
       </script>
 
 
@@ -278,13 +280,13 @@
       </script>
 
       <script type="text/x-handlebars-template" id="createGroupFooter-tmpl">
-<div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
+<div class="footer-btn material-ripple" onclick="showMain('owned')"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="addNewGroup()"><span>אישור</span></div>
       </script>
 
       <!--    edit group footer-->
       <script type="text/x-handlebars-template" id="editGroupFooter-tmpl">
-<div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
+<div class="footer-btn material-ripple" onclick="showMain('owned')"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="updateGroupToDB('{{groupUid}}')"><span>אישור</span></div>
       </script>
 
@@ -309,7 +311,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddQuestion" class="action btnAddEntity" onclick="newQuestion()"><i class="fa fa-plus" aria-hidden="true"></button>
+<!--<button id="btnAddQuestion" class="action btnAddEntity" onclick="newQuestion()"><i class="fa fa-plus" aria-hidden="true"></button>-->
       </script>
 
       <!--    create topic page-->
