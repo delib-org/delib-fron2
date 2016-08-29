@@ -66,6 +66,8 @@
 
       <script src="js/login.js"></script>
 
+      <script src="js/panels/entitiesPanel.js"></script>
+
       <!--<script src="js/feedNotifications/logic.js"></script>-->
       <!--<script src="js/feedNotifications/pushNotifications.js"></script>-->
       <!--<script src="js/feedNotifications/feed.js"></script>-->
@@ -127,10 +129,17 @@
 <div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
 <div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
-<div id="ownedBtn" class="footer-btn material-ripple" onclick="showAddGroup()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
-<!--<i id="ownedBtn" onclick="showAddGroup()" class="footer-btn material-ripple fa fa-plus fa-2x" aria-hidden="true"></i>-->
+<div id="groupPlusBtn" class="footer-btn material-ripple" onclick="showAddGroup()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+
       </script>
 
+      <script type="text/x-handlebars-template" id="showEntityPanel-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+      </script>
+
+      <script type="text/x-handlebars-template" id="hideEntityPanel-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-minus fa-2x" aria-hidden="true"></i></div>
+      </script>
       <!--    cards-->
       <script type="text/x-handlebars-template" id="cards-tmpl">
 {{#each groups}}
@@ -561,5 +570,25 @@ Tow options
    <script type="text/x-handlebars-template" id="optionWrapper-tmpl">
 <div id="{{optionUid}}DivOpt" class="card" contenteditable="true" >{{{description}}}</div>
       </script>
+
+<!--                     Panels                             -->
+
+   <script type="text/x-handlebars-template" id="EntitiesPanel-tmpl">
+      <div class="panel" id="entitiesPanel">
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-plus" aria-hidden="true"></i></div>
+            <div class="panelText">plus</div>
+         </div>
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-plus" aria-hidden="true"></i></div>
+            <div class="panelText">plus</div>
+         </div>
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-plus" aria-hidden="true"></i></div>
+            <div class="panelText">plus</div>
+         </div>
+
+      </div>
+   </script>
 
 </html>
