@@ -46,7 +46,7 @@
       <script src="js/routing.js"></script>
       <script src="js/chat.js"></script>
       <script src="js/generalFunctions.js"></script>
-      <script src="js/editor.js"></script>
+<!--      <script src="js/editor.js"></script>-->
 
       <script src="js/groups/group.js"></script>
       <script src="js/groups/addGroup.js"></script>
@@ -70,16 +70,22 @@
       <!--<script src="js/feedNotifications/logic.js"></script>-->
       <!--<script src="js/feedNotifications/pushNotifications.js"></script>-->
       <!--<script src="js/feedNotifications/feed.js"></script>-->
+    <!-- Text editor (Quill library) -->
+       <link rel="stylesheet" href="https://cdn.quilljs.com/1.0.0-rc.0/quill.snow.css" >
+       <script type="text/javascript" src="https://cdn.quilljs.com/1.0.0-rc.2/quill.js"></script>
 
-    <!-- Main WYSYWYG Editor (Quill library) -->
-       <link href="https://cdn.quilljs.com/1.0.0-rc.0/quill.snow.css" rel="stylesheet">
-       <script src="https://cdn.quilljs.com/1.0.0-rc.0/quill.js"></script>
+<!--
+       <link rel="stylesheet" href="js/quill-1.0.0-rc.2/themes/snow.js" >
+       <script type="text/javascript" src="js/quill-1.0.0-rc.2/core/quill.js"></script>
+-->
 
+       <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
    </head>
 
 
 
    <body dir="rtl">
+
       <!--    <div id="logo"><img src="img/logo.png"></div>-->
       <div id="container" style="height:100%">
          <header>
@@ -87,6 +93,13 @@
             <div id="headerBreadCrumbs"></div>
             <div id="headerMenu"></div>
          </header>
+<!--
+
+
+                 <div id="editor" style="z-index:1000; width:auto;height:auto;background-color:yellow"></div>
+          <script>createQuillEditor("#editor");</script>
+-->
+
 
          <wrapper></wrapper>
          <footer></footer>

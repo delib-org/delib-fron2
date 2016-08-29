@@ -1,21 +1,22 @@
+var editor;
+
 function createQuillEditor(elementUid){
+
     var toolbarOptions = [
+      [{ 'align': [] }],
+      [{ 'direction': 'rtl' }],
       ['bold', 'italic', 'underline'],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'direction': 'rtl' }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'align': [] }],
       ['clean']
     ]
 
     var options = {
       debug: 'info',
       modules: { toolbar: toolbarOptions },
-      placeholder: 'הכנס טקסט כאן...',
-      readOnly: false,
+      placeholder: 'enter text here...',
       theme: 'snow'
     };
 
-    var editor = new Quill(elementUid, options);
+    editor = new Quill(elementUid, options);
 }
