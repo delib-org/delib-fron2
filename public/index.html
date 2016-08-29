@@ -156,7 +156,7 @@
 {{#each groups}}
 <div id={{uuid}}_Div class="card">
    <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
-      <h4>קבוצה: {{title}}</h4>
+      <h4><i class="fa fa-users" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
          </div>
@@ -258,7 +258,7 @@
 {{#each groups}}
 <div id={{uuid}} class="card">
    <div class="groupDescription clickables" onclick="showTopic('{{uuid}}')">
-      <h4>נושא: {{title}}</h4>
+      <h4><i class="fa fa-folder-open" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
    <div class="cardsTopicsSubmenu" >
@@ -310,7 +310,7 @@
 {{#each questions}}
 <div id={{uuid}} class="card">
    <div class="groupDescription clickables" onclick=showQuestion('{{uuid}}')>
-      <h4>שאלה: {{title}}</h4>
+      <h4><i class="fa fa-question-circle" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
    <div class="cardsTopicsSubmenu">
