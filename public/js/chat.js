@@ -10,9 +10,11 @@ function showChat() {
 
    var headerContent ={};
    var chatUid = activeEntity.uid;
+
    var chatsCallback = function (chats) {
+      console.log('chatsCallback called');
       // debugger;
-      if (chats.exists()) {
+      if (chats.val().text != undefined) {
          var text = chats.val().text;
          var time = parseDate(chats.val().dateAdded);
          var author = chats.val().userName;
@@ -24,19 +26,27 @@ function showChat() {
       }
    };
 
+   var turnOff = function () {
+      console.log('turned off chat');
+      DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
+   };
+
       DB.child("chats/" + chatUid).once('value',function(snapshot) {
          // console.log('chat entity content',activeEntity.entity ,activeEntity.previuosEntity, chatUid, actualContent);
          if (snapshot.exists()){
             headerContent = snapshot.val().entity;
-            setActiveEntity("chats", chatUid, "child_added", chatsCallback);
+            setActiveEntity("chats", chatUid, "child_added", chatsCallback, turnOff);
          }
          else {
-            setActiveEntity("chats", chatUid, "child_added", chatsCallback);
+            setActiveEntity("chats", chatUid, "child_added", chatsCallback, turnOff);
             DB.child(activeEntity.previuosEntity + "/" + chatUid).once('value', function(actualContent) {
+
+               // create header for chat room
                headerContent = {
                   entityType: entityTypeToHebrew(activeEntity.previuosEntity),
                   title: actualContent.val().title
                };
+
                console.log(headerContent);
                DB.child("chats/" + chatUid + "/entity").set(headerContent);
             })
@@ -48,13 +58,7 @@ function showChat() {
          renderTemplate("#chatInput-tmpl",{},"footer");
    }).then(function() {
 
-      //show Header and build chat for the first time
-      DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).once("value", function(dataSnapshot) {
-         // actual chat builder
-         chatsCallback(dataSnapshot);
-      }).then(function(rendered) {
-         subsManager.isUpdatesSet();
-      });
+      subsManager.isUpdatesSet();
 
       DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
 

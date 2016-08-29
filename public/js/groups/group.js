@@ -72,8 +72,6 @@ function showGroup(groupUid){
 
 
    //show wrapper
-   counter++;
-   console.log("got into group "+counter+ "times");
    DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
    
    var turnOff = function () {
