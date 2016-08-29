@@ -41,7 +41,6 @@ function setUrl(type, uid){
 };
 
 function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffFunction){
-
    var previuosEntity = activeEntity.entity;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
@@ -74,6 +73,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
 
 
    activeEntity.entity = newEntity;
+    activeEntity.previousEntity = previuosEntity;
+    activeEntity.previousUid = previuosUid;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
@@ -89,6 +90,30 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    } else {
       document.title = "דליב (ראשי) : מחליטים ביחד";
    }
+    var currentEntity = activeEntity.uid;
+
+
+    DB.child(activeEntity.entity + '/' + activeEntity.uid + '/title').once('value',function(dataSnap){
+
+       console.log('previous entity', activeEntity.previousEntity);
+       console.log('previous uid', activeEntity.previousUid);
+        console.log('datasnap', dataSnap.val())
+        console.log('current uid', currentEntity)
+        return dataSnap
+
+    }).then(function(res){
+       DB.child(activeEntity.previousEntity +'/'+activeEntity.previousUid+'/title').once('value', function(dataSnap){
+                renderTemplate('#headerBreadCrumbs-tmpl',{
+                     previousEntity:activeEntity.previousEntity,
+                     previousUid:activeEntity.previousUid,
+                     currentUid:activeEntity.uid,
+                     currentTitle:res.val(),
+                     currentEntity:activeEntity.entity,
+                     previousTitle:dataSnap.val()
+                 },'#headerBreadCrumbs')
+       })
+    })
+
 }
 
 function showEntities(entity, uid){

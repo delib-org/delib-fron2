@@ -6,9 +6,9 @@ function clearChat(){
 function showChat(){
 
    clearChat();
-
    var chatUid = activeEntity.uid;
    var entityType = activeEntity.entity;
+
 
    //show Header
    DB.child(entityType+"/"+chatUid).once("value", function(dataSnapshot){
