@@ -89,6 +89,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    } else {
       document.title = "דליב (ראשי) : מחליטים ביחד";
    }
+
+   $("#entitiesPanel").slideUp(400);
 }
 
 function showEntities(entity, uid){
