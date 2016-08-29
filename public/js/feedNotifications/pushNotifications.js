@@ -90,42 +90,52 @@ function pushNotification(EntityData, entityType, variation) {
 
 
 subsManager.setNotifications = function(isOwnerCall) {
-    if(isOwnerCall == undefined)
+    if (isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == 'main')
+    if (activeEntity.entity == 'main')
         return;
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
 
-
     switch (activeEntity.entity) {
         case "chats":
+
+            // re-defining userFeed in chats context
+            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+                userNotifications = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().entityType+"/"+activeEntity.uid+"/notifications");
+            });
+
             userNotifications.once("value", function(dataSnapshot) {
 
                 if (dataSnapshot.child("chats").exists()) {
 
-                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
-                    //===================================================//
-                        DB.child("chats/" + activeEntity.uid + "/OwnerCalls").off('child_added');
-                        userNotifications.child("chats").remove();
-                    //===================================================//
-
-                    // first line shuts down a specific node listener, even if the listener used also for feed
-                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
-                    // same applies to the opposite.
-                    
                     $("#notificationsSub").css("color", inactiveColor);
 
-                    // remove inbox only if not registered to anything else
-                    if(!subsManager.feedIsSet)
+                    // remove and listener inbox only if not registered to anything else
+                    if (!subsManager.feedIsSet) {
+                        
+                        // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                        //===================================================//
+
+                        DB.child("chats/"+activeEntity.uid+"/massages").orderByChild("dateAdded").limitToLast(1).off("child_added", chats_cb);
+                        userNotifications.child("chats").remove();
+                        //===================================================//
+
+                        // first line shuts down a specific node listener, even if the listener used also for feed
+                        // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                        // same applies to the opposite.
                         DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).remove();
+                    } else {
+                        userNotifications.child("chats").remove();
+                    }
+                    
 
                 } else {
                     userNotifications.child("chats").set(true);
 
                     // initialize only if not registered to anything else (use existing inbox)
-                    if(!subsManager.feedIsSet)
+                    if (!subsManager.feedIsSet)
                         DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).set(0);
                     // firstRun = true;
                     $("#notificationsSub").css("color", activeColor);

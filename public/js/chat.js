@@ -3,6 +3,21 @@ function clearChat(){
    $("wrapper").html("");
 }
 
+var chatsCallback = function (chats) {
+   console.log('chatsCallback called');
+   // debugger;
+   if (chats.val().text != undefined) {
+      var text = chats.val().text;
+      var time = parseDate(chats.val().dateAdded);
+      var author = chats.val().userName;
+
+      var context = {text: text, time: time, author: author};
+      appendTemplate("#chatMessage-tmpl", context, "wrapper");
+
+      $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
+   }
+};
+
 function showChat() {
 
    // debugger;
@@ -11,63 +26,54 @@ function showChat() {
    var headerContent ={};
    var chatUid = activeEntity.uid;
 
-   var chatsCallback = function (chats) {
-      console.log('chatsCallback called');
-      // debugger;
-      if (chats.val().text != undefined) {
-         var text = chats.val().text;
-         var time = parseDate(chats.val().dateAdded);
-         var author = chats.val().userName;
-
-         var context = {text: text, time: time, author: author};
-         appendTemplate("#chatMessage-tmpl", context, "wrapper");
-
-         $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
-      }
-   };
-
+   // encapsulated .off() firebase call
    var turnOff = function () {
-      console.log('turned off chat');
       DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
    };
 
-      DB.child("chats/" + chatUid).once('value',function(snapshot) {
-         // console.log('chat entity content',activeEntity.entity ,activeEntity.previuosEntity, chatUid, actualContent);
-         if (snapshot.exists()){
+   DB.child("chats/" + chatUid).once('value',function(snapshot) {
+
+      // setActiveEntity should always be called first
+      setActiveEntity("chats", chatUid, "child_added", chatsCallback, turnOff);
+
+      // get actual content, create chat header if needed, implement existing header otherwise
+      DB.child(activeEntity.previuosEntity + "/" + chatUid).once('value', function(actualContent) {
+      if (snapshot.exists()) {
+
+            // get existing header
             headerContent = snapshot.val().entity;
-            setActiveEntity("chats", chatUid, "child_added", chatsCallback, turnOff);
-         }
-         else {
-            setActiveEntity("chats", chatUid, "child_added", chatsCallback, turnOff);
-            DB.child(activeEntity.previuosEntity + "/" + chatUid).once('value', function(actualContent) {
+         } else {
 
-               // create header for chat room
-               headerContent = {
-                  entityType: entityTypeToHebrew(activeEntity.previuosEntity),
-                  title: actualContent.val().title
-               };
+            // create header for chat room
+            headerContent = {
+               entityType: entityTypeToHebrew(activeEntity.previuosEntity),
+               title: actualContent.val().title
+            };
 
-               console.log(headerContent);
-               DB.child("chats/" + chatUid + "/entity").set(headerContent);
-            })
+            // set new header for latter use
+            DB.child("chats/" + chatUid + "/entity").set(headerContent);
          }
+
+         // go on rendering and when finished with header setting and active setActiveEntity
+      }).then(function(){
 
          // header rendering
          renderTemplate("#chatsHeader-tmpl",headerContent,"#headerTitle");
-         //show footer
+
+         // footer rendering
          renderTemplate("#chatInput-tmpl",{},"footer");
-   }).then(function() {
+         subsManager.isUpdatesSet();
 
-      subsManager.isUpdatesSet();
+         // render chat and keep .on() listening for coming messages
+         DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
 
-      DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
-
-      //listen to enter from input
-      $("#chatInputTxt").keypress(function (e) {
-         if (e.keyCode == 13) {
-            e.preventDefault();
-            addChatMessagePre(chatUid);
-         }
+         //listen to enter from input, should be called lastly.
+         $("#chatInputTxt").keypress(function (e) {
+            if (e.keyCode == 13) {
+               e.preventDefault();
+               addChatMessagePre(chatUid);
+            }
+         });
       });
    });
 }

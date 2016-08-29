@@ -1,3 +1,6 @@
+var chats_cb;
+var entityAdded_cb;
+var ownerCall_cb;
 function updatesListener() {
 
     function regFalsify(regObject) {
@@ -15,7 +18,6 @@ function updatesListener() {
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
             entityUpdates.forEach(function (entityUpdate) {
-
                 var isNewSubEntityReg = {
                     feed: entityUpdate.child('feed/newSubEntity').exists(),
                     notifications: entityUpdate.child('notifications/newSubEntity').exists()
@@ -27,8 +29,8 @@ function updatesListener() {
                     };
 
                 var isChatReg = {
-                    feed: entityUpdate.child('feed/chat').exists(),
-                    notifications: entityUpdate.child('notifications/chat').exists()
+                    feed: entityUpdate.child('feed/chats').exists(),
+                    notifications: entityUpdate.child('notifications/chats').exists()
                 };
 
                 isOwnerCallReg = regFalsify(isOwnerCallReg);
@@ -38,7 +40,7 @@ function updatesListener() {
 
                 // if subscribed to ownerCalls
                 if (isOwnerCallReg) {
-                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added', function (ownerCall) {
+                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (ownerCall) {
 
                         // ==== regulation chunk ==== //
                         // will make sure we will get the latest whatever..
@@ -68,7 +70,7 @@ function updatesListener() {
                 // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
 
                 if (isNewSubEntityReg) {
-                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/" + subEntity[entityUpdates.key]).orderByChild('dateAdded').limitToLast(1).on('child_added', function (entityAddedUid) {
+                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/" + subEntity[entityUpdates.key]).orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                         DB.child(subEntity[entityUpdates.key] + "/" + entityAddedUid.key).once('value', function (actualContent) {
                             // debugger;
 
@@ -104,7 +106,7 @@ function updatesListener() {
 
                 if(isChatReg) {
                     // check if added message, get last message by date
-                    DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').limitToLast(1).on('child_added', function (lastMessage) {
+                    DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').limitToLast(1).on('child_added', chats_cb = function (lastMessage) {
                         // get inbox unseen messages counter
                         DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
                             // now we need the actual content of the entity related to current chatRoom
@@ -112,6 +114,9 @@ function updatesListener() {
                                 // don't bring up notificaions and nor count them if already inside subscribed chat room
                                 if(!(activeEntity.entity == "chats" && activeEntity.uid == entityUpdate.key)) {
                                     // if no such group, get out
+
+                                    console.log("chat logic");
+
 
                                     if (chatEntityContent == null)
                                         return;
@@ -159,7 +164,6 @@ function updatesListener() {
                                 }
                             });
                         });
-
                     });
                 }
             });

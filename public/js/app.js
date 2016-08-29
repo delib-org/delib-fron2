@@ -77,6 +77,7 @@ var inactiveColor = "#5f1f1f";
 var activeColor = "white";
 // Updates Variables and Constants
 
+// subsManager Def.
 var subsManager = {
     isUpdatesSet: function(){
         this.isFeedSet();
