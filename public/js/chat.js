@@ -20,7 +20,6 @@ var chatsCallback = function (chats) {
 
 function showChat() {
 
-   // debugger;
    clearChat();
 
    var headerContent ={};
@@ -31,6 +30,7 @@ function showChat() {
       DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
    };
 
+   // get specific chat room stuff (== messages and entity content)
    DB.child("chats/" + chatUid).once('value',function(snapshot) {
 
       // setActiveEntity should always be called first
