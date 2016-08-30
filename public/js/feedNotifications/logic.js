@@ -18,7 +18,6 @@ function updatesListener() {
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
             entityUpdates.forEach(function (entityUpdate) {
-                // debugger;
                 var isNewSubEntityReg = {
                     feed: entityUpdate.child('feed/newSubEntity').exists(),
                     notifications: entityUpdate.child('notifications/newSubEntity').exists()
@@ -47,16 +46,16 @@ function updatesListener() {
                         // will make sure we will get the latest whatever..
                         if (mostUpdatedContent == null) {
                             mostUpdatedContent = ownerCall;
-                            console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                         }
                         else if (mostUpdatedContent.val().dateAdded < ownerCall.val().dateAdded - 400)
                         {
                             mostUpdatedContent = ownerCall;
-                            console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                         }
                         else
                             return;
-                        // ===============
+                        // ============================================================================
 
                             DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
                                 if(isOwnerCallReg.notifications)
@@ -73,7 +72,6 @@ function updatesListener() {
                 if (isNewSubEntityReg) {
                     DB.child(entityUpdates.key + "/" + entityUpdate.key + "/" + subEntity[entityUpdates.key]).orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                         DB.child(subEntity[entityUpdates.key] + "/" + entityAddedUid.key).once('value', function (actualContent) {
-                            // debugger;
 
                             console.log("actualContent: " + entityAddedUid.val().dateAdded);
 
@@ -81,20 +79,19 @@ function updatesListener() {
                             // will make sure we will get the latest whatever..
                             if (mostUpdatedContent == null) {
                                 mostUpdatedContent = entityAddedUid;
-                                console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                             }
                             else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 400)
                             {
                                 mostUpdatedContent = entityAddedUid;
-                                console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                             }
                             else
                                 return;
-                            // ===============
+                            // ============================================================================
 
                             if (isNewSubEntityReg.notifications)
-                                // if(!(activeEntity.entity == entityUpdates.key && activeEntity.uid == entityUpdate.key))
-                                    pushNotification(actualContent, subEntity[entityUpdates.key]);
+                                pushNotification(actualContent, subEntity[entityUpdates.key]);
 
                             if (isNewSubEntityReg.feed)
                                 feedBuilder(actualContent, entityUpdates.key);
@@ -106,19 +103,15 @@ function updatesListener() {
                 // chat logic
 
                 if(isChatReg) {
-                    console.log("chat logic: passed if",  entityUpdate.key, chats_cb);
                     // check if added message, get last message by date
                     DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').limitToLast(1).on('child_added', chats_cb = function (lastMessage) {
                         // get inbox unseen messages counter
                         DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
-                            // now we need the actual content of the entity related to current chatRoom
+                            // now we need the actual content of the entity related to current chatRoom, note that chat updates bound to groups only..
                             DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                 // don't bring up notificaions and nor count them if already inside subscribed chat room
-                                console.log("chat logic");
                                 if(!(activeEntity.entity == "chats" && activeEntity.uid == entityUpdate.key)) {
                                     // if no such group, get out
-
-                                    console.log("chat logic, not inside chat");
 
                                     if (chatEntityContent == null)
                                         return;
@@ -127,16 +120,16 @@ function updatesListener() {
                                     // will make sure we will get the latest whatever..
                                     if (mostUpdatedContent == null) {
                                         mostUpdatedContent = lastMessage;
-                                        console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                                     }
                                     else if (mostUpdatedContent.val().dateAdded < lastMessage.val().dateAdded - 400)
                                     {
                                         mostUpdatedContent = lastMessage;
-                                        console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                                     }
                                     else
                                         return;
-                                    // ===============
+                                    // ============================================================================
 
                                     // create a temporary messagesSentInc to hold inboxMessages.val()
                                     var messagesSentInc;

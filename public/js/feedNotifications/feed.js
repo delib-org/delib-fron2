@@ -111,7 +111,7 @@ subsManager.setFeed = function(isOwnerCall) {
 };
 
 subsManager.isFeedSet = function (isOwnerCall) {
-    // debugger;
+    
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
@@ -121,7 +121,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
         return;
     }
     
-    // debugger;
+    
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
 
     switch (activeEntity.entity) {
