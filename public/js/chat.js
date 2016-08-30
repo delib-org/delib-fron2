@@ -27,7 +27,7 @@ function showChat() {
 
    // encapsulated .off() firebase call
    var turnOff = function () {
-      DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
+      DB.child("chats/"+chatUid+"/messages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
    };
 
    // get specific chat room stuff (== messages and entity content)
@@ -41,7 +41,10 @@ function showChat() {
       if (snapshot.exists()) {
 
             // get existing header
-            headerContent = snapshot.val().entity;
+            headerContent = {
+               entityType: snapshot.val().entity.entityType,
+               title: snapshot.val().entity.title
+            };
          } else {
 
             // create header for chat room
@@ -51,7 +54,11 @@ function showChat() {
             };
 
             // set new header for latter use
-            DB.child("chats/" + chatUid + "/entity").set(headerContent);
+            DB.child("chats/" + chatUid + "/entity").set({
+               entityType: entityTypeToHebrew(activeEntity.previuosEntity),
+               title: actualContent.val().title,
+               typeInDB: activeEntity.previuosEntity
+            });
          }
 
          // go on rendering and when finished with header setting and active setActiveEntity
@@ -65,7 +72,7 @@ function showChat() {
          subsManager.isUpdatesSet();
 
          // render chat and keep .on() listening for coming messages
-         DB.child("chats/"+chatUid+"/massages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
+         DB.child("chats/"+chatUid+"/messages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
 
          //listen to enter from input, should be called lastly.
          $("#chatInputTxt").keypress(function (e) {
@@ -87,7 +94,7 @@ function addChatMessage(chatUid,userUid, text) {
       DB.child("users/"+userUid).once("value", function(user) {
          var userName = user.val().name;
 
-         DB.child("chats/"+chatUid+"/massages").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, user: userUid, userName:userName, text: text, chatUid: chatUid});
+         DB.child("chats/"+chatUid+"/messages").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, user: userUid, userName:userName, text: text, chatUid: chatUid});
       })
    }
 }

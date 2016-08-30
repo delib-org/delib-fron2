@@ -41,27 +41,22 @@ function setUrl(type, uid){
    }
 };
 
-function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff){
+function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff) {
    // debugger;
    var previuosEntity = activeEntity.entity;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
    var previuosCallback = activeEntity.callback;
    var previuosTurnOff = activeEntity.turnOff;
-   // var previousNewOnObject = activeEntity.onObject;
 
    if (previuosEntity != "main"){
       if (previuosEventType != undefined){
          if (previuosUid != undefined){
-            // for (var i=0 ;i++; i<10)
-               // DB.child(previuosEntity+"/"+previuosUid).off(previuosEventType, previousNewOnObject);
                previuosTurnOff();
-            console.log(previuosEntity, previuosUid, previuosEventType, turnOff);
+            console.log(previuosEntity, previuosUid, previuosEventType, previuosTurnOff, turnOff);
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }
-      } else {
-         // previuosTurnOffFunction();
       }
    } else {
       switch (previuosUid){

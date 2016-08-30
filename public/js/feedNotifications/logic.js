@@ -18,6 +18,7 @@ function updatesListener() {
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
             entityUpdates.forEach(function (entityUpdate) {
+                // debugger;
                 var isNewSubEntityReg = {
                     feed: entityUpdate.child('feed/newSubEntity').exists(),
                     notifications: entityUpdate.child('notifications/newSubEntity').exists()
@@ -105,6 +106,7 @@ function updatesListener() {
                 // chat logic
 
                 if(isChatReg) {
+                    console.log("chat logic: passed if",  entityUpdate.key, chats_cb);
                     // check if added message, get last message by date
                     DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').limitToLast(1).on('child_added', chats_cb = function (lastMessage) {
                         // get inbox unseen messages counter
@@ -112,11 +114,11 @@ function updatesListener() {
                             // now we need the actual content of the entity related to current chatRoom
                             DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                 // don't bring up notificaions and nor count them if already inside subscribed chat room
+                                console.log("chat logic");
                                 if(!(activeEntity.entity == "chats" && activeEntity.uid == entityUpdate.key)) {
                                     // if no such group, get out
 
-                                    console.log("chat logic");
-
+                                    console.log("chat logic, not inside chat");
 
                                     if (chatEntityContent == null)
                                         return;
