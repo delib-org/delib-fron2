@@ -33,9 +33,9 @@ function setUrl(type, uid){
 
       var url = domainUrl+"?"+type+"/"+uid;
       if(locationToCut >=0 && url!=currentUrl) {
-        history.pushState(typeEntity, uid, url );
+         history.pushState(typeEntity, uid, url );
       } else {
-        history.replaceState(typeEntity, uid, url );
+         history.replaceState(typeEntity, uid, url );
       }
    }
 };
@@ -73,8 +73,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
 
 
    activeEntity.entity = newEntity;
-    activeEntity.previousEntity = previuosEntity;
-    activeEntity.previousUid = previuosUid;
+   activeEntity.previousEntity = previuosEntity;
+   activeEntity.previousUid = previuosUid;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
@@ -90,35 +90,35 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOffF
    } else {
       document.title = "דליב (ראשי) : מחליטים ביחד";
    }
-<<<<<<< HEAD
+
 
    $("#entitiesPanel").slideUp(400);
-=======
-    var currentEntity = activeEntity.uid;
+
+   var currentEntity = activeEntity.uid;
 
 
-    DB.child(activeEntity.entity + '/' + activeEntity.uid + '/title').once('value',function(dataSnap){
+   DB.child(activeEntity.entity + '/' + activeEntity.uid + '/title').once('value',function(dataSnap){
 
-       console.log('previous entity', activeEntity.previousEntity);
-       console.log('previous uid', activeEntity.previousUid);
-        console.log('datasnap', dataSnap.val())
-        console.log('current uid', currentEntity)
-        return dataSnap
+      console.log('previous entity', activeEntity.previousEntity);
+      console.log('previous uid', activeEntity.previousUid);
+      console.log('datasnap', dataSnap.val())
+      console.log('current uid', currentEntity)
+      return dataSnap
 
-    }).then(function(res){
-       DB.child(activeEntity.previousEntity +'/'+activeEntity.previousUid+'/title').once('value', function(dataSnap){
-                renderTemplate('#headerBreadCrumbs-tmpl',{
-                     previousEntity:activeEntity.previousEntity,
-                     previousUid:activeEntity.previousUid,
-                     currentUid:activeEntity.uid,
-                     currentTitle:res.val(),
-                     currentEntity:activeEntity.entity,
-                     previousTitle:dataSnap.val()
-                 },'#headerBreadCrumbs')
-       })
-    })
+   }).then(function(res){
+      DB.child(activeEntity.previousEntity +'/'+activeEntity.previousUid+'/title').once('value', function(dataSnap){
+         renderTemplate('#headerBreadCrumbs-tmpl',{
+            previousEntity:activeEntity.previousEntity,
+            previousUid:activeEntity.previousUid,
+            currentUid:activeEntity.uid,
+            currentTitle:res.val(),
+            currentEntity:activeEntity.entity,
+            previousTitle:dataSnap.val()
+         },'#headerBreadCrumbs')
+      })
+   })
 
->>>>>>> origin/ftr-liveTalk
+
 }
 
 function showEntities(entity, uid){
