@@ -128,28 +128,40 @@ function showEntities(entity, uid){
          DB.child("groups/"+uid).once("value", function (group){
             if(group.exists()){
                showGroup(uid);
-            } else { console.log("group "+uid+" do not exist"); }
+            } else {
+               console.log("group "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "topics":
          DB.child("topics/"+uid).once("value", function (topic){
             if (topic.exists()){
                showTopic(uid);
-            } else { console.log("topic "+uid+" do not exist");}
+            } else {
+               console.log("topic "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "questions":
          DB.child("questions/"+uid).once("value", function (question){
             if (question.exists()){
                showQuestion(uid);
-            } else { console.log("question "+uid+" do not exist");}
+            } else {
+               console.log("question "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "chats":
          DB.child("chats/"+uid).once("value", function (question){
             if (question.exists()){
                showChat(uid);
-            } else { console.log("question "+uid+" do not exist");}
+            } else {
+               console.log("question "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "main":
@@ -157,10 +169,15 @@ function showEntities(entity, uid){
          break;
       case "options":
          DB.child("options/"+uid).once("value", function(dataSnapshot){
-            var questionUid = dataSnapshot.val().questionUid;
-            var optionUid = dataSnapshot.val().optionUid;
-            console.log(questionUid, optionUid);
-            showOption(questionUid,optionUid);
+            if (question.exists()){
+               var questionUid = dataSnapshot.val().questionUid;
+               var optionUid = dataSnapshot.val().optionUid;
+               console.log(questionUid, optionUid);
+               showOption(questionUid,optionUid);
+            } else {
+               console.log("option "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       default:
