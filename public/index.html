@@ -107,11 +107,12 @@
 
 
       <script type="text/x-handlebars-template" id="headerBreadCrumbs-tmpl">
-        </span><span onclick='showEntities("{{previousEntity}}","{{previousUid}}")'>  {{previousTitle}}</span>
-        <span onclick='showEntities("{{currentEntity}}","{{currentUid}}")'>/
+        <div >
+         <span class="clickables" onclick='showEntities("{{previousEntity}}","{{previousUid}}")'>  {{previousTitle}}</span>
+        <span class="clickables" onclick='showEntities("{{currentEntity}}","{{currentUid}}")'>/
            {{currentTitle}}
-
-
+         </span>
+        </div>
       </script>
 
       <script type="text/x-handlebars-template" id="headerMenu-tmpl">
