@@ -70,6 +70,7 @@
       <script src="js/feedNotifications/pushNotifications.js"></script>
       <script src="js/feedNotifications/feed.js"></script>
 
+      <script src="js/panels/entitiesPanel.js"></script>
    </head>
 
 
@@ -130,17 +131,28 @@
 <div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
 <div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
+<div id="ownedBtn"class="footer-btn material-ripple" onclick="showFeed()"><span>חדשות</span></div>
 <div id="groupPlusBtn" class="footer-btn material-ripple" onclick="showAddGroup()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
 
       </script>
 
+      <script type="text/x-handlebars-template" id="addTopicBtn-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showAddTopicScreen()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+      </script>
+
+      <script type="text/x-handlebars-template" id="addQuestionBtn-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="newQuestion()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+      </script>
+
+<!--
       <script type="text/x-handlebars-template" id="showEntityPanel-tmpl">
-         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
       </script>
 
       <script type="text/x-handlebars-template" id="hideEntityPanel-tmpl">
          <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-minus fa-2x" aria-hidden="true"></i></div>
       </script>
+-->
       <!--    cards-->
       <script type="text/x-handlebars-template" id="cards-tmpl">
 {{#each groups}}
@@ -159,6 +171,9 @@
    <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
       <h4><i class="fa fa-users" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
+         </div>
+         <div class="cardsTopicsSubmenu">
+            <div><i class="fa fa-globe clickables"></i></div>
          </div>
          </div>
 {{/each}}
@@ -186,10 +201,25 @@
    <div class="cardsTopicsSubmenu">
       <div class="cardsTopicsSubmenuDots clickables" onclick=openGroupMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
       <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editGroup('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+      <div><i class="fa fa-globe"></i></div>
          </div>
          </div>
 {{/each}}
 
+      </script>
+
+      <!--      feed    -->
+      <script type="text/x-handlebars-template" id="feeds-tmpl">
+         <div class="feedPanelClass">
+         {{#each feeds}}
+            <div class="feedCards">
+               <div class="clickables" onclick="showEntity('{{type}}','{{uuid}}')">
+                  <div class="feedTitle"><i class="fa fa-folder-open" aria-hidden="true"></i> {{title}}</div>
+                  <div class="feedDescription">תיאור: {{description}}</div>
+               </div>
+            </div>
+         {{/each}}
+         </div>
       </script>
 
       <!--- Login ------->
@@ -425,7 +455,7 @@ Tow options
 
       <script type="text/x-handlebars-template" id="createQuestionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
-<div class="footer-btn material-ripple action" onclick="addNewQuestion()"><span>אישור</span></div>
+<div class="footer-btn material-ripple action" onclick="showAddNewQuestion()"><span>אישור</span></div>
       </script>
 
       <!--  question edit footer  -->
@@ -576,6 +606,10 @@ Tow options
 
    <script type="text/x-handlebars-template" id="EntitiesPanel-tmpl">
       <div class="panel" id="entitiesPanel">
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-users" aria-hidden="true"></i></div>
+            <div class="panelText">Group</div>
+         </div>
          <div class="panelBlock">
             <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
             <div class="panelText">Topic</div>

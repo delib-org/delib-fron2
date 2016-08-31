@@ -11,7 +11,8 @@ function showTopic(topicUid){
    });
 
    //show footer
-   renderTemplate("#showEntityPanel-tmpl", {}, "footer");
+//   renderTemplate("#showEntityPanel-tmpl", {}, "footer");
+   renderTemplate("#addQuestionBtn-tmpl", {}, "footer");
 
    //show wrapper
 

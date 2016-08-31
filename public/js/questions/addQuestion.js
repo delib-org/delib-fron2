@@ -62,7 +62,7 @@ function setNumberOfOptions(numberOfOptions){
    }
 }
 
-function addNewQuestion(){
+function showAddNewQuestion(){
    //check if form exists...
 
    //get form info
