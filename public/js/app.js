@@ -105,10 +105,10 @@ var feedManager = {
 
 // Initialize Firebase
 var config = {
-	apiKey: "AIzaSyBEumZUTCL3Jc9pt7_CjiSVTxmz9aMqSvo"
-	, authDomain: "synthesistalyaron.firebaseapp.com"
-	, databaseURL: "https://synthesistalyaron.firebaseio.com"
-	, storageBucket: "gs://synthesistalyaron.appspot.com"
+    apiKey: "AIzaSyAjyyjWM63PSjyRoDI-87MpRtfOFnOO0aA",
+    authDomain: "delib21-aaeb0.firebaseapp.com",
+    databaseURL: "https://delib21-aaeb0.firebaseio.com",
+    storageBucket: "delib21-aaeb0.appspot.com"
 };
 firebase.initializeApp(config);
 var DB = firebase.database().ref();
