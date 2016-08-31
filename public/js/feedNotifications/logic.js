@@ -170,10 +170,10 @@ function updatesListener() {
 
 // feed builder
 function feedBuilder (entityDatum, entityType, variation) {
-
+    
     switch (entityType) {
         case "chats":
-            feedQueue.push( {
+            feedManager.queue.push( {
                     roomName: entityDatum.val().title,
                     chatMessagesCounter: variation,
                     date: entityDatum.val().dateAdded
@@ -182,30 +182,32 @@ function feedBuilder (entityDatum, entityType, variation) {
             break;
 
         case "ownerCalls":
-            feedQueue.push( {
+            feedManager.queue.push( {
                 roomName: entityDatum.val().title,
                 callText: variation,
                 date: entityDatum.val().dateAdded
             });
 
-            break;
+            break;  
 
         default:
-            feedQueue.push({
+            feedManager.queue.push({
                 title: entityDatum.val().title,
                 description: entityDatum.val().description,
                 date: entityDatum.val().dateAdded
             });
 
             // if feedVolume got to 20, also remove last feed in feedQueue
-            if(Object.keys(feedQueue).length >= feedVolume + 1)
-                feedQueue.pop();
+            if(Object.keys(feedManager.queue).length >= feedVolume + 1)
+                feedManager.queue.pop();
 
             break;
     }
 
+    feedManager.promise.resolve(true);
 
-    console.dir(feedQueue);
+    console.dir(feedManager.queue, feedManager.promise);
+
 }
 
 
