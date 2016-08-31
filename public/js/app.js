@@ -20,11 +20,10 @@ $(function(){
       size: 'medium'
 
     });
+
     $(".headerMenuBtn").ePulse({
       bgColor: "#ded9d9",
       size: 'medium'
-
-
    });
 
    var currentUrl = getUrl();
@@ -96,8 +95,14 @@ var subsManager = {
 
 var mostUpdatedContent = null;
 // Feed
-var feedQueue = [];
-const feedVolume = 10;
+
+const defaultFeedVolume = 10;
+var feedManager = {
+    queue: [],
+    volume: defaultFeedVolume,
+    promise: new Promise()
+};
+
 // Initialize Firebase
 var config = {
 	apiKey: "AIzaSyBEumZUTCL3Jc9pt7_CjiSVTxmz9aMqSvo"
