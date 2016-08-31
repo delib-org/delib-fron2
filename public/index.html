@@ -135,13 +135,23 @@
 
       </script>
 
+      <script type="text/x-handlebars-template" id="addTopicBtn-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showAddTopicScreen()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+      </script>
+
+      <script type="text/x-handlebars-template" id="addQuestionBtn-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="newQuestion()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+      </script>
+
+<!--
       <script type="text/x-handlebars-template" id="showEntityPanel-tmpl">
-         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
       </script>
 
       <script type="text/x-handlebars-template" id="hideEntityPanel-tmpl">
          <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-minus fa-2x" aria-hidden="true"></i></div>
       </script>
+-->
       <!--    cards-->
       <script type="text/x-handlebars-template" id="cards-tmpl">
 {{#each groups}}
@@ -426,7 +436,7 @@ Tow options
 
       <script type="text/x-handlebars-template" id="createQuestionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
-<div class="footer-btn material-ripple action" onclick="addNewQuestion()"><span>אישור</span></div>
+<div class="footer-btn material-ripple action" onclick="showAddNewQuestion()"><span>אישור</span></div>
       </script>
 
       <!--  question edit footer  -->
@@ -577,6 +587,10 @@ Tow options
 
    <script type="text/x-handlebars-template" id="EntitiesPanel-tmpl">
       <div class="panel" id="entitiesPanel">
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-users" aria-hidden="true"></i></div>
+            <div class="panelText">Group</div>
+         </div>
          <div class="panelBlock">
             <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
             <div class="panelText">Topic</div>
