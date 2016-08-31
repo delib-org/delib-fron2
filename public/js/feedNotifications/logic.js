@@ -198,13 +198,13 @@ function feedBuilder (entityDatum, entityType, variation) {
             });
 
             // if feedVolume got to 20, also remove last feed in feedQueue
-            if(Object.keys(feedManager.queue).length >= feedVolume + 1)
+            if(Object.keys(feedManager.queue).length >= feedManager.volume + 1)
                 feedManager.queue.pop();
 
             break;
     }
-
-    feedManager.promise.resolve(true);
+    
+    feedManager.promise = Promise.resolve(true);
 
     console.dir(feedManager.queue, feedManager.promise);
 
