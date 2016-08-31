@@ -131,6 +131,7 @@
 <div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
 <div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
+<div id="ownedBtn"class="footer-btn material-ripple" onclick="showFeed()"><span>חדשות</span></div>
 <div id="groupPlusBtn" class="footer-btn material-ripple" onclick="showAddGroup()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
 
       </script>
@@ -171,6 +172,9 @@
       <h4><i class="fa fa-users" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
+         <div class="cardsTopicsSubmenu">
+            <div><i class="fa fa-globe clickables"></i></div>
+         </div>
          </div>
 {{/each}}
 
@@ -197,10 +201,25 @@
    <div class="cardsTopicsSubmenu">
       <div class="cardsTopicsSubmenuDots clickables" onclick=openGroupMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
       <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editGroup('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+      <div><i class="fa fa-globe"></i></div>
          </div>
          </div>
 {{/each}}
 
+      </script>
+
+      <!--      feed    -->
+      <script type="text/x-handlebars-template" id="feeds-tmpl">
+         <div class="feedPanelClass">
+         {{#each feeds}}
+            <div class="feedCards">
+               <div class="clickables" onclick="showEntity('{{type}}','{{uuid}}')">
+                  <div class="feedTitle"><i class="fa fa-folder-open" aria-hidden="true"></i> {{title}}</div>
+                  <div class="feedDescription">תיאור: {{description}}</div>
+               </div>
+            </div>
+         {{/each}}
+         </div>
       </script>
 
       <!--- Login ------->
