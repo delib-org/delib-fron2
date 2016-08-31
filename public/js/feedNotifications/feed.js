@@ -4,41 +4,69 @@ subsManager.setFeed = function(isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+    if(activeEntity.entity == 'main')
         return;
 
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
 
     switch (activeEntity.entity) {
         case "chats":
-            userFeed.once("value", function(dataSnapshot) {
 
-                if (dataSnapshot.child("chats").exists()) {
-                    userFeed.child("chats").remove();
-                    $("#feedSub").css("color", inactiveColor);
+            // re-defining userFeed in chats context
+            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot){
+                userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
+                
+                userFeed.once("value", function(dataSnapshot) {
 
-                    // remove inbox only if not registered to anything else
-                    if(!subsManager.notificationsIsSet)
-                        DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).remove();
+                    if (dataSnapshot.child("chats").exists()) {
+                        // remove and listener inbox only if not registered to anything else
+                        if (!subsManager.notificationsIsSet) {
+                            // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                            //===================================================//
 
-                } else {
-                    userFeed.child("chats").set(true);
+                                DB.child("chats/"+activeEntity.uid+"/messages").orderByChild("dateAdded").limitToLast(1).off("value", chats_cb);
+                                userFeed.child("chats").remove();
+                            //===================================================//
 
-                    // initialize only if not registered to anything else (use existing inbox)
-                    if(!subsManager.notificationsIsSet)
-                        DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).set(0);
-                    $("#feedSub").css("color", activeColor);
-                }
+                            // first line shuts down a specific node listener, even if the listener used also for feed
+                            // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                            // same applies to the opposite.
+                            DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).remove();
+                        } else {
+                            userFeed.child("chats").remove();
+                        }
+
+                        $("#feedSub").css("color", inactiveColor);
+
+                    } else {
+                        userFeed.child("chats").set(true);
+
+                        // initialize only if not registered to anything else (use existing inbox)
+                        if(!subsManager.notificationsIsSet)
+                            DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).set(0);
+                        $("#feedSub").css("color", activeColor);
+                    }
+                });
             });
             break;
 
         case "groups":
 
             // get in only if on a group entity and function is called from the ownerCall box
-            if (isOwnerCall ) {
+            if (isOwnerCall) {
                 userFeed.once("value", function(dataSnapshot) {
                     if (dataSnapshot.child("OwnerCalls").exists()) {
-                        userFeed.child("OwnerCalls").remove();
+
+                        // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                        //===================================================//
+                            DB.child(activeEntity.entity + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
+                            userFeed.child("OwnerCalls").remove();
+                        //===================================================//
+
+                        // first line shuts down a specific node listener, even if the listener used also for feed
+                        // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                        // same applies to the opposite.
+
                         // $("#feedSub").css("color", inactiveColor);
                         // NEEDED: ownerCall box, and an on/off button
 
@@ -60,7 +88,17 @@ subsManager.setFeed = function(isOwnerCall) {
 
             userFeed.once("value", function(dataSnapshot) {
                 if (dataSnapshot.child("newSubEntity").exists()) {
-                    userFeed.child("newSubEntity").remove();
+
+                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                    //===================================================//
+                        DB.child(activeEntity.entity + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entity]).off('child_added');
+                        userFeed.child("newSubEntity").remove();
+                    //===================================================//
+
+                    // first line shuts down a specific node listener, even if the listener used also for feed
+                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                    // same applies to the opposite.
+                    
                     $("#feedSub").css("color", inactiveColor);
 
                 } else {
@@ -73,22 +111,29 @@ subsManager.setFeed = function(isOwnerCall) {
 };
 
 subsManager.isFeedSet = function (isOwnerCall) {
-    // debugger;
+    
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
     // if active entity is Main
-    if(activeEntity.entity == 'undefined' || activeEntity.uid == 'undefined')
+    if(activeEntity.entity == 'main') {
+        $("#feedSub").css("color", inactiveColor);
         return;
-
-    // debugger;
+    }
+    
+    
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
 
     switch (activeEntity.entity) {
         case "chats":
-            userFeed.once('value', function(dataSnapshot) {
-
-                subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
+            // re-defining userFeed in chats context
+            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+                userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
+                
+                userFeed.once('value', function(dataSnapshot) {
+    
+                    subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
+                });
             });
             break;
 

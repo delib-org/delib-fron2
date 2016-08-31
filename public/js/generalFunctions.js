@@ -78,6 +78,9 @@ function entityTypeToHebrew (entityType){
       case "questions":
          return "שאלה";
          break;
+      case "chats":
+         return "שיחה";
+         break;
       default:
          console.log("unknowen entity");
          return undefined;

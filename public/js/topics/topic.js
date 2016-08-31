@@ -17,6 +17,7 @@ function showTopic(topicUid){
 
    var topicCallback = function(questions){
 
+      console.log("topic is called, off dysfunc.");
       if(questions.exists()){
 
          var questionsUnderTopic = questions.val();
@@ -62,8 +63,12 @@ function showTopic(topicUid){
    };
 
    DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
-
-   setActiveEntity("topics", topicUid, "value", topicCallback);
+   
+   var turnOff = function () {
+      DB.child("topics/"+ topicUid.toString()+"/questions").off("value", topicCallback);
+   };
+   
+   setActiveEntity("topics", topicUid, "value", topicCallback, turnOff);
 
 }
 

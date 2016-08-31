@@ -5,7 +5,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
       //adjust the votes to a counting of votes
       DB.child("questions/"+questionUid+"/simpleVoting").once("value", function(voters){
 
-         console.log("adjust the votes to a counting of votes")
+         console.log("adjust the votes to a counting of votes");
          var counts = new Object();
          //get all options
          DB.child("questions/"+questionUid+"/options").once("value", function(options){

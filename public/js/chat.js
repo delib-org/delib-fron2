@@ -3,69 +3,90 @@ function clearChat(){
    $("wrapper").html("");
 }
 
-function showChat(){
+var chatsCallback = function (chats) {
+   console.log('chatsCallback called');
+   // debugger;
+   if (chats.val().text != undefined) {
+      var text = chats.val().text;
+      var time = parseDate(chats.val().dateAdded);
+      var author = chats.val().userName;
+
+      var context = {text: text, time: time, author: author};
+      appendTemplate("#chatMessage-tmpl", context, "wrapper");
+
+      $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
+   }
+};
+
+function showChat() {
 
    clearChat();
 
-   setActiveEntity("chats", chatUid);
-
+   var headerContent ={};
    var chatUid = activeEntity.uid;
-   var entityType = activeEntity.entity;
 
-   //show Header
-   DB.child(entityType+"/"+chatUid).once("value", function(dataSnapshot){
-      var entityTypeLocal = entityTypeToHebrew(entityType);
-      renderTemplate("#chatsHeader-tmpl",{entityType:entityTypeLocal, title:dataSnapshot.val().title },"#headerTitle");
+   // encapsulated .off() firebase call
+   var turnOff = function () {
+      DB.child("chats/"+chatUid+"/messages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
+   };
 
-   }).then(function(rendered) {
-      subsManager.isUpdatesSet();
+   // get specific chat room stuff (== messages and entity content)
+   DB.child("chats/" + chatUid).once('value',function(snapshot) {
+
+      // setActiveEntity should always be called first
+      setActiveEntity("chats", chatUid, "child_added", chatsCallback, turnOff);
+
+      // get actual content, create chat header if needed, implement existing header otherwise
+      DB.child(activeEntity.previuosEntity + "/" + chatUid).once('value', function(actualContent) {
+      if (snapshot.exists()) {
+
+            // get existing header
+            headerContent = {
+               entityType: snapshot.val().entity.entityType,
+               title: snapshot.val().entity.title
+            };
+         } else {
+
+            // create header for chat room
+            headerContent = {
+               entityType: entityTypeToHebrew(activeEntity.previuosEntity),
+               title: actualContent.val().title
+            };
+
+            // set new header for latter use
+            DB.child("chats/" + chatUid + "/entity").set({
+               entityType: entityTypeToHebrew(activeEntity.previuosEntity),
+               title: actualContent.val().title,
+               typeInDB: activeEntity.previuosEntity
+            });
+         }
+
+         // go on rendering and when finished with header setting and active setActiveEntity
+      }).then(function(){
+
+         // header rendering
+         renderTemplate("#chatsHeader-tmpl",headerContent,"#headerTitle");
+
+         // footer rendering
+         renderTemplate("#chatInput-tmpl",{},"footer");
+         subsManager.isUpdatesSet();
+
+         // render chat and keep .on() listening for coming messages
+         DB.child("chats/"+chatUid+"/messages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
+
+         //listen to enter from input, should be called lastly.
+         $("#chatInputTxt").keypress(function (e) {
+            if (e.keyCode == 13) {
+               e.preventDefault();
+               addChatMessagePre(chatUid);
+            }
+         });
+      });
    });
-
-   //show footer
-   renderTemplate("#chatInput-tmpl",{},"footer");
-
-   //listen to enter from input
-   $("#chatInputTxt").keypress(function (e) {
-      if (e.keyCode == 13)
-         e.preventDefault();
-
-  //get chat messages
-  // DB.child("chats/"+chatUid).off();
-  DB.child("chats/"+chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", function(chats){
-    if(chats.exists()) {
-       var text = chats.val().text;
-       var time = parseDate(chats.val().dateAdded);
-       var author = chats.val().userName;
-
-
-       //get chat messages
-       DB.child("chats/" + chatUid).orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
-
-       var chatsCallback = function (chats) {
-
-          if (chats.exists()) {
-             var text = chats.val().text;
-             var time = parseDate(chats.val().dateAdded);
-             var author = chats.val().userName;
-
-             var context = {text: text, time: time, author: author};
-             appendTemplate("#chatMessage-tmpl", context, "wrapper");
-
-             $('wrapper').scrollTop($('wrapper')[0].scrollHeight);
-          }
-
-       }
-    }
-  });
-
-   entitiesCallbacks.chats.callback = chatsCallback;
-   entitiesCallbacks.chats.eventType = "child_added";
-
-});
 }
 
 
-function addChatMessage(chatUid, userUid, text, entityType){
+function addChatMessage(chatUid,userUid, text) {
 
    if (text != "") {
 
@@ -73,22 +94,16 @@ function addChatMessage(chatUid, userUid, text, entityType){
       DB.child("users/"+userUid).once("value", function(user) {
          var userName = user.val().name;
 
-         DB.child("chats/"+chatUid).push({dateAdded: firebase.database.ServerValue.TIMESTAMP, user: userUid, userName:userName, text: text, chatUid: chatUid,entityType: entityType });
-
+         DB.child("chats/"+chatUid+"/messages").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, user: userUid, userName:userName, text: text, chatUid: chatUid});
       })
    }
 }
 
 
-function addChatMessagePre(chatUid, entityType){
+function addChatMessagePre(chatUid) {
 
-   if (chatUid == null || chatUid == undefined){
-      chatUid = activeEntity.uid;
-      entityType = activeEntity.entity;
-   }
-
-   var inputValue=$("#chatInputTxt").val();
-   addChatMessage(chatUid, userUuid, inputValue, entityType);
+   var inputValue = $("#chatInputTxt").val();
+   addChatMessage(chatUid, userUuid, inputValue);
    $("#chatInputTxt").val("");
 }
 

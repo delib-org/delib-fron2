@@ -24,6 +24,7 @@ function showGroup(groupUid){
 
    var showGroupCallback = function(topics){
 
+      console.log("group is called, off dysfunc.");
 
       if(topics.exists()){
 
@@ -72,7 +73,12 @@ function showGroup(groupUid){
 
    //show wrapper
    DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
-   setActiveEntity("groups", groupUid, "value", showGroupCallback);
+   
+   var turnOff = function () {
+      DB.child("groups/"+groupUid+"/topics").off("value", showGroupCallback);
+   };
+   
+   setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
 
 
    if(!back){

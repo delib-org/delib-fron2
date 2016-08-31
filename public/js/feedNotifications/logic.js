@@ -1,20 +1,23 @@
+var chats_cb;
+var entityAdded_cb;
+var ownerCall_cb;
 function updatesListener() {
 
     function regFalsify(regObject) {
         if (!(regObject.feed || regObject.notifications))
             regObject = false;
+        return regObject;
     }
 
     // turn off previous listener
     DB.child("users/"+userUuid+"/updates").off();
 
-    // listene to Updates
+    // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
         // search inside entities
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
             entityUpdates.forEach(function (entityUpdate) {
-
                 var isNewSubEntityReg = {
                     feed: entityUpdate.child('feed/newSubEntity').exists(),
                     notifications: entityUpdate.child('notifications/newSubEntity').exists()
@@ -26,33 +29,40 @@ function updatesListener() {
                     };
 
                 var isChatReg = {
-                    feed: entityUpdate.child('feed/chat').exists(),
-                    notifications: entityUpdate.child('notifications/chat').exists()
+                    feed: entityUpdate.child('feed/chats').exists(),
+                    notifications: entityUpdate.child('notifications/chats').exists()
                 };
 
-                regFalsify(isOwnerCallReg);
-                regFalsify(isNewSubEntityReg);
-                regFalsify(isChatReg);
+                isOwnerCallReg = regFalsify(isOwnerCallReg);
+                isNewSubEntityReg = regFalsify(isNewSubEntityReg);
+                isChatReg = regFalsify(isChatReg);
 
 
                 // if subscribed to ownerCalls
                 if (isOwnerCallReg) {
-                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added', function (ownerCall) {
+                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (ownerCall) {
 
-                        //needs to be mostUpdatedContent.key as chats
-                        if(mostUpdatedContent == null)
+                        // ==== regulation chunk ==== //
+                        // will make sure we will get the latest whatever..
+                        if (mostUpdatedContent == null) {
                             mostUpdatedContent = ownerCall;
-                        else if (mostUpdatedContent.dateAdded < ownerCall.dateAdded)
+                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                        }
+                        else if (mostUpdatedContent.val().dateAdded < ownerCall.val().dateAdded - 400)
+                        {
                             mostUpdatedContent = ownerCall;
+                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                        }
                         else
                             return;
+                        // ============================================================================
 
                             DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
                                 if(isOwnerCallReg.notifications)
-                                    pushNotification(actualContent, "ownerCalls", ownerCall.val().description);
+                                    pushNotification(actualContent, "ownerCalls", ownerCall.val().callText);
 
                                 if(isOwnerCallReg.feed)
-                                    feedBuilder(actualContent,"ownerCalls", ownerCall.val().description);
+                                    feedBuilder(actualContent, "ownerCalls", ownerCall.val().callText);
                             });
                     });
                 }
@@ -60,28 +70,31 @@ function updatesListener() {
                 // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
 
                 if (isNewSubEntityReg) {
-                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/" + subEntity[entityUpdates.key]).orderByChild('dateAdded').limitToLast(1).on('child_added', function (entityAddedUid) {
+                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/" + subEntity[entityUpdates.key]).orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                         DB.child(subEntity[entityUpdates.key] + "/" + entityAddedUid.key).once('value', function (actualContent) {
 
+                            console.log("actualContent: " + entityAddedUid.val().dateAdded);
 
-                            console.log(mostUpdatedContent.val());
-                            console.log(actualContent.val());
-                            console.log(Number(mostUpdatedContent.val().dateAdded) < Number(entityAddedUid.val().dateAdded));
-
-
-                            if (mostUpdatedContent == null)
-                                mostUpdatedContent = actualContent;
-                            else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded)
-                                mostUpdatedContent = actualContent;
+                            // ==== regulation chunk ==== //
+                            // will make sure we will get the latest whatever..
+                            if (mostUpdatedContent == null) {
+                                mostUpdatedContent = entityAddedUid;
+                                // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                            }
+                            else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 400)
+                            {
+                                mostUpdatedContent = entityAddedUid;
+                                // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                            }
                             else
                                 return;
+                            // ============================================================================
 
                             if (isNewSubEntityReg.notifications)
                                 pushNotification(actualContent, subEntity[entityUpdates.key]);
 
                             if (isNewSubEntityReg.feed)
-                                feedBuilder(actualContent,"chats", ownerCall.val().description);
-
+                                feedBuilder(actualContent, entityUpdates.key);
 
                         }); //.catch(function (error) { console.log(error, "no entity path") })
                     });
@@ -91,16 +104,32 @@ function updatesListener() {
 
                 if(isChatReg) {
                     // check if added message, get last message by date
-                    DB.child("chats/" + entityUpdate.key).orderByChild('dateAdded').limitToLast(1).on('child_added', function (lastMessage) {
+                    DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').limitToLast(1).on('child_added', chats_cb = function (lastMessage) {
                         // get inbox unseen messages counter
                         DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
-                            // now we need the actual content of the entity related to current chatRoom
+                            // now we need the actual content of the entity related to current chatRoom, note that chat updates bound to groups only..
                             DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                 // don't bring up notificaions and nor count them if already inside subscribed chat room
                                 if(!(activeEntity.entity == "chats" && activeEntity.uid == entityUpdate.key)) {
                                     // if no such group, get out
+
                                     if (chatEntityContent == null)
                                         return;
+
+                                    // ==== regulation chunk ==== //
+                                    // will make sure we will get the latest whatever..
+                                    if (mostUpdatedContent == null) {
+                                        mostUpdatedContent = lastMessage;
+                                        // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                    }
+                                    else if (mostUpdatedContent.val().dateAdded < lastMessage.val().dateAdded - 400)
+                                    {
+                                        mostUpdatedContent = lastMessage;
+                                        // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                    }
+                                    else
+                                        return;
+                                    // ============================================================================
 
                                     // create a temporary messagesSentInc to hold inboxMessages.val()
                                     var messagesSentInc;
@@ -130,7 +159,6 @@ function updatesListener() {
                                 }
                             });
                         });
-
                     });
                 }
             });
@@ -141,15 +169,24 @@ function updatesListener() {
 
 
 // feed builder
-function feedBuilder (entityDatum, subEntityType, messagesSentInc) {
+function feedBuilder (entityDatum, entityType, variation) {
 
-    switch (subEntityType) {
+    switch (entityType) {
         case "chats":
-                feedJson[entityDatum] = {
+            feedQueue.push( {
                     roomName: entityDatum.val().title,
-                    chatMessagesCounter: messagesSentInc,
+                    chatMessagesCounter: variation,
                     date: entityDatum.val().dateAdded
-            };
+            });
+
+            break;
+
+        case "ownerCalls":
+            feedQueue.push( {
+                roomName: entityDatum.val().title,
+                callText: variation,
+                date: entityDatum.val().dateAdded
+            });
 
             break;
 
@@ -161,11 +198,14 @@ function feedBuilder (entityDatum, subEntityType, messagesSentInc) {
             });
 
             // if feedVolume got to 20, also remove last feed in feedQueue
-            if(Object.keys(feedQueue).length >= feedVolume)
+            if(Object.keys(feedQueue).length >= feedVolume + 1)
                 feedQueue.pop();
 
             break;
     }
+
+
+    console.dir(feedQueue);
 }
 
 

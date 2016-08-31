@@ -42,12 +42,15 @@ function showOption(questionUid, optionUid){
 
    DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption);
 
+   var turnOff = function () {
+      DB.child("questions/"+questionUid+"/options/"+optionUid).off("value", updateWrapperOption);
+   };
 
 
    //setActive entity
    DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
       var optionKey = dataSnapshot.val().optionKey;
-      setActiveEntity("options", optionKey, "value", updateWrapperOption);
+      setActiveEntity("options", optionKey, "value", updateWrapperOption, turnOff);
    })
 
 
