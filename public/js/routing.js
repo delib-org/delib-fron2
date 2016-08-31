@@ -34,9 +34,9 @@ function setUrl(type, uid){
 
       var url = domainUrl+"?"+type+"/"+uid;
       if(locationToCut >=0 && url!=currentUrl) {
-        history.pushState(typeEntity, uid, url );
+         history.pushState(typeEntity, uid, url );
       } else {
-        history.replaceState(typeEntity, uid, url );
+         history.replaceState(typeEntity, uid, url );
       }
    }
 };
@@ -74,6 +74,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
 
    activeEntity.entity = newEntity;
+   activeEntity.previousEntity = previuosEntity;
+   activeEntity.previousUid = previuosUid;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
@@ -97,6 +99,35 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    } else {
       document.title = "דליב (ראשי) : מחליטים ביחד";
    }
+
+
+   $("#entitiesPanel").slideUp(400);
+
+   var currentEntity = activeEntity.uid;
+
+
+   DB.child(activeEntity.entity + '/' + activeEntity.uid + '/title').once('value',function(dataSnap){
+
+      console.log('previous entity', activeEntity.previousEntity);
+      console.log('previous uid', activeEntity.previousUid);
+      console.log('datasnap', dataSnap.val())
+      console.log('current uid', currentEntity)
+      return dataSnap
+
+   }).then(function(res){
+      DB.child(activeEntity.previousEntity +'/'+activeEntity.previousUid+'/title').once('value', function(dataSnap){
+         renderTemplate('#headerBreadCrumbs-tmpl',{
+            previousEntity:activeEntity.previousEntity,
+            previousUid:activeEntity.previousUid,
+            currentUid:activeEntity.uid,
+            currentTitle:res.val(),
+            currentEntity:activeEntity.entity,
+            previousTitle:dataSnap.val()
+         },'#headerBreadCrumbs')
+      })
+   })
+
+
 }
 
 function showEntities(entity, uid){
@@ -106,28 +137,40 @@ function showEntities(entity, uid){
          DB.child("groups/"+uid).once("value", function (group){
             if(group.exists()){
                showGroup(uid);
-            } else { console.log("group "+uid+" do not exist"); }
+            } else {
+               console.log("group "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "topics":
          DB.child("topics/"+uid).once("value", function (topic){
             if (topic.exists()){
                showTopic(uid);
-            } else { console.log("topic "+uid+" do not exist");}
+            } else {
+               console.log("topic "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "questions":
          DB.child("questions/"+uid).once("value", function (question){
             if (question.exists()){
                showQuestion(uid);
-            } else { console.log("question "+uid+" do not exist");}
+            } else {
+               console.log("question "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "chats":
          DB.child("chats/"+uid).once("value", function (question){
             if (question.exists()){
                showChat(uid);
-            } else { console.log("question "+uid+" do not exist");}
+            } else {
+               console.log("question "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       case "main":
@@ -135,10 +178,15 @@ function showEntities(entity, uid){
          break;
       case "options":
          DB.child("options/"+uid).once("value", function(dataSnapshot){
-            var questionUid = dataSnapshot.val().questionUid;
-            var optionUid = dataSnapshot.val().optionUid;
-            console.log(questionUid, optionUid);
-            showOption(questionUid,optionUid);
+            if (question.exists()){
+               var questionUid = dataSnapshot.val().questionUid;
+               var optionUid = dataSnapshot.val().optionUid;
+               console.log(questionUid, optionUid);
+               showOption(questionUid,optionUid);
+            } else {
+               console.log("option "+uid+" do not exist");
+               showMain("public");
+            }
          })
          break;
       default:

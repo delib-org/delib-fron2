@@ -47,9 +47,9 @@ $(function(){
 
     });
     //
-    // renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
-    // renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
-    // renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
+//     renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
+//     renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
+//     renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
 
     listenToAuth();
 });

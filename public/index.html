@@ -105,9 +105,12 @@
 
 
       <script type="text/x-handlebars-template" id="headerBreadCrumbs-tmpl">
-
-<span>url > sub > sub</span>
-
+        <div >
+         <span class="clickables" onclick='showEntities("{{previousEntity}}","{{previousUid}}")'>  {{previousTitle}}</span>
+        <span class="clickables" onclick='showEntities("{{currentEntity}}","{{currentUid}}")'>/
+           {{currentTitle}}
+         </span>
+        </div>
       </script>
 
       <script type="text/x-handlebars-template" id="headerMenu-tmpl">
@@ -127,8 +130,17 @@
 <div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
 <div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
+<div id="groupPlusBtn" class="footer-btn material-ripple" onclick="showAddGroup()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+
       </script>
 
+      <script type="text/x-handlebars-template" id="showEntityPanel-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+      </script>
+
+      <script type="text/x-handlebars-template" id="hideEntityPanel-tmpl">
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-minus fa-2x" aria-hidden="true"></i></div>
+      </script>
       <!--    cards-->
       <script type="text/x-handlebars-template" id="cards-tmpl">
 {{#each groups}}
@@ -145,12 +157,12 @@
 {{#each groups}}
 <div id={{uuid}}_Div class="card">
    <div class="groupDescription clickables" onclick="showGroup('{{uuid}}')">
-      <h4>קבוצה: {{title}}</h4>
+      <h4><i class="fa fa-users" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
          </div>
 {{/each}}
-<button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
+
       </script>
       <script type="text/x-handlebars-template" id="groups_member-tmpl">
 {{#each groups}}
@@ -161,7 +173,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
+
       </script>
 
       <script type="text/x-handlebars-template" id="groups_owner-tmpl">
@@ -177,7 +189,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddGroup" class="action btnAddEntity" onclick="showAddGroup()"><i class="fa fa-plus" aria-hidden="true"></button>
+
       </script>
 
       <!--- Login ------->
@@ -247,7 +259,7 @@
 {{#each groups}}
 <div id={{uuid}} class="card">
    <div class="groupDescription clickables" onclick="showTopic('{{uuid}}')">
-      <h4>נושא: {{title}}</h4>
+      <h4><i class="fa fa-folder-open" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
    <div class="cardsTopicsSubmenu" >
@@ -256,7 +268,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddTopic" class="action btnAddEntity" onclick="showAddTopicScreen()"><i class="fa fa-plus" aria-hidden="true"></button>
+<!--<button id="btnAddTopic" class="action btnAddEntity" onclick="showAddTopicScreen()"><i class="fa fa-plus" aria-hidden="true"></button>-->
       </script>
 
 
@@ -278,13 +290,13 @@
       </script>
 
       <script type="text/x-handlebars-template" id="createGroupFooter-tmpl">
-<div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
+<div class="footer-btn material-ripple" onclick="showMain('owned')"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="addNewGroup()"><span>אישור</span></div>
       </script>
 
       <!--    edit group footer-->
       <script type="text/x-handlebars-template" id="editGroupFooter-tmpl">
-<div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
+<div class="footer-btn material-ripple" onclick="showMain('owned')"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="updateGroupToDB('{{groupUid}}')"><span>אישור</span></div>
       </script>
 
@@ -299,7 +311,7 @@
 {{#each questions}}
 <div id={{uuid}} class="card">
    <div class="groupDescription clickables" onclick=showQuestion('{{uuid}}')>
-      <h4>שאלה: {{title}}</h4>
+      <h4><i class="fa fa-question-circle" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
    <div class="cardsTopicsSubmenu">
@@ -309,7 +321,7 @@
          </div>
          </div>
 {{/each}}
-<button id="btnAddQuestion" class="action btnAddEntity" onclick="newQuestion()"><i class="fa fa-plus" aria-hidden="true"></button>
+<!--<button id="btnAddQuestion" class="action btnAddEntity" onclick="newQuestion()"><i class="fa fa-plus" aria-hidden="true"></button>-->
       </script>
 
       <!--    create topic page-->
@@ -559,5 +571,28 @@ Tow options
    <script type="text/x-handlebars-template" id="optionWrapper-tmpl">
 <div id="{{optionUid}}DivOpt" class="card" contenteditable="true" >{{{description}}}</div>
       </script>
+
+<!--                     Panels                             -->
+
+   <script type="text/x-handlebars-template" id="EntitiesPanel-tmpl">
+      <div class="panel" id="entitiesPanel">
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
+            <div class="panelText">Topic</div>
+         </div>
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
+            <div class="panelText">Question</div>
+         </div>
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-file-text" aria-hidden="true"></i></div>
+            <div class="panelText">Document</div>
+         </div>
+         <div class="panelBlock">
+            <div class="panelSimbole"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></div>
+            <div class="panelText">Live Talk</div>
+         </div>
+      </div>
+   </script>
 
 </html>
