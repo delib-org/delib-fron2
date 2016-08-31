@@ -100,7 +100,7 @@ const defaultFeedVolume = 10;
 var feedManager = {
     queue: [],
     volume: defaultFeedVolume,
-    promise: new Promise()
+    promise: null
 };
 
 // Initialize Firebase
