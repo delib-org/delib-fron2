@@ -1,6 +1,7 @@
 function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
-   var questionDB = DB.child("questions/"+questionUid+"/options"); DB.child("questions/"+questionUid+"/options").orderByChild("votes").limitToLast(numberOfOptions).once("value",function(options){
+   var questionDB = DB.child("questions/"+questionUid+"/options");
+   DB.child("questions/"+questionUid+"/options").orderByChild("votes").limitToLast(numberOfOptions).once("value",function(options){
 
       //adjust the votes to a counting of votes
       DB.child("questions/"+questionUid+"/simpleVoting").once("value", function(voters){
@@ -68,6 +69,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
          })
       })
    };
+   
    setActiveEntity("questions",questionUid,"","",turnOff)
 }
 

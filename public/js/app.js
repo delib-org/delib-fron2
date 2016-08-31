@@ -74,7 +74,6 @@ const toHebrew = {
 };
 var inactiveColor = "#5f1f1f";
 var activeColor = "white";
-// Updates Variables and Constants
 
 // subsManager Def.
 var subsManager = {
@@ -94,8 +93,8 @@ var subsManager = {
 };
 
 var mostUpdatedContent = null;
-// Feed
 
+// FeedManager Def.
 const defaultFeedVolume = 10;
 var feedManager = {
     queue: [],
@@ -103,13 +102,15 @@ var feedManager = {
     promise: null
 };
 
-// Initialize Firebase
+// Firebase Configuration
 var config = {
 	apiKey: "AIzaSyBEumZUTCL3Jc9pt7_CjiSVTxmz9aMqSvo"
 	, authDomain: "synthesistalyaron.firebaseapp.com"
 	, databaseURL: "https://synthesistalyaron.firebaseio.com"
 	, storageBucket: "gs://synthesistalyaron.appspot.com"
 };
+
+// Initialize Firebase
 firebase.initializeApp(config);
 var DB = firebase.database().ref();
 var storage = firebase.storage();
