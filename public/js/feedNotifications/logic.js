@@ -62,7 +62,7 @@ function updatesListener() {
                                     pushNotification(actualContent, "ownerCalls", ownerCall.val().callText);
 
                                 if(isOwnerCallReg.feed)
-                                    feedBuilder(actualContent, "ownerCalls", ownerCall.val().callText);
+                                    feedBuilder(actualContent, entityUpdate.key, "ownerCalls", ownerCall.val().callText);
                             });
                     });
                 }
@@ -94,7 +94,7 @@ function updatesListener() {
                                 pushNotification(actualContent, subEntity[entityUpdates.key]);
 
                             if (isNewSubEntityReg.feed)
-                                feedBuilder(actualContent, entityUpdates.key);
+                                feedBuilder(actualContent, entityUpdate.key, entityUpdates.key);
 
                         }); //.catch(function (error) { console.log(error, "no entity path") })
                     });
@@ -154,7 +154,7 @@ function updatesListener() {
                                         if (isChatReg.notifications)
                                             pushNotification(chatEntityContent, "chats", messagesSentInc);
                                         if (isChatReg.feed)
-                                            feedBuilder(chatEntityContent,"chats", messagesSentInc);
+                                            feedBuilder(chatEntityContent, entityUpdate.key, "chats", messagesSentInc);
                                     }
                                 }
                             });
@@ -169,22 +169,26 @@ function updatesListener() {
 
 
 // feed builder
-function feedBuilder (entityDatum, entityType, variation) {
+function feedBuilder (entityDatum, entityUid, entityType, variation) {
     
     switch (entityType) {
         case "chats":
-            feedManager.queue.push( {
-                    roomName: entityDatum.val().title,
-                    chatMessagesCounter: variation,
-                    date: entityDatum.val().dateAdded
+            feedManager.queue.push({
+                roomName: entityDatum.val().title,
+                chatMessagesCounter: variation,
+                uid: entityUid,
+                entityType: entityType,
+                date: entityDatum.val().dateAdded
             });
 
             break;
 
         case "ownerCalls":
-            feedManager.queue.push( {
+            feedManager.queue.push({
                 roomName: entityDatum.val().title,
                 callText: variation,
+                uid: entityUid,
+                entityType: entityType,
                 date: entityDatum.val().dateAdded
             });
 
@@ -194,6 +198,8 @@ function feedBuilder (entityDatum, entityType, variation) {
             feedManager.queue.push({
                 title: entityDatum.val().title,
                 description: entityDatum.val().description,
+                uid: entityUid,
+                entityType: entityType,
                 date: entityDatum.val().dateAdded
             });
 
@@ -203,7 +209,7 @@ function feedBuilder (entityDatum, entityType, variation) {
 
             break;
     }
-    
+
     feedManager.promise = Promise.resolve(true);
 
     console.dir(feedManager.queue, feedManager.promise);
