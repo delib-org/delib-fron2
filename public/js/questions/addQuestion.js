@@ -87,7 +87,7 @@ function showAddNewQuestion(){
 //   }
    var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType);
    //  var newQuestion = DB.child("questions").push({title: questionName, description: questionDescription, type: questionType, owner: userUuid });
-   if (activeEntity.entity == "topics") {
+   if (activeEntity.entityType == "topics") {
       var topic = activeEntity.uid;
       DB.child("topics/"+topic+"/questions/"+newQuestion.key+"/dateAdded").set(firebase.database.ServerValue.TIMESTAMP);
    }
@@ -124,7 +124,7 @@ function setNewQuestionToDB (title, description, type){
       }
    }
 
-   var parentEntityType = activeEntity.entity;
+   var parentEntityType = activeEntity.entityType;
    var parentUid = activeEntity.uid;
    console.log("set question to DB")
    var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:optionsTempInput, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});

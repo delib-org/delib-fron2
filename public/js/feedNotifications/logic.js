@@ -110,7 +110,7 @@ function updatesListener() {
                             // now we need the actual content of the entity related to current chatRoom, note that chat updates bound to groups only..
                             DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                 // don't bring up notificaions and nor count them if already inside subscribed chat room
-                                if(!(activeEntity.entity == "chats" && activeEntity.uid == entityUpdate.key)) {
+                                if(!(activeEntity.entityType == "chats" && activeEntity.uid == entityUpdate.key)) {
                                     // if no such group, get out
 
                                     if (chatEntityContent == null)

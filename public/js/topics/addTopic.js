@@ -19,12 +19,12 @@ function addNewTopic(){
       return;
    }
 
-   var parentEntityType = activeEntity.entity;
+   var parentEntityType = activeEntity.entityType;
    var parentEntityUid = activeEntity.uid;
 
    var newTopic = DB.child("topics").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: topicName, description: topicDescription, owner: userUuid, parentEntityType:parentEntityType, parentEntityUid: parentEntityUid });
 
-//   if (activeEntity.entity == "groups"){
+//   if (activeEntity.entityType == "groups"){
 //      var group = activeEntity.uid;      DB.child("groups/"+group+"/topics/"+newTopic.key+"/dateAdded").set(firebase.database.ServerValue.TIMESTAMP);
 //   }
 
@@ -34,5 +34,5 @@ function addNewTopic(){
 
    DB.child("users/"+userUuid+"/topics/"+newTopic.key).set("owner");
 
-   showEntities(activeEntity.entity,activeEntity.uid);
+   showEntities(activeEntity.entityType,activeEntity.uid);
 }

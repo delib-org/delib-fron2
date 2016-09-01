@@ -43,7 +43,7 @@ function setUrl(type, uid){
 
 function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff) {
    // debugger;
-   var previuosEntity = activeEntity.entity;
+   var previuosEntity = activeEntity.entityType;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
    var previuosCallback = activeEntity.callback;
@@ -72,7 +72,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    }
 
 
-   activeEntity.entity = newEntity;
+   activeEntity.entityType = newEntity;
 //   activeEntity.previousEntity = previuosEntity;
 //   activeEntity.previousUid = previuosUid;
    activeEntity.uid = newUid;

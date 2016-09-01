@@ -24,7 +24,7 @@ function addNewGroup(){
    }
 
 
-   var parentEntityType = activeEntity.entity;
+   var parentEntityType = activeEntity.entityType;
    var parentEntityUid = activeEntity.uid;
 
    if(parentEntityType != "groups" && parentEntityType != "topics"){

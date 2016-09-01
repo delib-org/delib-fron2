@@ -4,12 +4,12 @@ subsManager.setFeed = function(isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == 'main')
+    if(activeEntity.entityType == 'main')
         return;
 
-    var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
+    var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/feed");
 
-    switch (activeEntity.entity) {
+    switch (activeEntity.entityType) {
         case "chats":
 
             // re-defining userFeed in chats context
@@ -59,7 +59,7 @@ subsManager.setFeed = function(isOwnerCall) {
 
                         // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                         //===================================================//
-                            DB.child(activeEntity.entity + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
+                            DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
                             userFeed.child("OwnerCalls").remove();
                         //===================================================//
 
@@ -91,7 +91,7 @@ subsManager.setFeed = function(isOwnerCall) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                     //===================================================//
-                        DB.child(activeEntity.entity + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entity]).off('child_added');
+                        DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entityType]).off('child_added');
                         userFeed.child("newSubEntity").remove();
                     //===================================================//
 
@@ -116,15 +116,15 @@ subsManager.isFeedSet = function (isOwnerCall) {
         isOwnerCall= false;
 
     // if active entity is Main
-    if(activeEntity.entity == 'main') {
+    if(activeEntity.entityType == 'main') {
         $("#feedSub").css("color", inactiveColor);
         return;
     }
     
     
-    var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/feed");
+    var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/feed");
 
-    switch (activeEntity.entity) {
+    switch (activeEntity.entityType) {
         case "chats":
             // re-defining userFeed in chats context
             DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {

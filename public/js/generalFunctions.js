@@ -51,7 +51,7 @@ function isNotEmpty(variable){
 }
 
 function back(){
-   var entity = activeEntity.entity;
+   var entity = activeEntity.entityType;
 
    switch (entity){
       case "groups":
