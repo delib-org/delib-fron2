@@ -22,19 +22,19 @@ function showGroup(groupUid){
    });
 
 
-   var showGroupCallback = function(topics){
+   var showGroupCallback = function(subEntities){
 
-      if(topics.exists()){
+      if(subEntities.exists()){
 
-         var topicsUnderGroup = topics.val();
-         var numberOfTopics = Object.keys(topicsUnderGroup).length;
-         var topicsArray = new Array();
+         var subEntitiesUnderGroup = subEntities.val();
+         var numberOfSubEntities = Object.keys(subEntitiesUnderGroup).length;
+         var subEntitiesUnderGroupArray = new Array();
 
          var i = 1;
 
-         topics.forEach(function(topic){
+         subEntities.forEach(function(subEntity){
 
-            DB.child("topics/"+topic.key).once("value", function(data){
+            DB.child(subEntity.val().entityType+"/"+subEntity.key).once("value", function(data){
 
                var preContext = new Object();
 
@@ -45,16 +45,16 @@ function showGroup(groupUid){
                   //          console.log("t: "+ title + ", d: "+ description);
 
                   preContext = {
-                     uuid: topic.key,
+                     uuid: subEntity.key,
                      title: title,
                      description: description
                   }
 
-                  topicsArray.push(preContext);
+                  subEntitiesUnderGroupArray.push(preContext);
                }
 
-               if (i === numberOfTopics){
-                  var context = {groups: topicsArray};
+               if (i === numberOfSubEntities){
+                  var context = {groups: subEntitiesUnderGroupArray};
                   renderTemplate("#groupPage-tmpl", context, "wrapper");
                   $("wrapper").hide();
                   $("wrapper").fadeIn();
@@ -70,7 +70,7 @@ function showGroup(groupUid){
 
 
    //show wrapper
-   DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
+   DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
    
    var turnOff = function () {
       DB.child("groups/"+groupUid+"/topics").off("value", showGroupCallback);
