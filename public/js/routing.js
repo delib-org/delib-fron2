@@ -86,13 +86,13 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
    if (newEntity == "chats")
       DB.child(previuosEntity+"/"+newUid).once("value", function (dataSnapshot){
-         // console.log(dataSnapshot.val());
+
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       });
 
    if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions"){
       DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
-         console.log(dataSnapshot.val());
+
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       })
    } else {
@@ -156,7 +156,7 @@ function showEntities(entity, uid){
             if (question.exists()){
                var questionUid = dataSnapshot.val().questionUid;
                var optionUid = dataSnapshot.val().optionUid;
-               console.log(questionUid, optionUid);
+
                showOption(questionUid,optionUid);
             } else {
                console.log("option "+uid+" do not exist");
@@ -174,7 +174,7 @@ function showBreadCrumb(entityType, uid, title){
    //get all parents of an entity (by settin it's type and uid)
 
    //child
-   console.log("c: "+ entityType, uid)
+
    //var parentsArray = [{entityType: entityType, uid: uid, title:title, symbol: symbols[entityType]}];
    var parentsArray = new Array();
    //get parent 1
@@ -184,7 +184,7 @@ function showBreadCrumb(entityType, uid, title){
          var parent1Type = dataP1.val().parentEntityType;
          var parent1Uid = dataP1.val().parentEntityUid;
          var parent1Symbol = symbols[parent1Type];
-         console.log("p1:"+parent1Type,parent1Uid);
+
 
          parentsArray.push({entityType: parent1Type, uid: parent1Uid, symbol: parent1Symbol});
 
@@ -192,7 +192,7 @@ function showBreadCrumb(entityType, uid, title){
 
          var context= {path: preContext}
          renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
-         console.log("0: "+JSON.stringify(parentsArray))
+
 
          //check if the parent have parent..
 
@@ -208,13 +208,12 @@ function showBreadCrumb(entityType, uid, title){
                var context= {path: preContext}
 
                renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
-               console.log("1: "+JSON.stringify(parentsArray));
 
                //get parent2 uid and type
                var parent2Type = dataP2.val().parentEntityType;
                var parent2Uid = dataP2.val().parentEntityUid;
                var parent2Symbol = symbols[parent2Type];
-               console.log("p2:"+parent2Type,parent2Uid)
+
 
                parentsArray.push({entityType: parent2Type, uid: parent2Uid, symbol: parent2Symbol});
 
@@ -226,12 +225,11 @@ function showBreadCrumb(entityType, uid, title){
                      preContext.reverse();
                      var context= {path: preContext}
                      renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
-                     console.log("2: "+JSON.stringify(parentsArray))
+
                   }
                })
             } else {
-               console.log("no 2nd parent");
-               console.log("p2:"+ JSON.stringify(parentsArray))
+
                parentsArray.reverse();
                var context= {path: parentsArray}
                renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
@@ -239,12 +237,10 @@ function showBreadCrumb(entityType, uid, title){
 
          })
       } else {
-         console.log("no 1st parent");
-         console.log("p1:"+ JSON.stringify(parentsArray))
+
          var context= {path: parentsArray}
          renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
       }
-
    })
 
 }
