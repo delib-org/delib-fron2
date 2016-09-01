@@ -108,10 +108,6 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
    DB.child(activeEntity.entity + '/' + activeEntity.uid + '/title').once('value',function(dataSnap){
 
-      console.log('previous entity', activeEntity.previousEntity);
-      console.log('previous uid', activeEntity.previousUid);
-      console.log('datasnap', dataSnap.val())
-      console.log('current uid', currentEntity)
       return dataSnap
 
    }).then(function(res){

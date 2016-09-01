@@ -183,7 +183,8 @@ function showFeed(){
    for (i in feedQueue){
       console.log(feedQueue[i].title);
       var title = feedQueue[i].title;
-      var description = feedQueue[i].description
+      var description = feedQueue[i].description;
+      var entityType = feedQueue[i].
 
       preContext.push({title:title, description: description})
 
