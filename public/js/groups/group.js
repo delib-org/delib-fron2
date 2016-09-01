@@ -14,7 +14,7 @@ function showGroup(groupUid){
 
 
       //show footer
-      renderTemplate("#addTopicBtn-tmpl", {}, "footer");
+      renderTemplate("#showEntityPanel-tmpl", {}, "footer");
 
       isMembership();
    }).then(function(rendered) {

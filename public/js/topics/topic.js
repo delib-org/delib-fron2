@@ -18,7 +18,6 @@ function showTopic(topicUid){
 
    var topicCallback = function(questions){
 
-      console.log("topic is called, off dysfunc.");
       if(questions.exists()){
 
          var questionsUnderTopic = questions.val();

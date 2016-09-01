@@ -147,7 +147,7 @@
 -->
 
       <script type="text/x-handlebars-template" id="showEntityPanel-tmpl">
-         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
       </script>
 
       <script type="text/x-handlebars-template" id="hideEntityPanel-tmpl">
@@ -606,11 +606,11 @@ Tow options
 
    <script type="text/x-handlebars-template" id="EntitiesPanel-tmpl">
       <div class="panel" id="entitiesPanel">
-         <div class="panelBlock">
+         <div class="panelBlock clickables" onclick="showAddGroup()">
             <div class="panelSimbole"><i class="fa fa-users" aria-hidden="true"></i></div>
             <div class="panelText">Group</div>
          </div>
-         <div class="panelBlock">
+         <div class="panelBlock clickables" onclick="showAddTopicScreen()" >
             <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
             <div class="panelText">Topic</div>
          </div>
