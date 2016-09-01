@@ -24,11 +24,17 @@ function addNewGroup(){
    }
 
 
-
-   var newGroup = DB.child("groups").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: groupName, description: groupDescription, type:groupType, owner: userUuid });
-
    var parentEntityType = activeEntity.entity;
    var parentEntityUid = activeEntity.uid;
+
+   if(parentEntityType != "groups" && parentEntityType != "topics"){
+      parentEntityType = "";
+      parentEntityUid = "";
+   }
+
+   var newGroup = DB.child("groups").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: groupName, description: groupDescription, type:groupType, owner: userUuid, parentEntityType:parentEntityType, parentEntityUid: parentEntityUid });
+
+
 
    if (parentEntityType == "groups"){
       DB.child("groups/"+parentEntityUid+"/subEntities/"+newGroup.key).set({entityType: "groups", dateAdded: firebase.database.ServerValue.TIMESTAMP, order:1 })

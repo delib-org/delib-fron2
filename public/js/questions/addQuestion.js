@@ -124,10 +124,11 @@ function setNewQuestionToDB (title, description, type){
       }
    }
 
-
-
-   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:optionsTempInput, owner: userUuid});
-
+   var parentEntityType = activeEntity.entity;
+   var parentUid = activeEntity.uid;
+   console.log("set question to DB")
+   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:optionsTempInput, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+   console.log("set question to DB: "+ questionId.key)
    return questionId;
 }
 

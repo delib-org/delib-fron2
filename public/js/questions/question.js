@@ -1,30 +1,31 @@
 function showQuestion(questionUid){
 
-  //show header & get question info
-  DB.child("questions/"+questionUid).once("value", function(dataSnapshot){
-    var title = dataSnapshot.val().title;
-    renderTemplate("#questionHeaderTitle-tmpl", {question: title}, "#headerTitle");
-    renderTemplate("#headerMenu-tmpl", {chatUid: questionUid, entityType: "questions"}, "#headerMenu");
+   //show header & get question info
+   DB.child("questions/"+questionUid).once("value", function(dataSnapshot){
+      var title = dataSnapshot.val().title;
+      renderTemplate("#questionHeaderTitle-tmpl", {question: title}, "#headerTitle");
+      showBreadCrumb("questions", questionUid)
+      renderTemplate("#headerMenu-tmpl", {chatUid: questionUid, entityType: "questions"}, "#headerMenu");
 
 
 
-    var description = dataSnapshot.val().description;
-    var typeOfQuestion = dataSnapshot.val().type;
-    var numberOfOptions = dataSnapshot.val().numberOfOptions;
+      var description = dataSnapshot.val().description;
+      var typeOfQuestion = dataSnapshot.val().type;
+      var numberOfOptions = dataSnapshot.val().numberOfOptions;
 
-    switch (typeOfQuestion){
-      case "limitedOptions":
-        showLimitedOptionsQuestion(questionUid, numberOfOptions);
-        break;
-      case "multiOptions":
-        showMultiOptions(questionUid);
-        break;
-      default:
-        showLimitedOptionsQuestion(questionUid, numberOfOptions);
-    }
-  }).then(function(rendered) {
-    subsManager.isUpdatesSet();
-  });
+      switch (typeOfQuestion){
+         case "limitedOptions":
+            showLimitedOptionsQuestion(questionUid, numberOfOptions);
+            break;
+         case "multiOptions":
+            showMultiOptions(questionUid);
+            break;
+         default:
+            showLimitedOptionsQuestion(questionUid, numberOfOptions);
+      }
+   }).then(function(rendered) {
+      subsManager.isUpdatesSet();
+   });
 
 
 
@@ -32,10 +33,10 @@ function showQuestion(questionUid){
 
 
    //  if (back == undefined){back = false};
-//
-//  if (!back){
-//    setUrl("question", questionUid);
-//  }
+   //
+   //  if (!back){
+   //    setUrl("question", questionUid);
+   //  }
 
 }
 
@@ -109,52 +110,52 @@ function showQuestion(questionUid){
 
 function voteSimple(questionUid, optionUid){
 
-  $("#info").hide(400);
-  var optionUidStr = JSON.stringify(optionUid);
-  //check to see what have the user voted last
+   $("#info").hide(400);
+   var optionUidStr = JSON.stringify(optionUid);
+   //check to see what have the user voted last
 
-  DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).once("value", function(vote){
-    var isExists = vote.exists();
+   DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).once("value", function(vote){
+      var isExists = vote.exists();
 
-    if (!isExists){
-      DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
+      if (!isExists){
+         DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
 
-      DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-        return currentVote +1;
-      })
-      $(".voteBtn").css("border" , "0px solid black");
-      $("#"+optionUid+"_btn").css("border" , "3px solid black");
-    } else {
-      var lastVoted = vote.val();
-      if (optionUid == lastVoted){
-        DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-          return currentVote -1;
-        })
-        DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).remove();
-
-        $(".voteBtn").css("border" , "0px solid black");
+         DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+            return currentVote +1;
+         })
+         $(".voteBtn").css("border" , "0px solid black");
+         $("#"+optionUid+"_btn").css("border" , "3px solid black");
       } else {
-        DB.child("questions/"+questionUid+"/options/"+lastVoted+"/votes").transaction(function(currentVote){
-          return currentVote -1;
-        });
-        DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-          return currentVote +1;
-        })
-        DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
-        $(".voteBtn").css("border" , "0px solid black");
-        $("#"+optionUid+"_btn").css("border" , "3px solid black");
-      }
+         var lastVoted = vote.val();
+         if (optionUid == lastVoted){
+            DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+               return currentVote -1;
+            })
+            DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).remove();
 
-    }
-  })
+            $(".voteBtn").css("border" , "0px solid black");
+         } else {
+            DB.child("questions/"+questionUid+"/options/"+lastVoted+"/votes").transaction(function(currentVote){
+               return currentVote -1;
+            });
+            DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+               return currentVote +1;
+            })
+            DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
+            $(".voteBtn").css("border" , "0px solid black");
+            $("#"+optionUid+"_btn").css("border" , "3px solid black");
+         }
+
+      }
+   })
 }
 
 function lightCheckedBtn(questionUid){
-  DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).once("value", function(checkedOption){
+   DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).once("value", function(checkedOption){
 
-    $(".voteBtn").css("border" , "0px solid black");
-    $("#"+checkedOption.val()+"_btn").css("border" , "3px solid black");
-  })
+      $(".voteBtn").css("border" , "0px solid black");
+      $("#"+checkedOption.val()+"_btn").css("border" , "3px solid black");
+   })
 }
 
 

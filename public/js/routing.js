@@ -52,7 +52,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    if (previuosEntity != "main"){
       if (previuosEventType != undefined){
          if (previuosUid != undefined){
-               previuosTurnOff();
+            previuosTurnOff();
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }
@@ -73,13 +73,13 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
 
    activeEntity.entity = newEntity;
-   activeEntity.previousEntity = previuosEntity;
-   activeEntity.previousUid = previuosUid;
+//   activeEntity.previousEntity = previuosEntity;
+//   activeEntity.previousUid = previuosUid;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
    activeEntity.turnOff = turnOff;
-   activeEntity.previuosEntity = previuosEntity;
+   //activeEntity.previuosEntity = previuosEntity;
    // activeEntity.onObject = newOnObject;
 
    setUrl(newEntity, newUid);
@@ -89,10 +89,10 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
          // console.log(dataSnapshot.val());
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       });
-   
+
    if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions"){
       DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
-         // console.log(dataSnapshot.val());
+         console.log(dataSnapshot.val());
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       })
    } else {
@@ -103,26 +103,6 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    $("#entitiesPanel").slideUp(400);
 
    var currentEntity = activeEntity.uid;
-
-
-   DB.child(activeEntity.entity + '/' + activeEntity.uid + '/title').once('value',function(dataSnap){
-
-      return dataSnap
-
-   }).then(function(res){
-      DB.child(activeEntity.previousEntity +'/'+activeEntity.previousUid+'/title').once('value', function(dataSnap){
-         renderTemplate('#headerBreadCrumbs-tmpl',{
-            previousEntity:activeEntity.previousEntity,
-            previousUid:activeEntity.previousUid,
-            currentUid:activeEntity.uid,
-            currentTitle:res.val(),
-            currentEntity:activeEntity.entity,
-            previousTitle:dataSnap.val()
-         },'#headerBreadCrumbs')
-      })
-   })
-
-
 }
 
 function showEntities(entity, uid){
@@ -190,3 +170,81 @@ function showEntities(entity, uid){
 
 };
 
+function showBreadCrumb(entityType, uid, title){
+   //get all parents of an entity (by settin it's type and uid)
+
+   //child
+   console.log("c: "+ entityType, uid)
+   //var parentsArray = [{entityType: entityType, uid: uid, title:title, symbol: symbols[entityType]}];
+   var parentsArray = new Array();
+   //get parent 1
+   DB.child(entityType+"/"+uid).once("value", function(dataP1){
+
+      if (dataP1.val() != null && dataP1.val().parentEntityType != undefined){
+         var parent1Type = dataP1.val().parentEntityType;
+         var parent1Uid = dataP1.val().parentEntityUid;
+         var parent1Symbol = symbols[parent1Type];
+         console.log("p1:"+parent1Type,parent1Uid);
+
+         parentsArray.push({entityType: parent1Type, uid: parent1Uid, symbol: parent1Symbol});
+
+         var preContext = parentsArray;
+
+         var context= {path: preContext}
+         renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
+         console.log("0: "+JSON.stringify(parentsArray))
+
+         //check if the parent have parent..
+
+         DB.child(parent1Type+"/"+parent1Uid).once("value", function(dataP2){
+
+             parentsArray[0].title = dataP2.val().title;
+
+            if (dataP2.val() != null && dataP2.val().parentEntityType != undefined){
+               //get parent1 title
+
+               var preContext = parentsArray;
+
+               var context= {path: preContext}
+
+               renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
+               console.log("1: "+JSON.stringify(parentsArray));
+
+               //get parent2 uid and type
+               var parent2Type = dataP2.val().parentEntityType;
+               var parent2Uid = dataP2.val().parentEntityUid;
+               var parent2Symbol = symbols[parent2Type];
+               console.log("p2:"+parent2Type,parent2Uid)
+
+               parentsArray.push({entityType: parent2Type, uid: parent2Uid, symbol: parent2Symbol});
+
+               DB.child(parent2Type+"/"+parent2Uid).once("value", function(dataP3){
+                  if (dataP3.val() != null){
+                     parentsArray[1].title = dataP3.val().title;
+
+                     var preContext = parentsArray;
+                     preContext.reverse();
+                     var context= {path: preContext}
+                     renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
+                     console.log("2: "+JSON.stringify(parentsArray))
+                  }
+               })
+            } else {
+               console.log("no 2nd parent");
+               console.log("p2:"+ JSON.stringify(parentsArray))
+               parentsArray.reverse();
+               var context= {path: parentsArray}
+               renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
+            }
+
+         })
+      } else {
+         console.log("no 1st parent");
+         console.log("p1:"+ JSON.stringify(parentsArray))
+         var context= {path: parentsArray}
+         renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
+      }
+
+   })
+
+}

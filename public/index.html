@@ -106,12 +106,17 @@
 
 
       <script type="text/x-handlebars-template" id="headerBreadCrumbs-tmpl">
-        <div >
-         <span class="clickables" onclick='showEntities("{{previousEntity}}","{{previousUid}}")'>  {{previousTitle}}</span>
-        <span class="clickables" onclick='showEntities("{{currentEntity}}","{{currentUid}}")'>/
-           {{currentTitle}}
-         </span>
-        </div>
+
+         <div class="breadCrumb">
+            <div class="breadCrumbBlock clickables" onclick="showMain('public')">
+                  <i class="breadCumbIcons fa fa-home"></i>
+               </div>
+            {{#each path}}
+               <div class="breadCrumbBlock clickables" onclick="showEntities('{{entityType}}','{{uid}}')">
+                  <i class="breadCumbIcons {{symbol}}"></i> {{title}}
+               </div>
+           {{/each}}
+         </div>
       </script>
 
       <script type="text/x-handlebars-template" id="headerMenu-tmpl">
@@ -340,8 +345,8 @@
       <script type="text/x-handlebars-template" id="topicPage-tmpl">
 {{#each questions}}
 <div id={{uuid}} class="card">
-   <div class="groupDescription clickables" onclick=showQuestion('{{uuid}}')>
-      <h4><i class="fa fa-question-circle" aria-hidden="true"></i> {{title}}</h4>
+   <div class="groupDescription clickables" onclick=showEntities('{{entityType}}','{{uuid}}')>
+      <h4><i class='{{symbol}}' aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
    <div class="cardsTopicsSubmenu">
@@ -614,13 +619,9 @@ Tow options
             <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
             <div class="panelText">Topic</div>
          </div>
-         <div class="panelBlock">
+         <div class="panelBlock clickables" onclick="newQuestion()">
             <div class="panelSimbole"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
             <div class="panelText">Question</div>
-         </div>
-         <div class="panelBlock">
-            <div class="panelSimbole"><i class="fa fa-file-text" aria-hidden="true"></i></div>
-            <div class="panelText">Document</div>
          </div>
          <div class="panelBlock">
             <div class="panelSimbole"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></div>

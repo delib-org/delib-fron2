@@ -5,13 +5,13 @@ function showTopic(topicUid){
    DB.child("topics/"+topicUid).once("value", function(dataSnapshot){
       var title = dataSnapshot.val().title;
       renderTemplate("#topicHeaderTitle-tmpl", {topic: title}, "#headerTitle");
+      showBreadCrumb("topics", topicUid, title);
       renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
    }).then(function(rendered) {
       subsManager.isUpdatesSet();
    });
 
    //show footer
-//   renderTemplate("#showEntityPanel-tmpl", {}, "footer");
    renderTemplate("#showEntityPanel-tmpl", {}, "footer");
 
    //show wrapper
@@ -29,7 +29,7 @@ function showTopic(topicUid){
 
          subEntities.forEach(function(subEntity){
 
-            var subEntityType = subEntity.val().entiyType;
+            var subEntityType = subEntity.val().entityType;
 
             DB.child(subEntityType+"/"+subEntity.key).once("value", function(data){
 
@@ -41,9 +41,11 @@ function showTopic(topicUid){
                   var description = data.val().description;
 
                   preContext = {
+                     entityType: subEntityType,
                      uuid: subEntity.key,
                      title: title,
-                     description: description
+                     description: description,
+                     symbol: symbols[subEntityType]
                   }
 
                   subEntitiesArray.push(preContext);
