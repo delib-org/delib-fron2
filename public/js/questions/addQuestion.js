@@ -62,7 +62,7 @@ function setNumberOfOptions(numberOfOptions){
    }
 }
 
-function showAddNewQuestion(){
+function addNewQuestion(){
    //check if form exists...
 
    //get form info
@@ -79,21 +79,17 @@ function showAddNewQuestion(){
       alert("אנא התחבר/י למערכת");
       return;
    }
-//   for (i=1;i<=numberOfOptionsTemp;i++){
-//      if (optionsTempInput["option"+i].title == "") {
-//         alert(" אופציה מספר "+i+" ריקה");
-//         return;
-//      }
-//   }
+
    var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType);
-   //  var newQuestion = DB.child("questions").push({title: questionName, description: questionDescription, type: questionType, owner: userUuid });
-   if (activeEntity.entityType == "topics") {
-      var topic = activeEntity.uid;
-      DB.child("topics/"+topic+"/questions/"+newQuestion.key+"/dateAdded").set(firebase.database.ServerValue.TIMESTAMP);
-   }
+
+//   if (activeEntity.entityType == "topics") {
+//      var topic = activeEntity.uid;
+//      DB.child("topics/"+topic+"/questions/"+newQuestion.key+"/dateAdded").set(firebase.database.ServerValue.TIMESTAMP);
+//   }
+
    DB.child("users/"+userUuid+"/questions/"+newQuestion.key).set("owner");
 
-   showTopic(activeEntity.uid);
+   showEntities(activeEntity.entityType, activeEntity.uid);
 }
 
 
@@ -128,7 +124,13 @@ function setNewQuestionToDB (title, description, type){
    var parentUid = activeEntity.uid;
    console.log("set question to DB")
    var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:optionsTempInput, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+
    console.log("set question to DB: "+ questionId.key)
+
+   //set questio to be subEntity of parent entity
+   DB.child(activeEntity.entityType+"/"+activeEntity.uid+"/subEntities/"+questionId.key).set({entityType: "questions", dateAdded: firebase.database.ServerValue.TIMESTAMP, order: 1})
+
+
    return questionId;
 }
 
