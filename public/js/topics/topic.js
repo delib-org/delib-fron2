@@ -12,24 +12,26 @@ function showTopic(topicUid){
 
    //show footer
 //   renderTemplate("#showEntityPanel-tmpl", {}, "footer");
-   renderTemplate("#addQuestionBtn-tmpl", {}, "footer");
+   renderTemplate("#showEntityPanel-tmpl", {}, "footer");
 
    //show wrapper
 
-   var topicCallback = function(questions){
+   var topicCallback = function(subEntities){
 
-      if(questions.exists()){
+      if(subEntities.exists()){
 
-         var questionsUnderTopic = questions.val();
-         var numberOfQuestions = Object.keys(questionsUnderTopic).length;
+         var subEntitiesUnderTopic = subEntities.val();
+         var numberOfSubEntities = Object.keys(subEntitiesUnderTopic).length;
 
-         var questionsArray = new Array();
+         var subEntitiesArray = new Array();
 
          var i = 1;
 
-         questions.forEach(function(question){
+         subEntities.forEach(function(subEntity){
 
-            DB.child("questions/"+question.key).once("value", function(data){
+            var subEntityType = subEntity.val().entiyType;
+
+            DB.child(subEntityType+"/"+subEntity.key).once("value", function(data){
 
                var preContext = new Object();
 
@@ -39,16 +41,16 @@ function showTopic(topicUid){
                   var description = data.val().description;
 
                   preContext = {
-                     uuid: question.key,
+                     uuid: subEntity.key,
                      title: title,
                      description: description
                   }
 
-                  questionsArray.push(preContext);
+                  subEntitiesArray.push(preContext);
                }
 
-               if (i === numberOfQuestions){
-                  var context = {questions: questionsArray};
+               if (i === numberOfSubEntities){
+                  var context = {questions: subEntitiesArray};
                   renderTemplate("#topicPage-tmpl", context, "wrapper");
                   $("wrapper").hide();
                   $("wrapper").fadeIn();
@@ -62,10 +64,10 @@ function showTopic(topicUid){
       } else {renderTemplate("#topicPage-tmpl",{}, "wrapper");}
    };
 
-   DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
+   DB.child("topics/"+ topicUid.toString()+"/subEntities").on("value",topicCallback);
    
    var turnOff = function () {
-      DB.child("topics/"+ topicUid.toString()+"/questions").off("value", topicCallback);
+      DB.child("topics/"+ topicUid.toString()+"/subEntities").off("value", topicCallback);
    };
    
    setActiveEntity("topics", topicUid, "value", topicCallback, turnOff);

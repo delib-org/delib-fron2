@@ -53,7 +53,6 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
       if (previuosEventType != undefined){
          if (previuosUid != undefined){
                previuosTurnOff();
-            console.log(previuosEntity, previuosUid, previuosEventType, previuosTurnOff, turnOff);
          } else {
             console.log("Error: no previuos entity to close off previous callback");
          }

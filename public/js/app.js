@@ -103,6 +103,13 @@ var feedManager = {
     promise: null
 };
 
+const symbols = {
+   groups: "fa fa-users",
+   topics: "fa fa-folder-open",
+   questions: "fa fa-question-circle",
+   options: "fa fa-file-text"
+}
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyAjyyjWM63PSjyRoDI-87MpRtfOFnOO0aA",

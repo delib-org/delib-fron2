@@ -46,8 +46,10 @@ function showGroup(groupUid){
 
                   preContext = {
                      uuid: subEntity.key,
+                     entityType: subEntity.val().entityType,
                      title: title,
-                     description: description
+                     description: description,
+                     symbol: symbols[subEntity.val().entityType]
                   }
 
                   subEntitiesUnderGroupArray.push(preContext);

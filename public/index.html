@@ -288,8 +288,8 @@
       <script type="text/x-handlebars-template" id="groupPage-tmpl">
 {{#each groups}}
 <div id={{uuid}} class="card">
-   <div class="groupDescription clickables" onclick="showTopic('{{uuid}}')">
-      <h4><i class="fa fa-folder-open" aria-hidden="true"></i> {{title}}</h4>
+   <div class="groupDescription clickables" onclick="showEntities('{{entityType}}','{{uuid}}')">
+      <h4><i class='{{symbol}}' aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
    <div class="cardsTopicsSubmenu" >
