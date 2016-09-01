@@ -42,50 +42,52 @@ function setUrl(type, uid){
 };
 
 function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff) {
+
+
    // debugger;
-   var previuosEntity = activeEntity.entityType;
+   var previuosEntityType = activeEntity.entityType;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
    var previuosCallback = activeEntity.callback;
    var previuosTurnOff = activeEntity.turnOff;
 
-   if (previuosEntity != "main"){
-      if (previuosEventType != undefined){
-         if (previuosUid != undefined){
-            previuosTurnOff();
-         } else {
-            console.log("Error: no previuos entity to close off previous callback");
-         }
-      }
-   } else {
-      switch (previuosUid){
-         case "member":
-         case "owned":
-            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
-            break;
-         case "public":
-            DB.child("groups").off(previuosEventType, previuosCallback);
-            break;
-         default:
-            console.log("Error: no such groups cluster in main ("+previuosUid+")");
-      }
-   }
 
+
+//   if (previuosEntityType != "main"){
+//      if (previuosEventType != undefined){
+//         if (previuosUid != undefined){
+//            previuosTurnOff();
+//         } else {
+//            console.log("Error: no previuos entity to close off previous callback");
+//         }
+//      }
+//   } else {
+//      switch (previuosUid){
+//         case "member":
+//         case "owned":
+//            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
+//            break;
+//         case "public":
+//            DB.child("groups").off(previuosEventType, previuosCallback);
+//            break;
+//         default:
+//            console.log("Error: no such groups cluster in main ("+previuosUid+")");
+//      }
+//   }
 
    activeEntity.entityType = newEntity;
-//   activeEntity.previousEntity = previuosEntity;
-//   activeEntity.previousUid = previuosUid;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
    activeEntity.turnOff = turnOff;
-   //activeEntity.previuosEntity = previuosEntity;
-   // activeEntity.onObject = newOnObject;
+   //activeEntity.previuosEntityType = previuosEntityType;
+//   activeEntity.onObject = newOnObject;
+
 
    setUrl(newEntity, newUid);
 
    if (newEntity == "chats")
-      DB.child(previuosEntity+"/"+newUid).once("value", function (dataSnapshot){
+      DB.child(previuosEntityType+"/"+newUid).once("value", function (dataSnapshot){
 
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       });

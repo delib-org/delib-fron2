@@ -13,6 +13,8 @@ function newQuestion(){
 
    renderTemplate("#questionOptionsLimitedOptions-tmpl", {}, "#questionOptions");
 
+   $("#entitiesPanel").slideUp();
+
    setNumberOfOptions(numberOfOptionsTemp);
 
 

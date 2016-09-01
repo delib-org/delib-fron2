@@ -1,9 +1,9 @@
 function openTopicMenu(topicUid){
 
-  if ($("#questionMenu"+topicUid).is(':visible')){
-    $("#questionMenu"+topicUid).hide(400);
+  if ($("#topicMenu"+topicUid).is(':visible')){
+    $("#topicMenu"+topicUid).hide(400);
   } else {
-    $("#questionMenu"+topicUid).show(400);
+    $("#topicMenu"+topicUid).show(400);
   }
 }
 
@@ -24,6 +24,6 @@ function sendTopicToDB(topicUid){
   var description = $("#createTopicDescription").val();
 
   DB.child("topics/"+topicUid).update({title: title,description:description });
-  showGroup(activeEntity.uid);
+  showEntities(activeEntity.entityType, activeEntity.uid);
 
 }
