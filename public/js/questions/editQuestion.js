@@ -15,7 +15,7 @@ function questionsEdit(questionUid){
       $("#questionDescription").val(questionDescription);
 
       document.questionTypeForm.type.value=typeOfQuestion;
-//      setNumberOfOptions(numberOfOptions);
+      setNumberOfOptions(numberOfOptions);
 
       showOptionsInUpdate(questionUid, numberOfOptions);
 

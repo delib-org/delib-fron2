@@ -56,7 +56,7 @@ function setNumberOfOptions(numberOfOptions){
    $("#numberOfOptions"+numberOfOptions).css("background", "linear-gradient(to top,  #cc0000 0%,#cc3535 52%,#6d0000 100%)");
 
    for (i=1; i<9;i++){
-      if (i> 8-numberOfOptions){
+      if (i<numberOfOptions){
          $("#"+i+"_optionOrder").show();
       } else {
          $("#"+i+"_optionOrder").hide();
