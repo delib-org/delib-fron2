@@ -2,7 +2,7 @@ var optionsTempInput = new Array();
 
 var numberOfOptionsTemp = 2;
 
-function newQuestion(){
+function showAddNewQuestionScreen(){
 
    for (i=1;i<9;i++){
       optionsTempInput["option"+i]={title:"", description:""};
@@ -17,25 +17,25 @@ function newQuestion(){
 
    setNumberOfOptions(numberOfOptionsTemp);
 
+   var preContext = new Array();
+   renderTemplate("#questionOptionsLimitedOptions-tmpl", {}, "#questionOptions");
+   for (i=0;i<8;i++){
+      preContext.push({optionOrder:i, optionUid: "option"+i, description:""})
+   }
+   var context = {options: preContext}
+   renderTemplate("#questionOption-tmpl", context, "#optionsForLimitedOptions");
 
+   //listen to radio buttons changes
    $('input[type=radio][name=type]').change(function(){
 
       var selection = this.value;
 
       switch (selection) {
-
+         case "multiOptions":
+            $("#questionOptions").slideUp();
+            break;
          case "limitedOptions":
-            var preContext = new Array();
-            renderTemplate("#questionOptionsLimitedOptions-tmpl", {}, "#questionOptions");
-            for (i=0;i<8;i++){
-               preContext.push({optionOrder:i, optionUid: "option"+i, description:""})
-            }
-            var context = {options: preContext}
-            renderTemplate("#questionOption-tmpl", context, "#optionsForLimitedOptions");
-            $("#questionOptions").show();
-//            if(numberOfOptionsTemp>0){
-//               setNumberOfOptions(numberOfOptionsTemp);
-//            }
+            $("#questionOptions").slideDown();
             break;
          default:
             $("#questionOptions").hide();
@@ -82,12 +82,34 @@ function addNewQuestion(){
       return;
    }
 
-   var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType);
+   //get options
+   //   $('input[name=radioName]:checked', '#myForm').val()
+   var radioInput  = $('input[type=radio][name=type]:checked').val();
 
-//   if (activeEntity.entityType == "topics") {
-//      var topic = activeEntity.uid;
-//      DB.child("topics/"+topic+"/questions/"+newQuestion.key+"/dateAdded").set(firebase.database.ServerValue.TIMESTAMP);
-//   }
+
+   if (radioInput == "limitedOptions"){
+      var limitiedOptionsArray = new Object();
+      for (i=0; i<9; i++){
+         var optionTitle = $("#option"+i+"_limitedOptions").val();
+         var optionDescription = $("#option"+i+"_limitedOptionsDesc").val();
+
+         if (optionTitle != "" && optionTitle != null){
+            var color = getRandomColor();
+
+            limitiedOptionsArray["option"+i]= {title: optionTitle, description: optionDescription, color:color} ;
+         }
+      }
+
+      console.log(JSON.stringify(limitiedOptionsArray));
+      if (limitiedOptionsArray.length <2){
+         alert("Not enough options. Please add more options bellow");
+         return;
+      }
+   }
+
+
+   var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType, limitiedOptionsArray);
+
 
    DB.child("users/"+userUuid+"/questions/"+newQuestion.key).set("owner");
 
@@ -96,7 +118,7 @@ function addNewQuestion(){
 
 
 //create new question
-function setNewQuestionToDB (title, description, type){
+function setNewQuestionToDB (title, description, type, limitedOptionsArray){
 
    if (title == undefined){
       title = "";
@@ -109,9 +131,7 @@ function setNewQuestionToDB (title, description, type){
    if (type == undefined){
       explanation = "";
    };
-   //  if (imgQuestion == undefined){
-   //    imgQuestion = "";
-   //  };
+
    for (i=1;i<9;i++){
       if (optionsTempInput["option"+i].title == ""){
          delete optionsTempInput["option"+i];
@@ -125,7 +145,7 @@ function setNewQuestionToDB (title, description, type){
    var parentEntityType = activeEntity.entityType;
    var parentUid = activeEntity.uid;
    console.log("set question to DB")
-   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:optionsTempInput, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:limitedOptionsArray, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
 
    console.log("set question to DB: "+ questionId.key)
 
