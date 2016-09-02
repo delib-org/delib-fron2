@@ -82,7 +82,7 @@ function updateQuestion(questionUid){
    DB.child("questions/"+questionUid+"/options").update(optionsTempInput);
    DB.child("questions/"+questionUid).update({numberOfOptions:numberOfOptionsTemp});
 
-   showTopic(activeEntity.uid);
+   showEntities(activeEntity.entityType, activeEntity.uid);
 }
 
 function switchBetweenTypesOfQuestions (questionUid, typeOfQuestion, numberOfOptions){
