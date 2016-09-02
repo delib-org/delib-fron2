@@ -392,10 +392,10 @@
       <!--    create Question page-->
       <script type="text/x-handlebars-template" id="createQuestion-tmpl">
 <div class="addEntityDiv">
-   <form>
-      <input id="createQuestionName" name="name" placeholder="שם שאלה" value='{{questionTitle}}'>
+   <form name="questionTypeForm">
+      <input id="quesionTitle" name="name" placeholder="שם שאלה" value='{{questionTitle}}'>
       <br>
-      <textarea id="createQuestionDescription" class="inputErea" name="description" placeholder="תיאור השאלה">{{questionDescription}}</textarea>
+      <textarea id="questionDescription" class="inputErea" name="description" placeholder="תיאור השאלה">{{questionDescription}}</textarea>
       <br>
       <input type="radio" class="radioInput" name="type" value="limitedOptions" checked><span> מעט אופציות</span>
       <br>

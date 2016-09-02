@@ -9,21 +9,13 @@ function questionsEdit(questionUid){
       var questionDescription = dataSnapshot.val().description;
       var typeOfQuestion = dataSnapshot.val().type;
 
-      renderTemplate("#createQuestion-tmpl",{questionTitle: questionTitle, questionDescription:questionDescription}, "wrapper");
-      renderTemplate("#editQuestionFooter-tmpl",{uuid:questionUid}, "footer");
+      showAddNewQuestionScreen();
 
+      $("#quesionTitle").val(questionTitle);
+      $("#questionDescription").val(questionDescription);
 
-      $('input[type=radio][name=type]').val([typeOfQuestion]);
-
-      switchBetweenTypesOfQuestions(questionUid, typeOfQuestion, numberOfOptions);
-
-      $('input[type=radio][name=type]').change(function(){
-
-         var selection = this.value;
-
-         switchBetweenTypesOfQuestions(questionUid, selection, numberOfOptions);
-
-      });
+      document.questionTypeForm.type.value=typeOfQuestion;
+//      setNumberOfOptions(numberOfOptions);
 
       showOptionsInUpdate(questionUid, numberOfOptions);
 
@@ -34,8 +26,8 @@ function questionsEdit(questionUid){
 function updateQuestion(questionUid){
 
    //get form info
-   var title = $("#createQuestionName").val();
-   var description = $("#createQuestionDescription").val();
+   var title = $("#quesionTitle").val();
+   var description = $("#questionDescription").val();
    var type = $("input[name=type]:checked").val();
    console.log("name: " + title + ", Question description: "+ description + ", type: " + type);
 
@@ -102,26 +94,17 @@ function showOptionsInUpdate(questionUid){
    //get Options form DB
    DB.child("questions/"+questionUid+"/options").orderByChild("votes").limitToLast(8).once("value", function(optionsObj){
 
-      var preContext = new Array();
-      var iOptions = 1;
+      var optionsArray = new Array() ;
+
       optionsObj.forEach(function(optionObj){
-         var title = optionObj.val().title;
-         var description = optionObj.val().description;
-         var optionUid = optionObj.key;
-         editiedOptions[iOptions] = optionUid;
+         optionsArray.push({title: optionObj.val().title, description: optionObj.val().description})
 
-         preContext.unshift({optionOrder: iOptions, title:title, description: description, optionUid: optionUid});
-         iOptions++;
       })
-      var context = {options: preContext};
-      renderTemplate("#questionOptionsLimitedOptions-tmpl",{},"#questionOptions");
-      renderTemplate("#questionOption-tmpl", context, "#optionsForLimitedOptions");
-
-      //get number of options
-      DB.child("questions/"+questionUid+"/numberOfOptions").once("value", function(dataSnapshot){
-         setNumberOfOptions(dataSnapshot.val());
-      })
-
+      optionsArray.reverse();
+      for (i=0;i<optionsArray.length;i++){
+         $("#option"+i+"_limitedOptions").val(optionsArray[i].title);
+         $("#option"+i+"_limitedOptionsDesc").val(optionsArray[i].description);
+      }
 
    })
 }

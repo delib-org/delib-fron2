@@ -68,8 +68,8 @@ function addNewQuestion(){
    //check if form exists...
 
    //get form info
-   var questionName = $("#createQuestionName").val();
-   var questionDescription = $("#createQuestionDescription").val();
+   var questionName = $("#quesionTitle").val();
+   var questionDescription = $("#questionDescription").val();
    var questionType = $("input[name=type]:checked").val();
 
    if (questionName == "") {
@@ -100,7 +100,6 @@ function addNewQuestion(){
          }
       }
 
-      console.log(JSON.stringify(limitiedOptionsArray));
       if (limitiedOptionsArray.length <2){
          alert("Not enough options. Please add more options bellow");
          return;
