@@ -10,6 +10,7 @@ function questionsEdit(questionUid){
       var typeOfQuestion = dataSnapshot.val().type;
 
       showAddNewQuestionScreen();
+      renderTemplate("#editQuestionFooter-tmpl",{uid: questionUid}, "footer");
 
       $("#quesionTitle").val(questionTitle);
       $("#questionDescription").val(questionDescription);
@@ -41,26 +42,9 @@ function updateQuestion(questionUid){
       return;
    }
 
-   console.dir(optionsTempInput);
-   console.log("numberOfOptions "+numberOfOptionsTemp );
 
-   //   for (i=1;i<=numberOfOptionsTemp;i++){
-   //      if (optionsTempInput["option"+i].title == "") {
-   //         alert(" אופציה מספר "+i+" ריקה");
-   //         return;
-   //      }
-   //   }
-   //   for (i=numberOfOptionsTemp+1;i<9;i++){
-   //      if (optionsTempInput["option"+i].title == "") {
-   //         delete optionsTempInput["option"+i];
-   //      }
-   //
-   //
-   //   }
 
-   console.dir(optionsTempInput);
-
-   DB.child("questions/"+questionUid).update({title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp});
+   DB.child("questions/"+questionUid).update({title: title, description: description, type: type, numberOfOptions: numberOfOptions_g});
 
    for (i in editiedOptions){
       //get new name and description
@@ -72,7 +56,7 @@ function updateQuestion(questionUid){
       }
    }
    DB.child("questions/"+questionUid+"/options").update(optionsTempInput);
-   DB.child("questions/"+questionUid).update({numberOfOptions:numberOfOptionsTemp});
+   DB.child("questions/"+questionUid).update({numberOfOptions:numberOfOptions_g});
 
    showEntities(activeEntity.entityType, activeEntity.uid);
 }

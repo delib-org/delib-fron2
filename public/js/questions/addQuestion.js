@@ -1,6 +1,6 @@
 var optionsTempInput = new Array();
 
-var numberOfOptionsTemp = 2;
+var numberOfOptions_g = 2;
 
 function showAddNewQuestionScreen(){
 
@@ -15,7 +15,7 @@ function showAddNewQuestionScreen(){
 
    $("#entitiesPanel").slideUp();
 
-   setNumberOfOptions(numberOfOptionsTemp);
+   setNumberOfOptions(numberOfOptions_g);
 
    var preContext = new Array();
    renderTemplate("#questionOptionsLimitedOptions-tmpl", {}, "#questionOptions");
@@ -47,7 +47,7 @@ function showAddNewQuestionScreen(){
 
 function setNumberOfOptions(numberOfOptions){
 
-   numberOfOptionsTemp = numberOfOptions;
+   numberOfOptions_g = numberOfOptions;
 
    //color the menu
    for (i=2; i<9;i++){
@@ -64,8 +64,7 @@ function setNumberOfOptions(numberOfOptions){
    }
 }
 
-function addNewQuestion(){
-   //check if form exists...
+function addNewQuestion(questionUid){
 
    //get form info
    var questionName = $("#quesionTitle").val();
@@ -107,10 +106,29 @@ function addNewQuestion(){
    }
 
 
-   var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType, limitiedOptionsArray);
+   if (questionUid == undefined){
+      //setting new question
 
+      var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType, limitiedOptionsArray);
 
-   DB.child("users/"+userUuid+"/questions/"+newQuestion.key).set("owner");
+      DB.child("users/"+userUuid+"/questions/"+newQuestion.key).set("owner");
+
+   } else {
+      //updating question
+      console.log("updateing question")
+      var parentEntityType = activeEntity.entityType;
+      var parentUid = activeEntity.uid;
+
+      if (questionType == "limitedOptions"){
+         //if question type = limitedOptions
+
+         DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g, options:limitiedOptionsArray, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+
+      } else {
+
+         DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+      }
+   }
 
    showEntities(activeEntity.entityType, activeEntity.uid);
 }
@@ -143,10 +161,9 @@ function setNewQuestionToDB (title, description, type, limitedOptionsArray){
 
    var parentEntityType = activeEntity.entityType;
    var parentUid = activeEntity.uid;
-   console.log("set question to DB")
-   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:limitedOptionsArray, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
 
-   console.log("set question to DB: "+ questionId.key)
+   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptions_g, options:limitedOptionsArray, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+
 
    //set questio to be subEntity of parent entity
    DB.child(activeEntity.entityType+"/"+activeEntity.uid+"/subEntities/"+questionId.key).set({entityType: "questions", dateAdded: firebase.database.ServerValue.TIMESTAMP, order: 1})

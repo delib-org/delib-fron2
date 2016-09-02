@@ -51,20 +51,10 @@ function isNotEmpty(variable){
 }
 
 function back(){
-   var entity = activeEntity.entityType;
+   var entityType = activeEntity.entityType;
+   var entityUid = activeEntity.uid;
 
-   switch (entity){
-      case "groups":
-         showOwnedGroups();
-         break;
-      case "topics":
-         showGroup(activeEntity.uid);
-         break;
-      case "questions":
-         showTopic(activeEntity.uid);
-      default:
-         showOwnedGroups();
-   }
+   showEntities(entityType,entityUid);
 }
 
 function entityTypeToHebrew (entityType){
