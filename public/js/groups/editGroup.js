@@ -6,7 +6,7 @@ function openGroupMenu(groupUid){
   }
 }
 
-function editGroup(groupUid){
+function groupsEdit(groupUid){
 
   renderTemplate("#createGroup-tmpl",{},"wrapper");
   renderTemplate("#editGroupFooter-tmpl", {groupUid:groupUid}, "footer");

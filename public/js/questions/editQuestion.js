@@ -1,4 +1,4 @@
-function editQuestion(questionUid){
+function questionsEdit(questionUid){
 
 
    //bring data from DB

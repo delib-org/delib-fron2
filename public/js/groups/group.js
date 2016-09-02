@@ -57,7 +57,7 @@ function showGroup(groupUid){
                }
 
                if (i === numberOfSubEntities){
-                  var context = {groups: subEntitiesUnderGroupArray};
+                  var context = {subEntities: subEntitiesUnderGroupArray};
                   renderTemplate("#groupPage-tmpl", context, "wrapper");
                   $("wrapper").hide();
                   $("wrapper").fadeIn();
@@ -74,11 +74,11 @@ function showGroup(groupUid){
 
    //show wrapper
    DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
-   
+
    var turnOff = function () {
       DB.child("groups/"+groupUid+"/topics").off("value", showGroupCallback);
    };
-   
+
    setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
 
 

@@ -1,13 +1,13 @@
-function openTopicMenu(topicUid){
+function showEditTab(topicUid){
 
-  if ($("#topicMenu"+topicUid).is(':visible')){
-    $("#topicMenu"+topicUid).hide(400);
+  if ($("#menu"+topicUid).is(':visible')){
+    $("#menu"+topicUid).hide(400);
   } else {
-    $("#topicMenu"+topicUid).show(400);
+    $("#menu"+topicUid).show(400);
   }
 }
 
-function editTopic(topicUid){
+function topicsEdit(topicUid){
   renderTemplate("#createTopic-tmpl",{},"wrapper");
   renderTemplate("#editTopicFooter-tmpl",{topicUid:topicUid}, "footer");
 
