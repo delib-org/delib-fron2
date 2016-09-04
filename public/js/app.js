@@ -119,4 +119,4 @@ var config = {
 };
 firebase.initializeApp(config);
 var DB = firebase.database().ref();
-var storage = firebase.storage();
+//var storage = firebase.storage();

@@ -5,7 +5,9 @@
       <title>דליב: מחליטים ביחד</title>
       <meta charset="utf-8">
 
-      <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+      <!--      <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>-->
+<!--      <script src="js/jquery-3.1.0.slim.min.js"></script>-->
+      <script src="js/jquery-3.1.0.min.js"></script>
 
       <!--      less Js-->
       <link rel="stylesheet/less" type="text/css" href="css/styles.less" />
@@ -13,7 +15,11 @@
       <!--      less Js-->
 
       <script type="text/javascript" src="js/handlebars-v4.0.5.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+<!--            <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>-->
+
+      <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-auth.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>
 
       <script src="https://apis.google.com/js/platform.js" async defer></script>
       <!-- Material Ripple JS -->
@@ -21,8 +27,8 @@
       <script src="js/jquery-ui.min.js"></script>
       <script src="js/jquery-epulse.min.js"></script>
 
-
-      <link rel="stylesheet" href="css/font-awesome-4.6.1/css/font-awesome.min.css">
+<!--            version 4.6.3-->
+      <link rel="stylesheet" href="css/font-awesome-4.6.3/css/font-awesome.min.css">
       <!--    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">-->
 
       <link rel="manifest" href="manifest.json">
@@ -30,8 +36,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 
-    <!-- templates -->
-    <script src="templates/functions.js"></script>
+      <!-- templates -->
+      <script src="templates/functions.js"></script>
 
 
 
@@ -107,15 +113,15 @@
 
       <script type="text/x-handlebars-template" id="headerBreadCrumbs-tmpl">
 
-         <div class="breadCrumb">
-            <div class="breadCrumbBlock clickables" onclick="showMain('member')">
-                  <i class="breadCumbIcons fa fa-home"></i>
-               </div>
-            {{#each path}}
-               <div class="breadCrumbBlock clickables" onclick="showEntities('{{entityType}}','{{uid}}')">
-                  <i class="breadCumbIcons {{symbol}}"></i> {{title}}
-               </div>
-           {{/each}}
+<div class="breadCrumb">
+   <div class="breadCrumbBlock clickables" onclick="showMain('member')">
+      <i class="breadCumbIcons fa fa-home"></i>
+         </div>
+   {{#each path}}
+   <div class="breadCrumbBlock clickables" onclick="showEntities('{{entityType}}','{{uid}}')">
+      <i class="breadCumbIcons {{symbol}}"></i> {{title}}
+         </div>
+   {{/each}}
          </div>
       </script>
 
@@ -141,22 +147,22 @@
 
       </script>
 
-<!--
-      <script type="text/x-handlebars-template" id="addTopicBtn-tmpl">
-         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showAddTopicScreen()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
-      </script>
+      <!--
+<script type="text/x-handlebars-template" id="addTopicBtn-tmpl">
+<div id="openPanelBtn" class="footer-btn material-ripple" onclick="showAddTopicScreen()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+</script>
 
-      <script type="text/x-handlebars-template" id="addQuestionBtn-tmpl">
-         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showAddNewQuestionScreen()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
-      </script>
+<script type="text/x-handlebars-template" id="addQuestionBtn-tmpl">
+<div id="openPanelBtn" class="footer-btn material-ripple" onclick="showAddNewQuestionScreen()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+</script>
 -->
 
       <script type="text/x-handlebars-template" id="showEntityPanel-tmpl">
-         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="showEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
+<div id="openPanelBtn" class="footer-btn material-ripple" onclick="showEntityPanel()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
       </script>
 
       <script type="text/x-handlebars-template" id="hideEntityPanel-tmpl">
-         <div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-minus fa-2x" aria-hidden="true"></i></div>
+<div id="openPanelBtn" class="footer-btn material-ripple" onclick="hideEntityPanel()"><i class="fa fa-minus fa-2x" aria-hidden="true"></i></div>
       </script>
       <!--    cards-->
       <script type="text/x-handlebars-template" id="cards-tmpl">
@@ -177,8 +183,8 @@
       <h4><i class="fa fa-users" aria-hidden="true"></i> {{title}}</h4>
       <p>תיאור: {{description}}</p>
          </div>
-         <div class="cardsTopicsSubmenu">
-            <div><i class="fa fa-globe clickables"></i></div>
+   <div class="cardsTopicsSubmenu">
+      <div><i class="fa fa-globe clickables"></i></div>
          </div>
          </div>
 {{/each}}
@@ -205,7 +211,7 @@
          </div>
    <div class="cardsTopicsSubmenu">
       <div class="cardsTopicsSubmenuDots clickables" onclick=openGroupMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
-      <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=editGroup('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+      <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=groupsEdit('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
       <div><i class="fa fa-globe"></i></div>
          </div>
          </div>
@@ -215,15 +221,15 @@
 
       <!--      feed    -->
       <script type="text/x-handlebars-template" id="feeds-tmpl">
-         <div class="feedPanelClass">
-         {{#each feeds}}
-            <div class="feedCards">
-               <div class="clickables" onclick="showEntity('{{type}}','{{uuid}}')">
-                  <div class="feedTitle"><i class="fa fa-folder-open" aria-hidden="true"></i> {{title}}</div>
-                  <div class="feedDescription">תיאור: {{description}}</div>
-               </div>
-            </div>
-         {{/each}}
+<div class="feedPanelClass">
+   {{#each feeds}}
+   <div class="feedCards">
+      <div class="clickables" onclick="showEntity('{{type}}','{{uuid}}')">
+         <div class="feedTitle"><i class="fa fa-folder-open" aria-hidden="true"></i> {{title}}</div>
+         <div class="feedDescription">תיאור: {{description}}</div>
+         </div>
+         </div>
+   {{/each}}
          </div>
       </script>
 
@@ -593,40 +599,40 @@ Tow options
       </div>
    </script>
 
-    <!--   Options -->
+   <!--   Options -->
 
    <script type="text/x-handlebars-template" id="optionHeaderTitle-tmpl">
-      <center>אפשרות: {{title}}</center>
+<center>אפשרות: {{title}}</center>
    </script>
 
    <script type="text/x-handlebars-template" id="optionFooter-tmpl">
 <div id="backToquestionBtn" class="footer-btn material-ripple" onclick="showEntities('questions','{{questionUid}}')"><span>חזרה לשאלה</span></div>
-      </script>
+   </script>
 
    <script type="text/x-handlebars-template" id="optionWrapper-tmpl">
 <div id="{{optionUid}}DivOpt" class="card" contenteditable="true" >{{{description}}}</div>
-      </script>
+   </script>
 
-<!--                     Panels                             -->
+   <!--                     Panels                             -->
 
    <script type="text/x-handlebars-template" id="EntitiesPanel-tmpl">
-      <div class="panel" id="entitiesPanel">
-         <div class="panelBlock clickables" onclick="showAddGroup()">
-            <div class="panelSimbole"><i class="fa fa-users" aria-hidden="true"></i></div>
-            <div class="panelText">Group</div>
-         </div>
-         <div class="panelBlock clickables" onclick="showAddTopicScreen()" >
-            <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
-            <div class="panelText">Topic</div>
-         </div>
-         <div class="panelBlock clickables" onclick="showAddNewQuestionScreen()">
-            <div class="panelSimbole"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
-            <div class="panelText">Question</div>
-         </div>
-         <div class="panelBlock">
-            <div class="panelSimbole"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></div>
-            <div class="panelText">Live Talk</div>
-         </div>
+<div class="panel" id="entitiesPanel">
+   <div class="panelBlock clickables" onclick="showAddGroup()">
+      <div class="panelSimbole"><i class="fa fa-users" aria-hidden="true"></i></div>
+      <div class="panelText">Group</div>
+      </div>
+   <div class="panelBlock clickables" onclick="showAddTopicScreen()" >
+      <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
+      <div class="panelText">Topic</div>
+      </div>
+   <div class="panelBlock clickables" onclick="showAddNewQuestionScreen()">
+      <div class="panelSimbole"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
+      <div class="panelText">Question</div>
+      </div>
+   <div class="panelBlock">
+      <div class="panelSimbole"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></div>
+      <div class="panelText">Live Talk</div>
+      </div>
       </div>
    </script>
 
