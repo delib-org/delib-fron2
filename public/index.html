@@ -71,6 +71,8 @@
       <script src="js/feedNotifications/feed.js"></script>
 
       <script src="js/panels/entitiesPanel.js"></script>
+
+      <script src="js/liveTalk/liveTalk.js"></script>
    </head>
 
 
@@ -623,11 +625,27 @@ Tow options
             <div class="panelSimbole"><i class="fa fa-question-circle" aria-hidden="true"></i></div>
             <div class="panelText">Question</div>
          </div>
-         <div class="panelBlock">
-            <div class="panelSimbole"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></div>
+         <div class="panelBlock clickables" onclick="ShowLiveTalkEditScreen()" >
+            <div class="panelSimbole"><i class="fa fa-eye" aria-hidden="true"></i></div>
             <div class="panelText">Live Talk</div>
          </div>
       </div>
    </script>
 
+   <!--                Live Talks          -->
+
+    <script type="text/x-handlebars-template" id="editLiveTalk-tmpl">
+<div class="addEntityDiv">
+   <form>
+      <input id="liveTalkName" name="name" placeholder="שם שיחה">
+      <br>
+      <textarea id="liveTalkDescription" class="inputErea" name="description" placeholder="תיאור שיחה"></textarea>
+         </form>
+         </div>
+      </script>
+
+   <script type="text/x-handlebars-template" id="liveTalkFooter-tmpl">
+<div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
+<div class="footer-btn material-ripple action" onclick="setLiveTalkToDb()"><span>אישור</span></div>
+      </script>
 </html>
