@@ -1,17 +1,17 @@
 $(function(){
 
-//   if ('serviceWorker' in navigator) {
-//      console.log('Service Worker is supported');
-//      navigator.serviceWorker.register('../delib-service-worker.js').then(function() {
-//         return navigator.serviceWorker.ready;
-//      }).then(function(serviceWorkerRegistration) {
-//         SWreg = serviceWorkerRegistration;
-//         // fcmNotificationsBtn.disabled = false;
-//         console.log('Service Worker is ready :^)', SWreg);
-//      }).catch(function(error) {
-//         console.log('Service Worker Error :^(', error);
-//      });
-//   }
+   //   if ('serviceWorker' in navigator) {
+   //      console.log('Service Worker is supported');
+   //      navigator.serviceWorker.register('../delib-service-worker.js').then(function() {
+   //         return navigator.serviceWorker.ready;
+   //      }).then(function(serviceWorkerRegistration) {
+   //         SWreg = serviceWorkerRegistration;
+   //         // fcmNotificationsBtn.disabled = false;
+   //         console.log('Service Worker is ready :^)', SWreg);
+   //      }).catch(function(error) {
+   //         console.log('Service Worker Error :^(', error);
+   //      });
+   //   }
 
    //start ripple effect
    $(".footer-btn").ePulse({
@@ -19,9 +19,9 @@ $(function(){
       bgColor: "#ded9d9",
       size: 'medium'
 
-    });
+   });
 
-    $(".headerMenuBtn").ePulse({
+   $(".headerMenuBtn").ePulse({
       bgColor: "#ded9d9",
       size: 'medium'
    });
@@ -33,7 +33,7 @@ $(function(){
    listenToAuth();
 
 
-//   setFeeds();
+   //   setFeeds();
 
    //routTo(currentUrl, false);
 
@@ -44,13 +44,13 @@ $(function(){
       var back = true;
       routTo(currentUrl,back);
 
-    });
-    //
-//     renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
-//     renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
-//     renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
+   });
+   //
+   //     renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
+   //     renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
+   //     renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
 
-    listenToAuth();
+   listenToAuth();
 });
 
 // Global General Variables and Constants
@@ -60,17 +60,19 @@ var startingUrl;
 var activeEntity = new Object();
 var firstRun = true;
 const subEntity = {
-	groups: "topics"
-	, topics: "questions"
-	, questions: "options"
-	, chat: "room"
+   groups: "topics"
+   , topics: "questions"
+   , questions: "options"
+   , chat: "room"
+   , liveTalks: "live Talk"
 };
 const toHebrew = {
-	groups: "קבוצה חדשה: "
-	, topics: "נושא חדש: "
-	, questions: "שאלה חדשה: "
-	, owner: "קריאה: "
-	, chats: "הודעה חדשה מ:"
+   groups: "קבוצה חדשה: "
+   , topics: "נושא חדש: "
+   , questions: "שאלה חדשה: "
+   , owner: "קריאה: "
+   , chats: "הודעה חדשה מ:"
+   , liveTalks: "שיחה חדשה: "
 };
 var inactiveColor = "#5f1f1f";
 var activeColor = "white";
@@ -78,19 +80,19 @@ var activeColor = "white";
 
 // subsManager Def.
 var subsManager = {
-    isUpdatesSet: function(){
-        this.isFeedSet();
-        this.isNotificationsSet();
+   isUpdatesSet: function(){
+      this.isFeedSet();
+      this.isNotificationsSet();
 
-    },
-    setFeed: function(){},
-    isFeedSet: function(){},
-    setNotifications: function(){},
-    isNotificationsSet: function(){},
-    userFeed: null,
-    feedIsSet: false,
-    userNotifications: null,
-    notificationsIsSet: false
+   },
+   setFeed: function(){},
+   isFeedSet: function(){},
+   setNotifications: function(){},
+   isNotificationsSet: function(){},
+   userFeed: null,
+   feedIsSet: false,
+   userNotifications: null,
+   notificationsIsSet: false
 };
 
 var mostUpdatedContent = null;
@@ -98,24 +100,25 @@ var mostUpdatedContent = null;
 
 const defaultFeedVolume = 10;
 var feedManager = {
-    queue: [],
-    volume: defaultFeedVolume,
-    promise: null
+   queue: [],
+   volume: defaultFeedVolume,
+   promise: null
 };
 
 const symbols = {
    groups: "fa fa-users",
    topics: "fa fa-folder-open",
    questions: "fa fa-question-circle",
-   options: "fa fa-file-text"
+   options: "fa fa-file-text",
+   liveTalks: "fa fa-eye"
 }
 
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyAjyyjWM63PSjyRoDI-87MpRtfOFnOO0aA",
-    authDomain: "delib21-aaeb0.firebaseapp.com",
-    databaseURL: "https://delib21-aaeb0.firebaseio.com",
-    storageBucket: "delib21-aaeb0.appspot.com"
+   apiKey: "AIzaSyAjyyjWM63PSjyRoDI-87MpRtfOFnOO0aA",
+   authDomain: "delib21-aaeb0.firebaseapp.com",
+   databaseURL: "https://delib21-aaeb0.firebaseio.com",
+   storageBucket: "delib21-aaeb0.appspot.com"
 };
 firebase.initializeApp(config);
 var DB = firebase.database().ref();
