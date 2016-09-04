@@ -5,7 +5,7 @@ function liveTalksEdit(liveTalkUid){
 function ShowLiveTalkEditScreen(liveTalkUid){
 
    renderTemplate("#editLiveTalk-tmpl",{}, "wrapper");
-   renderTemplate("#liveTalkFooter-tmpl",{}, "footer");
+   renderTemplate("#liveTalkEditFooter-tmpl",{}, "footer");
    $("#entitiesPanel").slideUp();
 
    if(liveTalkUid != undefined && liveTalkUid != ""){

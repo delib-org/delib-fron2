@@ -645,8 +645,33 @@ Tow options
          </div>
       </script>
 
-   <script type="text/x-handlebars-template" id="liveTalkFooter-tmpl">
+   <script type="text/x-handlebars-template" id="liveTalkEditFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
 <div class="footer-btn material-ripple action" onclick="setLiveTalkToDb()"><span>אישור</span></div>
       </script>
+
+      <script type="text/x-handlebars-template" id="liveTalksHeaderTitle-tmpl">
+שיחה חיה: <span>{{title}}</span>
+      </script>
+
+   <script type="text/x-handlebars-template" id="liveTalkFooter-tmpl">
+      <div>
+         <div class="clickables">
+            <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+         </div>
+         <div class="clickables">
+            <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+         </div>
+         <div class="clickables">
+            <i class="fa fa-bullseye" aria-hidden="true"></i>
+         </div>
+         <div class="clickables">
+            <i class="fa fa-hand-pointer-o" aria-hidden="true"></i>
+         </div>
+         <div class="clickables" onclick="showEntities('{{entityType}}','{{uid}}')">
+           <span>חזרה</span>
+         </div>
+      </div>
+   </script>
+
 </html>
