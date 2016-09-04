@@ -116,7 +116,7 @@ function showEntities(entity, uid){
                showGroup(uid);
             } else {
                console.log("group "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
@@ -126,7 +126,7 @@ function showEntities(entity, uid){
                showTopic(uid);
             } else {
                console.log("topic "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
@@ -136,7 +136,7 @@ function showEntities(entity, uid){
                showQuestion(uid);
             } else {
                console.log("question "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
@@ -146,7 +146,7 @@ function showEntities(entity, uid){
                showChat(uid);
             } else {
                console.log("question "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
@@ -162,12 +162,12 @@ function showEntities(entity, uid){
                showOption(questionUid,optionUid);
             } else {
                console.log("option "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
       default:
-         showMain("public");
+         showMain("member");
    }
 
 };
