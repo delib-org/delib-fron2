@@ -53,27 +53,27 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
 
 
-//   if (previuosEntityType != "main"){
-//      if (previuosEventType != undefined){
-//         if (previuosUid != undefined){
-//            previuosTurnOff();
-//         } else {
-//            console.log("Error: no previuos entity to close off previous callback");
-//         }
-//      }
-//   } else {
-//      switch (previuosUid){
-//         case "member":
-//         case "owned":
-//            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
-//            break;
-//         case "public":
-//            DB.child("groups").off(previuosEventType, previuosCallback);
-//            break;
-//         default:
-//            console.log("Error: no such groups cluster in main ("+previuosUid+")");
-//      }
-//   }
+   //   if (previuosEntityType != "main"){
+   //      if (previuosEventType != undefined){
+   //         if (previuosUid != undefined){
+   //            previuosTurnOff();
+   //         } else {
+   //            console.log("Error: no previuos entity to close off previous callback");
+   //         }
+   //      }
+   //   } else {
+   //      switch (previuosUid){
+   //         case "member":
+   //         case "owned":
+   //            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
+   //            break;
+   //         case "public":
+   //            DB.child("groups").off(previuosEventType, previuosCallback);
+   //            break;
+   //         default:
+   //            console.log("Error: no such groups cluster in main ("+previuosUid+")");
+   //      }
+   //   }
 
    activeEntity.entityType = newEntity;
    activeEntity.uid = newUid;
@@ -81,7 +81,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    activeEntity.callback = newCallback;
    activeEntity.turnOff = turnOff;
    //activeEntity.previuosEntityType = previuosEntityType;
-//   activeEntity.onObject = newOnObject;
+   //   activeEntity.onObject = newOnObject;
 
 
    setUrl(newEntity, newUid);
@@ -150,6 +150,16 @@ function showEntities(entity, uid){
             }
          })
          break;
+      case "liveTalks":
+         DB.child("liveTalks/"+uid).once("value", function (question){
+            if (question.exists()){
+               showLiveTalk(uid);
+            } else {
+               console.log("question "+uid+" do not exist");
+               showMain("member");
+            }
+         })
+         break;
       case "main":
          showMain(uid);
          break;
@@ -200,7 +210,7 @@ function showBreadCrumb(entityType, uid, title){
 
          DB.child(parent1Type+"/"+parent1Uid).once("value", function(dataP2){
 
-             parentsArray[0].title = dataP2.val().title;
+            parentsArray[0].title = dataP2.val().title;
 
             if (dataP2.val() != null && dataP2.val().parentEntityType != undefined){
                //get parent1 title

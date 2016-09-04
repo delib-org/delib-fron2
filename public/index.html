@@ -655,20 +655,20 @@ Tow options
       </script>
 
    <script type="text/x-handlebars-template" id="liveTalkFooter-tmpl">
-      <div>
-         <div class="clickables">
+      <div class="liveTalkFooterDiv">
+         <div class="liveTalkButtons liveTalkButtonsSymbols clickables" onclick="setThumbDown('{{liveTalkUid}}')">
             <i class="fa fa-thumbs-down" aria-hidden="true"></i>
          </div>
-         <div class="clickables">
+         <div class="liveTalkButtons liveTalkButtonsSymbols clickables">
             <i class="fa fa-thumbs-up" aria-hidden="true"></i>
          </div>
-         <div class="clickables">
+         <div class="liveTalkButtons liveTalkButtonsSymbols clickables">
             <i class="fa fa-bullseye" aria-hidden="true"></i>
          </div>
-         <div class="clickables">
+         <div class="liveTalkButtons liveTalkButtonsSymbols clickables">
             <i class="fa fa-hand-pointer-o" aria-hidden="true"></i>
          </div>
-         <div class="clickables" onclick="showEntities('{{entityType}}','{{uid}}')">
+         <div class="liveTalkButtons clickables" onclick="showEntities('{{entityType}}','{{uid}}')">
            <span>חזרה</span>
          </div>
       </div>
