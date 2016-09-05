@@ -1,18 +1,5 @@
 $(function(){
 
-   //   if ('serviceWorker' in navigator) {
-   //      console.log('Service Worker is supported');
-   //      navigator.serviceWorker.register('../delib-service-worker.js').then(function() {
-   //         return navigator.serviceWorker.ready;
-   //      }).then(function(serviceWorkerRegistration) {
-   //         SWreg = serviceWorkerRegistration;
-   //         // fcmNotificationsBtn.disabled = false;
-   //         console.log('Service Worker is ready :^)', SWreg);
-   //      }).catch(function(error) {
-   //         console.log('Service Worker Error :^(', error);
-   //      });
-   //   }
-
    //start ripple effect
    $(".footer-btn").ePulse({
 
@@ -33,10 +20,6 @@ $(function(){
    listenToAuth();
 
 
-   //   setFeeds();
-
-   //routTo(currentUrl, false);
-
    $(window).on('popstate', function() {
 
       console.log("rout to.. popstate");
@@ -45,12 +28,6 @@ $(function(){
       routTo(currentUrl,back);
 
    });
-   //
-   //     renderTemplate("#LogoHeaderTitle-tmpl",{},"#headerTitle");
-   //     renderTemplate("#headerBreadCrumbs-tmpl",{},"#headerBreadCrumbs");
-   //     renderTemplate("#headerMenu-tmpl",{},"#headerMenu");
-
-   listenToAuth();
 });
 
 // Global General Variables and Constants
