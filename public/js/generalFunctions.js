@@ -82,6 +82,16 @@ function replaceAll(str, find, replace) {
 }
 
 
+function playCough(){
+   var cough = new Audio("sounds/Cough-SoundBible.com-1409703798.wav");
+   cough.play();
+}
+
+function playCheer(){
+   var cheer = new Audio("sounds/SMALLCROWDAPPLAUSEYannickLemieux1268806408.wav");
+   cheer.play();
+}
+
 
 
 

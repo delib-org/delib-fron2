@@ -17,7 +17,7 @@ function showLiveTalk(liveTalkUid){
    })
 
 
-   DB.child("liveTalks/"+liveTalkUid+"/thumbsDown/start").set(true);
+//   DB.child("liveTalks/"+liveTalkUid+"/thumbsDown/start").set(true);
    showThumbDown(liveTalkUid);
    showThumbUp(liveTalkUid);
 
@@ -37,16 +37,19 @@ function showThumbDown(liveTalkUid){
 
    DB.child("liveTalks/"+liveTalkUid+"/thumbsDown").on("value", function(thumbsDown){
 
-
       var numberOfThumbsDown = thumbsDown.numChildren();
 
       $("#"+liveTalkUid+"thumbsDown").text(numberOfThumbsDown-1).height(numberOfThumbsDown*5);
 
    })
+
+   DB.child("liveTalks/"+liveTalkUid+"/thumbsDown").on("child_added", function(thumbDown){
+      playCough();
+   })
 }
 
 function setThumbUp(liveTalkUid){
-   console.log("thumbUp")
+
    DB.child("liveTalks/"+liveTalkUid+"/thumbsUp/"+userUuid).set(true);
 
    setTimeout(function(){
@@ -64,5 +67,11 @@ function showThumbUp(liveTalkUid){
       $("#"+liveTalkUid+"thumbsUp").text(numberOfThumbsDown-1).height(numberOfThumbsDown*5);
 
    })
+
+   DB.child("liveTalks/"+liveTalkUid+"/thumbsUp").on("child_added", function(thumbUp){
+      playCheer();
+   })
+
 }
+
 
