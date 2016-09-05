@@ -14,7 +14,7 @@ function listenToAuth(){
          updatesListener();
 
 
-//         listenToNotifications(user.uid);
+
          console.log("login: "+ user.displayName);
 
          showEntities("main", "public");

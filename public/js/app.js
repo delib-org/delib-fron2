@@ -26,6 +26,8 @@ $(function(){
       var currentUrl = getUrl();
       var back = true;
       routTo(currentUrl,back);
+      
+      window.scrollTo(0,1);
 
    });
 });
