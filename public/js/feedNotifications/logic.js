@@ -212,7 +212,7 @@ function feedBuilder (entityDatum, entityUid, entityType, variation) {
 
     feedManager.promise = Promise.resolve(true);
 
-    console.dir(feedManager.queue, feedManager.promise);
+    console.dir(feedManager.promise);
 
 }
 

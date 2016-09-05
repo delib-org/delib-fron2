@@ -39,7 +39,7 @@ function showMultiOptions(questionUid){
       }
 
       if (!isUserVoted){
-         DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(false)
+         DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(false);
          var userVote = false;
 
       } else {
@@ -70,9 +70,10 @@ function showMultiOptions(questionUid){
          } else {
             $("#"+optionUid+"voteImg").attr("src", "img/thumbUpInactive.png");
          }
-      })
+      });
+      var multiOptionsCallBack
       //if changes in votes, update text and position
-      DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").on("value",function(currentVote){
+      DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").on("value",function(currentVote) {
          $("#"+optionUid+"voteCount").text("בעד: "+ currentVote.val());
 
          //see if changes in locations
@@ -105,9 +106,11 @@ function showMultiOptions(questionUid){
       })
    };
 
-   var onObject = DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
+   var turnOff = function () {
+      DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").orderByChild("dateAdded").limitToLast(20).off("child_added", multiOptionsCallback);
+   };
 
-   setActiveEntity("questions",questionUid, "child_added", multiOptionsCallback, onObject);
+   setActiveEntity("questions",questionUid, "child_added", multiOptionsCallback, turnOff);
 }
 
 function voteUpOption(questionUid, optionUid){
@@ -158,11 +161,11 @@ function addMultiOptionToDB(questionUid){
 function adjustCounting(questionUid, optionUid){
    DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp").once("value", function(thumbsUp){
       //get numbe of true
-      var count = 0
+      var count = 0;
       thumbsUp.forEach(function(thumbUp){
          if(thumbUp.val()){ count++}
 
-      })
+      });
 
       DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").set(count);
    })
