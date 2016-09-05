@@ -48,6 +48,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
       renderTemplate("#simpleVote-tmpl", context, "wrapper");
       renderTemplate("#simpleVoteBtns-tmpl", context, "footer");
+      $("wrapper").css("overflow","auto");
 
       $(".voteBtn").ePulse({
          bgColor: "#ded9d9",

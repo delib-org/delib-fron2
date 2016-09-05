@@ -7,6 +7,7 @@ function showTopic(topicUid){
       renderTemplate("#topicHeaderTitle-tmpl", {topic: title}, "#headerTitle");
       showBreadCrumb("topics", topicUid, title);
       renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
+      $("wrapper").css("overflow","auto");
    }).then(function(rendered) {
       subsManager.isUpdatesSet();
    });

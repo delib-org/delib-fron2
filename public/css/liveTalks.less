@@ -19,6 +19,7 @@
 
    background-color: #cc0000;
    width: 100%;
+
 }
 
 .liveTalkButtons{
@@ -44,13 +45,20 @@
    -ms-justify-content:center;
 
    color: white;
+   border-left: 1px solid gray;
 }
 
 .liveTalkButtonsSymbols{
    font-size: 1.3em;
 }
 
+
+
 .liveTalksWrapper{
+
+   height: 95%;
+   overflow-y:hidden;
+   overflow: hidden;
 
    display: flex;
    display: -webkit-flex;
@@ -74,6 +82,7 @@
 
 .liveTalkColumn{
    flex-grow: 1;
+   border-left: 1px solid gray;
 
    display: flex;
    display: -webkit-flex;
@@ -97,6 +106,14 @@
 .ThumbDownColumn{
 
    background-color: orangered;
+   margin: 5px;
+   border-top-left-radius: 6px;
+   border-top-right-radius: 6px;
+}
+
+.ThumbUpColumn{
+
+   background-color: green;
    margin: 5px;
    border-top-left-radius: 6px;
    border-top-right-radius: 6px;

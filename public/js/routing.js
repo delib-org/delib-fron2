@@ -51,6 +51,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    var previuosCallback = activeEntity.callback;
    var previuosTurnOff = activeEntity.turnOff;
 
+   activeEntity.previuosEntity = previuosEntityType;
+   activeEntity.previuosUid = previuosUid;
 
 
    //   if (previuosEntityType != "main"){
@@ -109,6 +111,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
 function showEntities(entity, uid){
 
+   $("wrapper").css("overflow","auto");
    switch (entity){
       case "groups":
          DB.child("groups/"+uid).once("value", function (group){
