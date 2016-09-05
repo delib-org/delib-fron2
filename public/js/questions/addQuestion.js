@@ -1,8 +1,8 @@
 var optionsTempInput = new Array();
 
-var numberOfOptionsTemp = 2;
+var numberOfOptions_g = 2;
 
-function newQuestion(){
+function showAddNewQuestionScreen(){
 
    for (i=1;i<9;i++){
       optionsTempInput["option"+i]={title:"", description:""};
@@ -13,27 +13,29 @@ function newQuestion(){
 
    renderTemplate("#questionOptionsLimitedOptions-tmpl", {}, "#questionOptions");
 
-   setNumberOfOptions(numberOfOptionsTemp);
+   $("#entitiesPanel").slideUp();
 
+   setNumberOfOptions(numberOfOptions_g);
 
+   var preContext = new Array();
+   renderTemplate("#questionOptionsLimitedOptions-tmpl", {}, "#questionOptions");
+   for (i=0;i<8;i++){
+      preContext.push({optionOrder:i, optionUid: "option"+i, description:""})
+   }
+   var context = {options: preContext}
+   renderTemplate("#questionOption-tmpl", context, "#optionsForLimitedOptions");
+
+   //listen to radio buttons changes
    $('input[type=radio][name=type]').change(function(){
 
       var selection = this.value;
 
       switch (selection) {
-
+         case "multiOptions":
+            $("#questionOptions").slideUp();
+            break;
          case "limitedOptions":
-            var preContext = new Array();
-            renderTemplate("#questionOptionsLimitedOptions-tmpl", {}, "#questionOptions");
-            for (i=0;i<8;i++){
-               preContext.push({optionOrder:i, optionUid: "option"+i, description:""})
-            }
-            var context = {options: preContext}
-            renderTemplate("#questionOption-tmpl", context, "#optionsForLimitedOptions");
-            $("#questionOptions").show();
-//            if(numberOfOptionsTemp>0){
-//               setNumberOfOptions(numberOfOptionsTemp);
-//            }
+            $("#questionOptions").slideDown();
             break;
          default:
             $("#questionOptions").hide();
@@ -45,7 +47,7 @@ function newQuestion(){
 
 function setNumberOfOptions(numberOfOptions){
 
-   numberOfOptionsTemp = numberOfOptions;
+   numberOfOptions_g = numberOfOptions;
 
    //color the menu
    for (i=2; i<9;i++){
@@ -54,7 +56,7 @@ function setNumberOfOptions(numberOfOptions){
    $("#numberOfOptions"+numberOfOptions).css("background", "linear-gradient(to top,  #cc0000 0%,#cc3535 52%,#6d0000 100%)");
 
    for (i=1; i<9;i++){
-      if (i> 8-numberOfOptions){
+      if (i<numberOfOptions){
          $("#"+i+"_optionOrder").show();
       } else {
          $("#"+i+"_optionOrder").hide();
@@ -62,12 +64,11 @@ function setNumberOfOptions(numberOfOptions){
    }
 }
 
-function showAddNewQuestion(){
-   //check if form exists...
+function addNewQuestion(questionUid){
 
    //get form info
-   var questionName = $("#createQuestionName").val();
-   var questionDescription = $("#createQuestionDescription").val();
+   var questionName = $("#quesionTitle").val();
+   var questionDescription = $("#questionDescription").val();
    var questionType = $("input[name=type]:checked").val();
 
    if (questionName == "") {
@@ -79,26 +80,62 @@ function showAddNewQuestion(){
       alert("אנא התחבר/י למערכת");
       return;
    }
-//   for (i=1;i<=numberOfOptionsTemp;i++){
-//      if (optionsTempInput["option"+i].title == "") {
-//         alert(" אופציה מספר "+i+" ריקה");
-//         return;
-//      }
-//   }
-   var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType);
-   //  var newQuestion = DB.child("questions").push({title: questionName, description: questionDescription, type: questionType, owner: userUuid });
-   if (activeEntity.entity == "topics") {
-      var topic = activeEntity.uid;
-      DB.child("topics/"+topic+"/questions/"+newQuestion.key+"/dateAdded").set(firebase.database.ServerValue.TIMESTAMP);
-   }
-   DB.child("users/"+userUuid+"/questions/"+newQuestion.key).set("owner");
 
-   showTopic(activeEntity.uid);
+   //get options
+   //   $('input[name=radioName]:checked', '#myForm').val()
+   var radioInput  = $('input[type=radio][name=type]:checked').val();
+
+
+   if (radioInput == "limitedOptions"){
+      var limitiedOptionsArray = new Object();
+      for (i=0; i<9; i++){
+         var optionTitle = $("#option"+i+"_limitedOptions").val();
+         var optionDescription = $("#option"+i+"_limitedOptionsDesc").val();
+
+         if (optionTitle != "" && optionTitle != null){
+            var color = getRandomColor();
+
+            limitiedOptionsArray["option"+i]= {title: optionTitle, description: optionDescription, color:color} ;
+         }
+      }
+
+      if (limitiedOptionsArray.length <2){
+         alert("Not enough options. Please add more options bellow");
+         return;
+      }
+   }
+
+
+   if (questionUid == undefined){
+      //setting new question
+
+      var newQuestion = setNewQuestionToDB(questionName,questionDescription,questionType, limitiedOptionsArray);
+
+      DB.child("users/"+userUuid+"/questions/"+newQuestion.key).set("owner");
+
+   } else {
+      //updating question
+      console.log("updateing question")
+      var parentEntityType = activeEntity.entityType;
+      var parentUid = activeEntity.uid;
+
+      if (questionType == "limitedOptions"){
+         //if question type = limitedOptions
+
+         DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g, options:limitiedOptionsArray, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+
+      } else {
+
+         DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+      }
+   }
+
+   showEntities(activeEntity.entityType, activeEntity.uid);
 }
 
 
 //create new question
-function setNewQuestionToDB (title, description, type){
+function setNewQuestionToDB (title, description, type, limitedOptionsArray){
 
    if (title == undefined){
       title = "";
@@ -111,9 +148,7 @@ function setNewQuestionToDB (title, description, type){
    if (type == undefined){
       explanation = "";
    };
-   //  if (imgQuestion == undefined){
-   //    imgQuestion = "";
-   //  };
+
    for (i=1;i<9;i++){
       if (optionsTempInput["option"+i].title == ""){
          delete optionsTempInput["option"+i];
@@ -124,9 +159,15 @@ function setNewQuestionToDB (title, description, type){
       }
    }
 
+   var parentEntityType = activeEntity.entityType;
+   var parentUid = activeEntity.uid;
+
+   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptions_g, options:limitedOptionsArray, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
 
 
-   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptionsTemp, options:optionsTempInput, owner: userUuid});
+   //set questio to be subEntity of parent entity
+   DB.child(activeEntity.entityType+"/"+activeEntity.uid+"/subEntities/"+questionId.key).set({entityType: "questions", dateAdded: firebase.database.ServerValue.TIMESTAMP, order: 1})
+
 
    return questionId;
 }

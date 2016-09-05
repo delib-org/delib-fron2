@@ -1,6 +1,6 @@
 function showGroup(groupUid){
 
-   //show header
+
 
    //show footer&header
 
@@ -8,13 +8,15 @@ function showGroup(groupUid){
       //show header
       var title = dataSnapshot.val().title;
       renderTemplate("#groupHeaderTitle-tmpl", {group: title}, "#headerTitle");
+      showBreadCrumb("groups", groupUid, title);
       renderTemplate("#headerMenu-tmpl", {chatUid: groupUid, entityType: "groups"}, "#headerMenu");
 
       //    getLocalNotifications();
 
 
       //show footer
-      renderTemplate("#addTopicBtn-tmpl", {}, "footer");
+      renderTemplate("#showEntityPanel-tmpl", {}, "footer");
+      $("wrapper").css("overflow","auto");
 
       isMembership();
    }).then(function(rendered) {
@@ -22,21 +24,19 @@ function showGroup(groupUid){
    });
 
 
-   var showGroupCallback = function(topics){
+   var showGroupCallback = function(subEntities){
 
-      console.log("group is called, off dysfunc.");
+      if(subEntities.exists()){
 
-      if(topics.exists()){
-
-         var topicsUnderGroup = topics.val();
-         var numberOfTopics = Object.keys(topicsUnderGroup).length;
-         var topicsArray = new Array();
+         var subEntitiesUnderGroup = subEntities.val();
+         var numberOfSubEntities = Object.keys(subEntitiesUnderGroup).length;
+         var subEntitiesUnderGroupArray = new Array();
 
          var i = 1;
 
-         topics.forEach(function(topic){
+         subEntities.forEach(function(subEntity){
 
-            DB.child("topics/"+topic.key).once("value", function(data){
+            DB.child(subEntity.val().entityType+"/"+subEntity.key).once("value", function(data){
 
                var preContext = new Object();
 
@@ -47,16 +47,18 @@ function showGroup(groupUid){
                   //          console.log("t: "+ title + ", d: "+ description);
 
                   preContext = {
-                     uuid: topic.key,
+                     uuid: subEntity.key,
+                     entityType: subEntity.val().entityType,
                      title: title,
-                     description: description
+                     description: description,
+                     symbol: symbols[subEntity.val().entityType]
                   }
 
-                  topicsArray.push(preContext);
+                  subEntitiesUnderGroupArray.push(preContext);
                }
 
-               if (i === numberOfTopics){
-                  var context = {groups: topicsArray};
+               if (i === numberOfSubEntities){
+                  var context = {subEntities: subEntitiesUnderGroupArray};
                   renderTemplate("#groupPage-tmpl", context, "wrapper");
                   $("wrapper").hide();
                   $("wrapper").fadeIn();
@@ -72,12 +74,12 @@ function showGroup(groupUid){
 
 
    //show wrapper
-   DB.child("groups/"+groupUid+"/topics").on("value", showGroupCallback);
-   
+   DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+
    var turnOff = function () {
       DB.child("groups/"+groupUid+"/topics").off("value", showGroupCallback);
    };
-   
+
    setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
 
 

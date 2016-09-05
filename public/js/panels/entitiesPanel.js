@@ -8,6 +8,7 @@ function showEntityPanel(){
 }
 
 function hideEntityPanel(){
+
    renderTemplate("#showEntityPanel-tmpl",{}, "footer");
    $("#entitiesPanel").slideUp(400);
 }

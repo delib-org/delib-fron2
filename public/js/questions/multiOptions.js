@@ -138,7 +138,8 @@ function addMultiOption(questionUid){
    DB.child("questions/"+questionUid+"/options").off("child_added");
 
    renderTemplate("#createMultiOption-tmpl",{}, "wrapper");
-   renderTemplate("#createMultiOptionFooter-tmpl", {questionUid:questionUid}, "footer")
+   renderTemplate("#createMultiOptionFooter-tmpl", {questionUid:questionUid}, "footer");
+   $("wrapper").css("overflow","auto");
 }
 
 function addMultiOptionToDB(questionUid){

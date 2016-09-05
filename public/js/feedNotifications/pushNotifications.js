@@ -93,12 +93,12 @@ subsManager.setNotifications = function(isOwnerCall) {
     if (isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if (activeEntity.entity == 'main')
+    if (activeEntity.entityType == 'main')
         return;
 
-    var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
+    var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/notifications");
 
-    switch (activeEntity.entity) {
+    switch (activeEntity.entityType) {
         case "chats":
 
             // re-defining userFeed in chats context
@@ -152,7 +152,7 @@ subsManager.setNotifications = function(isOwnerCall) {
 
                         // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                         //===================================================//
-                            DB.child(activeEntity.entity + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
+                            DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
                             userNotifications.child("OwnerCalls").remove();
                         //===================================================//
 
@@ -183,7 +183,7 @@ subsManager.setNotifications = function(isOwnerCall) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                     //===================================================//
-                        DB.child(activeEntity.entity + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entity]).off('child_added');
+                        DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entityType]).off('child_added');
                         userNotifications.child("newSubEntity").remove();
                     //===================================================//
 
@@ -206,14 +206,14 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
-    if(activeEntity.entity == 'main') {
+    if(activeEntity.entityType == 'main') {
         $("#notificationsSub").css("color", inactiveColor);
         return;
     }
 
-    var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entity+"/"+activeEntity.uid+"/notifications");
+    var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/notifications");
 
-    switch (activeEntity.entity) {
+    switch (activeEntity.entityType) {
         case "chats":
             // re-defining userFeed in chats context
             DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {

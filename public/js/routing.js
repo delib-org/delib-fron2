@@ -42,58 +42,61 @@ function setUrl(type, uid){
 };
 
 function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff) {
+
+
    // debugger;
-   var previuosEntity = activeEntity.entity;
+   var previuosEntityType = activeEntity.entityType;
    var previuosUid = activeEntity.uid;
    var previuosEventType = activeEntity.eventType;
    var previuosCallback = activeEntity.callback;
    var previuosTurnOff = activeEntity.turnOff;
 
-   if (previuosEntity != "main"){
-      if (previuosEventType != undefined){
-         if (previuosUid != undefined){
-               previuosTurnOff();
-            console.log(previuosEntity, previuosUid, previuosEventType, previuosTurnOff, turnOff);
-         } else {
-            console.log("Error: no previuos entity to close off previous callback");
-         }
-      }
-   } else {
-      switch (previuosUid){
-         case "member":
-         case "owned":
-            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
-            break;
-         case "public":
-            DB.child("groups").off(previuosEventType, previuosCallback);
-            break;
-         default:
-            console.log("Error: no such groups cluster in main ("+previuosUid+")");
-      }
-   }
+   activeEntity.previuosEntity = previuosEntityType;
+   activeEntity.previuosUid = previuosUid;
 
 
-   activeEntity.entity = newEntity;
-   activeEntity.previousEntity = previuosEntity;
-   activeEntity.previousUid = previuosUid;
+   //   if (previuosEntityType != "main"){
+   //      if (previuosEventType != undefined){
+   //         if (previuosUid != undefined){
+   //            previuosTurnOff();
+   //         } else {
+   //            console.log("Error: no previuos entity to close off previous callback");
+   //         }
+   //      }
+   //   } else {
+   //      switch (previuosUid){
+   //         case "member":
+   //         case "owned":
+   //            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
+   //            break;
+   //         case "public":
+   //            DB.child("groups").off(previuosEventType, previuosCallback);
+   //            break;
+   //         default:
+   //            console.log("Error: no such groups cluster in main ("+previuosUid+")");
+   //      }
+   //   }
+
+   activeEntity.entityType = newEntity;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
    activeEntity.callback = newCallback;
    activeEntity.turnOff = turnOff;
-   activeEntity.previuosEntity = previuosEntity;
-   // activeEntity.onObject = newOnObject;
+   //activeEntity.previuosEntityType = previuosEntityType;
+   //   activeEntity.onObject = newOnObject;
+
 
    setUrl(newEntity, newUid);
 
    if (newEntity == "chats")
-      DB.child(previuosEntity+"/"+newUid).once("value", function (dataSnapshot){
-         // console.log(dataSnapshot.val());
+      DB.child(previuosEntityType+"/"+newUid).once("value", function (dataSnapshot){
+
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       });
-   
+
    if (newEntity == "groups" || newEntity == "topics" || newEntity == "questions"){
       DB.child(newEntity+"/"+newUid).once("value", function (dataSnapshot){
-         // console.log(dataSnapshot.val());
+
          document.title = "דליב: " + entityTypeToHebrew(newEntity) + " - " +dataSnapshot.val().title;
       })
    } else {
@@ -104,34 +107,11 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    $("#entitiesPanel").slideUp(400);
 
    var currentEntity = activeEntity.uid;
-
-
-   DB.child(activeEntity.entity + '/' + activeEntity.uid + '/title').once('value',function(dataSnap){
-
-      console.log('previous entity', activeEntity.previousEntity);
-      console.log('previous uid', activeEntity.previousUid);
-      console.log('datasnap', dataSnap.val())
-      console.log('current uid', currentEntity)
-      return dataSnap
-
-   }).then(function(res){
-      DB.child(activeEntity.previousEntity +'/'+activeEntity.previousUid+'/title').once('value', function(dataSnap){
-         renderTemplate('#headerBreadCrumbs-tmpl',{
-            previousEntity:activeEntity.previousEntity,
-            previousUid:activeEntity.previousUid,
-            currentUid:activeEntity.uid,
-            currentTitle:res.val(),
-            currentEntity:activeEntity.entity,
-            previousTitle:dataSnap.val()
-         },'#headerBreadCrumbs')
-      })
-   })
-
-
 }
 
 function showEntities(entity, uid){
 
+   $("wrapper").css("overflow","auto");
    switch (entity){
       case "groups":
          DB.child("groups/"+uid).once("value", function (group){
@@ -139,7 +119,7 @@ function showEntities(entity, uid){
                showGroup(uid);
             } else {
                console.log("group "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
@@ -149,7 +129,7 @@ function showEntities(entity, uid){
                showTopic(uid);
             } else {
                console.log("topic "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
@@ -159,7 +139,7 @@ function showEntities(entity, uid){
                showQuestion(uid);
             } else {
                console.log("question "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
@@ -169,7 +149,17 @@ function showEntities(entity, uid){
                showChat(uid);
             } else {
                console.log("question "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
+            }
+         })
+         break;
+      case "liveTalks":
+         DB.child("liveTalks/"+uid).once("value", function (question){
+            if (question.exists()){
+               showLiveTalk(uid);
+            } else {
+               console.log("question "+uid+" do not exist");
+               showMain("member");
             }
          })
          break;
@@ -181,17 +171,91 @@ function showEntities(entity, uid){
             if (question.exists()){
                var questionUid = dataSnapshot.val().questionUid;
                var optionUid = dataSnapshot.val().optionUid;
-               console.log(questionUid, optionUid);
+
                showOption(questionUid,optionUid);
             } else {
                console.log("option "+uid+" do not exist");
-               showMain("public");
+               showMain("member");
             }
          })
          break;
       default:
-         showMain("public");
+         showMain("member");
    }
 
 };
 
+function showBreadCrumb(entityType, uid, title){
+   //get all parents of an entity (by settin it's type and uid)
+
+   //child
+
+   //var parentsArray = [{entityType: entityType, uid: uid, title:title, symbol: symbols[entityType]}];
+   var parentsArray = new Array();
+   //get parent 1
+   DB.child(entityType+"/"+uid).once("value", function(dataP1){
+
+      if (dataP1.val() != null && dataP1.val().parentEntityType != undefined){
+         var parent1Type = dataP1.val().parentEntityType;
+         var parent1Uid = dataP1.val().parentEntityUid;
+         var parent1Symbol = symbols[parent1Type];
+
+
+         parentsArray.push({entityType: parent1Type, uid: parent1Uid, symbol: parent1Symbol});
+
+         var preContext = parentsArray;
+
+         var context= {path: preContext}
+         renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
+
+
+         //check if the parent have parent..
+
+         DB.child(parent1Type+"/"+parent1Uid).once("value", function(dataP2){
+
+            parentsArray[0].title = dataP2.val().title;
+
+            if (dataP2.val() != null && dataP2.val().parentEntityType != undefined){
+               //get parent1 title
+
+               var preContext = parentsArray;
+
+               var context= {path: preContext}
+
+               renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
+
+               //get parent2 uid and type
+               var parent2Type = dataP2.val().parentEntityType;
+               var parent2Uid = dataP2.val().parentEntityUid;
+               var parent2Symbol = symbols[parent2Type];
+
+
+               parentsArray.push({entityType: parent2Type, uid: parent2Uid, symbol: parent2Symbol});
+
+               DB.child(parent2Type+"/"+parent2Uid).once("value", function(dataP3){
+                  if (dataP3.val() != null){
+                     parentsArray[1].title = dataP3.val().title;
+
+                     var preContext = parentsArray;
+                     preContext.reverse();
+                     var context= {path: preContext}
+                     renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
+
+                  }
+               })
+            } else {
+
+               parentsArray.reverse();
+               var context= {path: parentsArray}
+               renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
+            }
+
+         })
+      } else {
+
+         var context= {path: parentsArray}
+         renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
+      }
+   })
+
+}

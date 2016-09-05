@@ -1,5 +1,7 @@
 function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
+   console.log("limOpt: "+ questionUid, numberOfOptions)
+
    var questionDB = DB.child("questions/"+questionUid+"/options"); DB.child("questions/"+questionUid+"/options").orderByChild("votes").limitToLast(numberOfOptions).once("value",function(options){
 
       //adjust the votes to a counting of votes
@@ -46,6 +48,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
       renderTemplate("#simpleVote-tmpl", context, "wrapper");
       renderTemplate("#simpleVoteBtns-tmpl", context, "footer");
+      $("wrapper").css("overflow","auto");
 
       $(".voteBtn").ePulse({
          bgColor: "#ded9d9",

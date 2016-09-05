@@ -51,20 +51,10 @@ function isNotEmpty(variable){
 }
 
 function back(){
-   var entity = activeEntity.entity;
+   var entityType = activeEntity.entityType;
+   var entityUid = activeEntity.uid;
 
-   switch (entity){
-      case "groups":
-         showOwnedGroups();
-         break;
-      case "topics":
-         showGroup(activeEntity.uid);
-         break;
-      case "questions":
-         showTopic(activeEntity.uid);
-      default:
-         showOwnedGroups();
-   }
+   showEntities(entityType,entityUid);
 }
 
 function entityTypeToHebrew (entityType){
@@ -91,6 +81,16 @@ function replaceAll(str, find, replace) {
   return str.replace(new RegExp(find, 'g'), replace);
 }
 
+
+function playCough(){
+   var cough = new Audio("sounds/Cough-SoundBible.com-1409703798.wav");
+   cough.play();
+}
+
+function playCheer(){
+   var cheer = new Audio("sounds/SMALLCROWDAPPLAUSEYannickLemieux1268806408.wav");
+   cheer.play();
+}
 
 
 

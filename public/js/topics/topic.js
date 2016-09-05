@@ -5,32 +5,34 @@ function showTopic(topicUid){
    DB.child("topics/"+topicUid).once("value", function(dataSnapshot){
       var title = dataSnapshot.val().title;
       renderTemplate("#topicHeaderTitle-tmpl", {topic: title}, "#headerTitle");
+      showBreadCrumb("topics", topicUid, title);
       renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
+      $("wrapper").css("overflow","auto");
    }).then(function(rendered) {
       subsManager.isUpdatesSet();
    });
 
    //show footer
-//   renderTemplate("#showEntityPanel-tmpl", {}, "footer");
-   renderTemplate("#addQuestionBtn-tmpl", {}, "footer");
+   renderTemplate("#showEntityPanel-tmpl", {}, "footer");
 
    //show wrapper
 
-   var topicCallback = function(questions){
+   var topicCallback = function(subEntities){
 
-      console.log("topic is called, off dysfunc.");
-      if(questions.exists()){
+      if(subEntities.exists()){
 
-         var questionsUnderTopic = questions.val();
-         var numberOfQuestions = Object.keys(questionsUnderTopic).length;
+         var subEntitiesUnderTopic = subEntities.val();
+         var numberOfSubEntities = Object.keys(subEntitiesUnderTopic).length;
 
-         var questionsArray = new Array();
+         var subEntitiesArray = new Array();
 
          var i = 1;
 
-         questions.forEach(function(question){
+         subEntities.forEach(function(subEntity){
 
-            DB.child("questions/"+question.key).once("value", function(data){
+            var subEntityType = subEntity.val().entityType;
+
+            DB.child(subEntityType+"/"+subEntity.key).once("value", function(data){
 
                var preContext = new Object();
 
@@ -40,16 +42,18 @@ function showTopic(topicUid){
                   var description = data.val().description;
 
                   preContext = {
-                     uuid: question.key,
+                     entityType: subEntityType,
+                     uuid: subEntity.key,
                      title: title,
-                     description: description
+                     description: description,
+                     symbol: symbols[subEntityType]
                   }
 
-                  questionsArray.push(preContext);
+                  subEntitiesArray.push(preContext);
                }
 
-               if (i === numberOfQuestions){
-                  var context = {questions: questionsArray};
+               if (i === numberOfSubEntities){
+                  var context = {questions: subEntitiesArray};
                   renderTemplate("#topicPage-tmpl", context, "wrapper");
                   $("wrapper").hide();
                   $("wrapper").fadeIn();
@@ -63,10 +67,10 @@ function showTopic(topicUid){
       } else {renderTemplate("#topicPage-tmpl",{}, "wrapper");}
    };
 
-   DB.child("topics/"+ topicUid.toString()+"/questions").on("value",topicCallback);
+   DB.child("topics/"+ topicUid.toString()+"/subEntities").on("value",topicCallback);
    
    var turnOff = function () {
-      DB.child("topics/"+ topicUid.toString()+"/questions").off("value", topicCallback);
+      DB.child("topics/"+ topicUid.toString()+"/subEntities").off("value", topicCallback);
    };
    
    setActiveEntity("topics", topicUid, "value", topicCallback, turnOff);
