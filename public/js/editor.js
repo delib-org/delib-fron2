@@ -1,5 +1,3 @@
-var editor;
-
 function createQuillEditor(elementUid){
 
     var toolbarOptions = [
@@ -9,14 +7,15 @@ function createQuillEditor(elementUid){
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
       ['clean']
-    ]
+    ];
 
     var options = {
       debug: 'info',
       modules: { toolbar: toolbarOptions },
       placeholder: 'enter text here...',
-      theme: 'snow'
+      theme: 'snow',
+      readOnly: false,
     };
 
-    editor = new Quill(elementUid, options);
+    var editor = new Quill(elementUid, options);
 }

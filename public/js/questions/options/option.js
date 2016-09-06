@@ -21,24 +21,23 @@ function showOption(questionUid, optionUid) {
     DB.child("questions/" + questionUid + "/options/" + optionUid).once("value", function (dataSnapshot) {
 
         var description = dataSnapshot.val().description;
+//
+//        renderTemplate("#optionWrapper-tmpl", {
+//            questionUid: questionUid,
+//            optionUid: optionUid,
+//            description: description
+//        }, "wrapper");
+//        $('wrapper').html("<div id='" + optionUid + "DivOpt' class='card' contenteditable='true' >"+description+"</div>")
+        $('wrapper').html("<div id='"+optionUid+"DivOpt' class='card'>"+description+"</div>")
 
-        renderTemplate("#optionWrapper-tmpl", {
-            questionUid: questionUid,
-            optionUid: optionUid,
-            description: description
-        }, "wrapper");
-//        createQuillEditor("#" + optionUid + "DivOpt");
-        tinymce.init({ selector:"#" + optionUid + "DivOpt" });
+        createQuillEditor("#" + optionUid + "DivOpt");
+//        tinymce.init({ selector:"#" + optionUid + "DivOpt" });
 
     });
 
-
-
     $("#" + optionUid + "DivOpt").keyup(function (e) {
-        //
         var description = $("#" + optionUid + "DivOpt").html();
         console.log("text: " + description);
-
 
         DB.child("questions/" + questionUid + "/options/" + optionUid).update({
             description: description,
@@ -54,12 +53,13 @@ function showOption(questionUid, optionUid) {
         var writer = optionDB.val().writer;
 
         if (writer != userUuid) {
-            console.log("write")
+            console.log("write");
             $("#" + optionUid + "DivOpt").html(descriptionFromDB);
         }
     }
 
     DB.child("questions/" + questionUid + "/options/" + optionUid).on("value", updateWrapperOption);
+//    DB.child("questions/" + questionUid + "/options/" + optionUid).once("value", updateWrapperOption);
 
 
 
@@ -188,7 +188,5 @@ function showOptionInfo(question, option) {
             $("#info").css("top", headerHeight).css("height", infoHeight).css("width", headerWidth).show(400);
 
         })
-
-
     }
 }
