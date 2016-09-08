@@ -203,8 +203,8 @@ function feedBuilder (entityDatum, entityType, variation) {
 
             break;
     }
-    
-    feedManager.promise = Promise.resolve(true);
+
+    feedManager.promise.resolve();
 
     console.dir(feedManager.queue, feedManager.promise);
 
