@@ -70,8 +70,8 @@ function updatesListener() {
                 // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
 
                 if (isNewSubEntityReg) {
-                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/" + subEntity[entityUpdates.key]).orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
-                        DB.child(subEntity[entityUpdates.key] + "/" + entityAddedUid.key).once('value', function (actualContent) {
+                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
+                        DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
 
                             console.log("actualContent: " + entityAddedUid.val().dateAdded);
 
