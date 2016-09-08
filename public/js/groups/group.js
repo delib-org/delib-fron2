@@ -11,6 +11,7 @@ function showGroup(groupUid){
       showBreadCrumb("groups", groupUid, title);
       renderTemplate("#headerMenu-tmpl", {chatUid: groupUid, entityType: "groups"}, "#headerMenu");
 
+
       //    getLocalNotifications();
 
 
