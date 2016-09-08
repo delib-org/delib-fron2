@@ -79,6 +79,8 @@
       <script src="js/feedNotifications/pushNotifications.js"></script>
       <script src="js/feedNotifications/feed.js"></script>
 
+      <script src="js/feed/feed.js"></script>
+
       <script src="js/panels/entitiesPanel.js"></script>
 
       <script src="js/liveTalks/liveTalk.js"></script>
@@ -140,6 +142,7 @@
 <div id="feedSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setFeed()"><i class="fa fa-globe fa-2x"></i></div>
 <div id="notificationsSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
 <div id="isMembership" class="material-ripple clickables headerMenuBtn" onclick="membership()"><i class="fa fa-heart fa-2x"></i></div>
+<div id="isMembership" class="material-ripple clickables headerMenuBtn feedButton" onclick="showFeed()"><div class="feedButtonDivs" id="evelopeDiv"><i class="fa fa-envelope-o fa-2x"></i></div><div class="feedButtonDivs" id="divCounter"></div></div></div>
 
       </script>
 
@@ -148,7 +151,7 @@
 <div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
 <div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
-<!--<div id="ownedBtn"class="footer-btn material-ripple" onclick="showFeed()"><span>חדשות</span></div>-->
+<div id="ownedBtn"class="footer-btn material-ripple" onclick="showFeed()"><span>חדשות</span></div>
 <div id="groupPlusBtn" class="footer-btn material-ripple" onclick="showAddGroup()"><i class="fa fa-plus fa-2x" aria-hidden="true"></i></div>
 
       </script>
@@ -684,4 +687,17 @@ Tow options
       </div>
    </script>
 
+
+   <!-----   Feed ------------------->
+   <script type="text/x-handlebars-template" id="feedHeaderTitle-tmpl">
+<center>דליב: חדשות</center>
+      </script>
+
+<!--   footer-->
+   <script type="text/x-handlebars-template" id="feedFooter-tmpl">
+<div id="publicBtn" class="footer-btn material-ripple" onclick="showMain('public')"><span>קבוצות פומביות</span></div>
+<div id="memberBtn"class="footer-btn material-ripple" onclick="showMain('member')"><span>הקבוצות שלי</span></div>
+<div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
+<div id="ownedBtn"class="footer-btn material-ripple"><span>חדשות</span></div>
+      </script>
 </html>

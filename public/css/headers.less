@@ -92,11 +92,11 @@ header {
 
 .breadCrumbBlock{
    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#cc2222+1,cc5f5f+52,6b1b1b+100 */
-background: #cc2222; /* Old browsers */
-background: -moz-linear-gradient(top,  #cc2222 1%, #cc5f5f 52%, #6b1b1b 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top,  #cc2222 1%,#cc5f5f 52%,#6b1b1b 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom,  #cc2222 1%,#cc5f5f 52%,#6b1b1b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc2222', endColorstr='#6b1b1b',GradientType=0 ); /* IE6-9 */
+   background: #cc2222; /* Old browsers */
+   background: -moz-linear-gradient(top,  #cc2222 1%, #cc5f5f 52%, #6b1b1b 100%); /* FF3.6-15 */
+   background: -webkit-linear-gradient(top,  #cc2222 1%,#cc5f5f 52%,#6b1b1b 100%); /* Chrome10-25,Safari5.1-6 */
+   background: linear-gradient(to bottom,  #cc2222 1%,#cc5f5f 52%,#6b1b1b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc2222', endColorstr='#6b1b1b',GradientType=0 ); /* IE6-9 */
 
 
    color: #ffeaea;
@@ -114,4 +114,44 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc2222', end
 
 .breadCumbIcons{
    font-size: 0.6em;
+}
+
+.feedButton{
+   display: flex;
+   display: -webkit-flex;
+   display: -webkit-box-flex;
+   display: -moz-box-flex;
+   display: -ms-flex;
+
+
+   flex-direction:row;
+   -webkit-flex-direction: row;
+   -webkit-box-flex-direction: row;
+   -moz-box-flex-direction: row;
+   -ms-flex-direction: row;
+
+   //   align-items:center;
+   //   align-self:stretch;
+   justify-content: center;
+
+   //   vertical-align: middle;
+}
+
+.feedButtonDivs{
+    position: absolute;
+   top: 50%;
+   left: 50%;
+   height: 30%;
+   width: 50%;
+   margin: -15% 0 0 -25%;
+}
+
+#evelopeDiv{
+
+}
+#divCounter{
+   background-color: rgba(255, 226, 0, 0.9);
+   padding: 5px;
+   border-radius: 10px;
+   color: black;
 }

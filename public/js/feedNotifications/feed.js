@@ -172,27 +172,4 @@ subsManager.isFeedSet = function (isOwnerCall) {
 
 };
 
-function showFeed(){
 
-   //show header
-
-   //show footer
-
-   //show wrapper
-   var preContext = new Array();
-   for (i in feedQueue){
-      console.log(feedQueue[i].title);
-      var title = feedQueue[i].title;
-      var description = feedQueue[i].description
-
-      preContext.push({title:title, description: description})
-
-
-
-   }
-
-   var context = {"feeds": preContext};
-   console.log(JSON.stringify(context));
-
-   renderTemplate("#feeds-tmpl", context, "wrapper")
-}
