@@ -204,7 +204,8 @@ function feedBuilder (entityDatum, entityType, variation) {
             break;
     }
 
-    feedManager.promise.resolve();
+    
+    $.event.trigger('feedPushed');
 
     console.dir(feedManager.queue, feedManager.promise);
 

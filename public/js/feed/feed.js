@@ -1,10 +1,9 @@
-   $.when(feedManager.promise).done(function() {
-   console.log('resolved');
-   var feedLength = feedManager.queue.length;
-   showNumberOfFeeds(feedLength);
+   $(document).on('feedPushed', function () {
+      console.log('resolved', feedManager.queue.length);
 
-   feedManager.promise = jQuery.Deferred();
-});
+      var feedLength = feedManager.queue.length;
+      showNumberOfFeeds(feedLength);
+   });
 
 //feedManager.promise.then(function(){
 //   //new message

@@ -77,12 +77,14 @@ var subsManager = {
 var mostUpdatedContent = null;
 // Feed
 
+
 const defaultFeedVolume = 10;
+
 var feedManager = {
    queue: [],
-   volume: defaultFeedVolume,
-   promise: jQuery.Deferred()
+   volume: defaultFeedVolume
 };
+
 
 const symbols = {
    groups: "fa fa-users",
