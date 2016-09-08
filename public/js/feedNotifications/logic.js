@@ -167,9 +167,12 @@ function updatesListener() {
 
     feedManager.inbox = {
         get: function () {
-            return DB.child('users/'+userUuid+'/feedInbox').once('value',function (snapshot){
-                return snapshot;
-            })
+            var val;
+            DB.child('users/'+userUuid+'/feedInbox').once('value',function (snapshot){
+                val = snapshot.val();
+            });
+
+            return val;
         },
         set: function (val) {
             DB.child('users/'+userUuid+'/feedInbox').set(val);
@@ -220,7 +223,6 @@ function feedBuilder (entityDatum, entityType, variation) {
     $.event.trigger('feedPushed');
 
     feedManager.inbox.set(2);
-    console.log(feedManager.inbox.get(), userUuid);
-    console.dir(feedManager.queue, feedManager.promise);
+    console.log(feedManager.inbox.get());
 
 }
