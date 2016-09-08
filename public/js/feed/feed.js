@@ -23,6 +23,7 @@ function showNumberOfFeeds(){
 }
 
 function showFeed(){
+   feedManager.inbox.set(0);
    feedManager.promise.resolve();
    //show header
 

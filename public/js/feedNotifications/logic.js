@@ -3,14 +3,14 @@ var entityAdded_cb;
 var ownerCall_cb;
 function updatesListener() {
 
+    // turn off previous listener
+    DB.child("users/"+userUuid+"/updates").off();
+    
     function regFalsify(regObject) {
         if (!(regObject.feed || regObject.notifications))
             regObject = false;
         return regObject;
     }
-
-    // turn off previous listener
-    DB.child("users/"+userUuid+"/updates").off();
 
     // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
@@ -164,6 +164,16 @@ function updatesListener() {
             });
         });
     });
+
+    feedManager.inbox = {
+        get: function () {
+            return DB.child('users/'+userUuid+'/feedInbox').once('value',function (snapshot){
+                return snapshot;
+            })
+        },
+        set: function (val) {
+            DB.child('users/'+userUuid+'/feedInbox').set(val);
+        }};
 }
 
 
@@ -209,8 +219,8 @@ function feedBuilder (entityDatum, entityType, variation) {
     // triggering feedPushed event
     $.event.trigger('feedPushed');
 
+    feedManager.inbox.set(2);
+    console.log(feedManager.inbox.get(), userUuid);
     console.dir(feedManager.queue, feedManager.promise);
 
 }
-
-

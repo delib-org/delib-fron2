@@ -59,7 +59,7 @@ subsManager.setFeed = function(isOwnerCall) {
 
                         // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                         //===================================================//
-                            DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/OwnerCalls").off('child_added');
+                            DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/OwnerCalls").off('child_added', ownerCall_cb);
                             userFeed.child("OwnerCalls").remove();
                         //===================================================//
 
@@ -91,7 +91,7 @@ subsManager.setFeed = function(isOwnerCall) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                     //===================================================//
-                        DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entityType]).off('child_added');
+                        DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/subEntities").orderByChild('dateAdded').limitToLast(1).off('child_added', entityAdded_cb);
                         userFeed.child("newSubEntity").remove();
                     //===================================================//
 

@@ -32,12 +32,14 @@ $(function(){
    });
 });
 
+
 // Global General Variables and Constants
 
 var userUuid;
 var startingUrl;
 var activeEntity = new Object();
 var firstRun = true;
+
 const subEntity = {
    groups: "topics"
    , topics: "questions"
@@ -75,9 +77,9 @@ var subsManager = {
 };
 
 var mostUpdatedContent = null;
-// Feed
+// Feed ========================================================================================
 
-
+// default feed volume
 const defaultFeedVolume = 10;
 
 var feedManager = {
@@ -85,6 +87,7 @@ var feedManager = {
    volume: defaultFeedVolume
 };
 
+//==================================================================================
 
 const symbols = {
    groups: "fa fa-users",
@@ -94,13 +97,14 @@ const symbols = {
    liveTalks: "fa fa-eye"
 }
 
-// Initialize Firebase
+//============// Initialize Firebase
 var config = {
    apiKey: "AIzaSyAjyyjWM63PSjyRoDI-87MpRtfOFnOO0aA",
    authDomain: "delib21-aaeb0.firebaseapp.com",
    databaseURL: "https://delib21-aaeb0.firebaseio.com",
    storageBucket: "delib21-aaeb0.appspot.com"
 };
+
 firebase.initializeApp(config);
 var DB = firebase.database().ref();
 var storage = firebase.storage();
