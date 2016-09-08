@@ -94,7 +94,7 @@ function updatesListener() {
                                 pushNotification(actualContent, subEntity[entityUpdates.key]);
 
                             if (isNewSubEntityReg.feed)
-                                feedBuilder(actualContent, entityUpdates.key);
+                                feedBuilder(actualContent, entityUpdates.key, entityAddedUid);
 
                         }); //.catch(function (error) { console.log(error, "no entity path") })
                     });
@@ -195,8 +195,8 @@ function feedBuilder (entityDatum, entityType, variation) {
                 title: entityDatum.val().title,
                 description: entityDatum.val().description,
                 date: entityDatum.val().dateAdded,
-                entityType: entityType,
-                entityUid: entityDatum.key
+                entityType: variation.val().entityType,
+                entityUid: variation.key
             });
 
             break;
