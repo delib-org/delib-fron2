@@ -1,7 +1,9 @@
-$.when(feedManager.promise).done(function() {
+   $.when(feedManager.promise).done(function() {
    console.log('resolved');
    var feedLength = feedManager.queue.length;
    showNumberOfFeeds(feedLength);
+
+   feedManager.promise = jQuery.Deferred();
 });
 
 //feedManager.promise.then(function(){
