@@ -194,17 +194,19 @@ function feedBuilder (entityDatum, entityType, variation) {
             feedManager.queue.push({
                 title: entityDatum.val().title,
                 description: entityDatum.val().description,
-                date: entityDatum.val().dateAdded
+                date: entityDatum.val().dateAdded,
+                entityType: entityType,
+                entityUid: entityDatum.key
             });
-
-            // if feedVolume got to 20, also remove last feed in feedQueue
-            if(Object.keys(feedManager.queue).length >= feedManager.volume + 1)
-                feedManager.queue.pop();
 
             break;
     }
 
-    
+    // if feedVolume got to 20, also remove last feed in feedQueue
+    if(Object.keys(feedManager.queue).length >= feedManager.volume + 1)
+        feedManager.queue.pop();
+
+    // triggering feedPushed event
     $.event.trigger('feedPushed');
 
     console.dir(feedManager.queue, feedManager.promise);
