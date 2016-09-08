@@ -77,7 +77,7 @@ function showGroup(groupUid){
    DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
 
    var turnOff = function () {
-      DB.child("groups/"+groupUid+"/topics").off("value", showGroupCallback);
+      DB.child("groups/"+groupUid+"/subEntities").off("value", showGroupCallback);
    };
 
    setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
