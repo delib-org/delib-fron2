@@ -81,7 +81,7 @@ const defaultFeedVolume = 10;
 var feedManager = {
    queue: [],
    volume: defaultFeedVolume,
-   promise: null
+   promise: jQuery.Deferred()
 };
 
 const symbols = {

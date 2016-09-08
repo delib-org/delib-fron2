@@ -1,5 +1,6 @@
-$.when(feedManager.promise).then(function() {
-   feedLength = feedManager.queue.length;
+$.when(feedManager.promise).done(function() {
+   console.log('resolved');
+   var feedLength = feedManager.queue.length;
    showNumberOfFeeds(feedLength);
 });
 
@@ -19,7 +20,7 @@ function showNumberOfFeeds(x){
 }
 
 function showFeed(){
-//   feedManager.promise = Promise.resolve(true);
+   feedManager.promise.resolve();
    //show header
 
    renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
