@@ -1,9 +1,7 @@
-   $(document).on('feedPushed', function () {
-      console.log('resolved', feedManager.queue.length);
+$(document).on('feedPushed', function () {
 
-      var feedLength = feedManager.queue.length;
-      showNumberOfFeeds(feedLength);
-   });
+   showNumberOfFeeds();
+});
 
 //feedManager.promise.then(function(){
 //   //new message
@@ -16,8 +14,12 @@
 //      feedManager.queue
 //});
 
-function showNumberOfFeeds(x){
-   $("#divCounter").text(x);
+function showNumberOfFeeds(){
+   if(feedManager.queue.length == 0 || feedManager.queue.length == null || feedManager.queue.length == undefined){
+      $("#divCounter").hide();
+   } else{
+      $("#divCounter").show().text(feedManager.queue.length);
+   }
 }
 
 function showFeed(){

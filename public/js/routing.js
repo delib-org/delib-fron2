@@ -107,6 +107,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    $("#entitiesPanel").slideUp(400);
 
    var currentEntity = activeEntity.uid;
+
+   showNumberOfFeeds();
 }
 
 function showEntities(entity, uid){
@@ -183,6 +185,7 @@ function showEntities(entity, uid){
          showMain("member");
    }
 
+
 };
 
 function showBreadCrumb(entityType, uid, title){
@@ -257,5 +260,7 @@ function showBreadCrumb(entityType, uid, title){
          renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs")
       }
    })
+
+
 
 }
