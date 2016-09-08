@@ -574,7 +574,7 @@ Tow options
    <h5>{{description}}</h5></div>
 <div class="infoExplanation">{{explanation}}</div>
       </script>
-   </body>
+
 
    <!--  Chats  -->
    <script type="text/x-handlebars-template" id="chatsHeader-tmpl">
@@ -700,4 +700,16 @@ Tow options
 <div id="ownedBtn"class="footer-btn material-ripple" onclick="showMain('owned')"><span>הקבוצות שאני מנהל</span></div>
 <div id="ownedBtn"class="footer-btn material-ripple"><span>חדשות</span></div>
       </script>
+
+   <script type="text/x-handlebars-template" id="feedWrapper-tmpl">
+{{#each feeds}}
+<div id={{uuid}}_Div class="card">
+   <div class="feedTitle clickables" onclick="showEntities('{{type}}','{{uid}}')">
+      <h5><i class="{{symbol}}" aria-hidden="true"></i>{{title}}</h5>
+   </div>
+</div>
+{{/each}}
+
+      </script>
+      </body>
 </html>

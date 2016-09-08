@@ -1,30 +1,23 @@
 $(document).on('feedPushed', function () {
 
    showNumberOfFeeds();
+
 });
 
-//feedManager.promise.then(function(){
-//   //new message
-//      //indication
-//      //feedManager.queue.length
-//
-//
-//
-//     // rerender feed if on feed
-//      feedManager.queue
-//});
+
 
 function showNumberOfFeeds(){
    if(feedManager.queue.length == 0 || feedManager.queue.length == null || feedManager.queue.length == undefined){
       $("#divCounter").hide();
    } else{
-      $("#divCounter").show().text(feedManager.queue.length);
+      $("#divCounter").show().text(feedManager.inbox.get());
+      console.dir(feedManager.inbox.get());
    }
 }
 
 function showFeed(){
    feedManager.inbox.set(0);
-   feedManager.promise.resolve();
+   //feedManager.promise.resolve();
    //show header
 
    renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
@@ -32,8 +25,18 @@ function showFeed(){
    $("#headerMenu").html("");
 
    //show footer
-
    renderTemplate("#feedFooter-tmpl",{},"footer");
-   //show wrapper
 
+   //show
+   var entitiesArray = feedManager.queue;
+   var preContext = new Array();
+
+
+   for (i in entitiesArray){
+      preContext.push({type: entitiesArray[i].entityType, uid:entitiesArray[i].entityUid, title: entitiesArray[i].title ,symbol:symbols[entitiesArray[i].entityType]});
+   }
+
+   var context = {feeds: preContext};
+   console.log(JSON.stringify(context));
+   renderTemplate("#feedWrapper-tmpl", context, "wrapper");
 }
