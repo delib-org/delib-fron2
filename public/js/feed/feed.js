@@ -11,7 +11,6 @@ function showNumberOfFeeds(){
       $("#divCounter").hide();
    } else{
       $("#divCounter").show().text(feedManager.inbox.get());
-      console.dir(feedManager.inbox.get());
    }
 }
 
@@ -37,6 +36,6 @@ function showFeed(){
    }
 
    var context = {feeds: preContext};
-   console.log(JSON.stringify(context));
+
    renderTemplate("#feedWrapper-tmpl", context, "wrapper");
 }
