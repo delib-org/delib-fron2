@@ -15,6 +15,38 @@ function showMultiOptions(questionUid){
 
    var indexDiv = 0;
 
+   var votesCallBack = function(currentVote){
+      $("#"+optionUid+"voteCount").text("בעד: "+ currentVote.val());
+
+      //see if changes in locations
+      //get new order
+      DB.child("questions/"+questionUid+"/options").orderByChild("votes").once("value", function(options){
+         var newOrder = new Array();
+         options.forEach(function(option){
+            newOrder.push(option.key);
+         })
+
+         var isDifference = false;
+         var newOrderLength = newOrder.length;
+
+         for (i in newOrder){
+            if(newOrder[i] == optionsPosition[i]){
+
+            } else {
+               isDifference = true;
+               var oldPostionLocation = $("#"+optionsPosition[i]+"Div").position();
+            }
+         }
+         if (isDifference){
+            var numberOfNewDivs = newOrder.length;
+            for (i in newOrder){
+               $("#"+newOrder[i]+"Div").animate({top:((numberOfNewDivs-i)*87)-70},1500, "easeOutElastic");
+            }
+         }
+         optionsPosition = newOrder;
+      })
+   };
+
    var multiOptionsCallback = function(option){
 
       console.log("question is called, off dysfunc.");
@@ -30,7 +62,8 @@ function showMultiOptions(questionUid){
       adjustCounting(questionUid,optionUid);
 
       //check if user has voted. if not, set user vote to zero.
-      var isSomebodyVoted = option.val().hasOwnProperty("thumbUp")
+      var isSomebodyVoted = option.val().hasOwnProperty("thumbUp");
+
       if (isSomebodyVoted){
          var isUserVoted = option.val().thumbUp.hasOwnProperty(userUuid);
 
@@ -39,7 +72,7 @@ function showMultiOptions(questionUid){
       }
 
       if (!isUserVoted){
-         DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(false)
+         DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(false);
          var userVote = false;
 
       } else {
@@ -48,7 +81,7 @@ function showMultiOptions(questionUid){
       }
 
       var votes = option.val().votes;
-      if (votes == undefined){ votes = 0};
+      if (votes == undefined){ votes = 0}
 
       if (userVote) {
          userVote = "img/thumbUpActive.png";
@@ -72,42 +105,17 @@ function showMultiOptions(questionUid){
          }
       })
       //if changes in votes, update text and position
-      DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").on("value",function(currentVote){
-         $("#"+optionUid+"voteCount").text("בעד: "+ currentVote.val());
-
-         //see if changes in locations
-         //get new order
-         DB.child("questions/"+questionUid+"/options").orderByChild("votes").once("value", function(options){
-            var newOrder = new Array();
-            options.forEach(function(option){
-               newOrder.push(option.key);
-            })
-
-            var isDifference = false;
-            var newOrderLength = newOrder.length;
-
-            for (i in newOrder){
-               if(newOrder[i] == optionsPosition[i]){
-
-               } else {
-                  isDifference = true;
-                  var oldPostionLocation = $("#"+optionsPosition[i]+"Div").position();
-               }
-            }
-            if (isDifference){
-               var numberOfNewDivs = newOrder.length;
-               for (i in newOrder){
-                  $("#"+newOrder[i]+"Div").animate({top:((numberOfNewDivs-i)*87)-70},1500, "easeOutElastic");
-               }
-            }
-            optionsPosition = newOrder;
-         })
-      })
+      DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").on("value", votesCallBack)
    };
 
-   var onObject = DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
+   DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
 
-   setActiveEntity("questions",questionUid, "child_added", multiOptionsCallback, onObject);
+   var turnOff = function (){
+
+      DB.child("questions/"+questionUid+"/options").orderByChild("votes").off("child_added", multiOptionsCallback);
+   };
+
+   setActiveEntity("questions",questionUid, "child_added", multiOptionsCallback, turnOff);
 }
 
 function voteUpOption(questionUid, optionUid){
