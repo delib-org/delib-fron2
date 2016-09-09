@@ -23,8 +23,7 @@ function showNumberOfFeeds(){
 }
 
 function showFeed(){
-   feedManager.inbox.set(0);
-   feedManager.promise.resolve();
+   feedManager.inbox = 0;
    //show header
 
    renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
