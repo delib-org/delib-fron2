@@ -222,9 +222,12 @@ function feedBuilder (entityDatum, entityType, variation) {
     if(Object.keys(feedManager.queue).length >= feedManager.volume + 1)
         feedManager.queue.pop();
 
-    // triggering feedPushed event
-    $.event.trigger('feedPushed');
-
-    feedManager.inbox.then(function(val){console.log(val);});
+    feedManager.inbox.then(function(val){
+        feedManager.inbox = ++val;
+            console.log(val);
+    }).then( function () {
+        // triggering feedPushed event
+        $.event.trigger('feedPushed');
+    });
 
 }

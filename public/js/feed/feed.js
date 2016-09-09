@@ -10,14 +10,20 @@ function showNumberOfFeeds(){
    if(feedManager.queue.length == 0 || feedManager.queue.length == null || feedManager.queue.length == undefined){
       $("#divCounter").hide();
    } else{
-      $("#divCounter").show().text(feedManager.inbox.get());
-      console.dir(feedManager.inbox.get());
+      feedManager.inbox.then(function (result) {
+         console.dir(result);
+         $("#divCounter").show().text(result);
+      })
    }
 }
 
 function showFeed(){
-   feedManager.inbox.set(0);
-   //feedManager.promise.resolve();
+
+   // initialize inbox
+   feedManager.inbox = 0;
+   feedManager.inbox.then(function (result) {
+      console.dir(result);
+   });
    //show header
 
    renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
