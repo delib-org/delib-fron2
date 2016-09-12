@@ -1,5 +1,9 @@
 function createQuillEditor(elementUid){
 
+    var checkConsole = function(){
+        console.log("\n\nclickEvent");
+    }
+
     var toolbarOptions = [
       [{ 'align': [] }],
       [{ 'direction': 'rtl' }],
@@ -11,11 +15,13 @@ function createQuillEditor(elementUid){
 
     var options = {
       debug: 'info',
-      modules: { toolbar: toolbarOptions },
-      placeholder: 'enter text here...',
+      modules: {
+          toolbar: toolbarOptions
+    },
       theme: 'snow',
       readOnly: false,
     };
 
     var editor = new Quill(elementUid, options);
+
 }

@@ -45,6 +45,16 @@ function showOption(questionUid, optionUid) {
         });
     });
 
+    $(".ql-toolbar span").click(function () {
+        var description = $("#" + optionUid + "DivOpt").html();
+        console.log("\n\n-Toolbar click: " + description);
+
+        DB.child("questions/" + questionUid + "/options/" + optionUid).update({
+            description: description,
+            writer: userUuid
+        });
+    });
+
     //update wrapper
 
     var updateWrapperOption = function (optionDB) {
@@ -60,7 +70,6 @@ function showOption(questionUid, optionUid) {
 
     DB.child("questions/" + questionUid + "/options/" + optionUid).on("value", updateWrapperOption);
 //    DB.child("questions/" + questionUid + "/options/" + optionUid).once("value", updateWrapperOption);
-
 
 
     //setActive entity
