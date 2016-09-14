@@ -136,7 +136,7 @@ function addNewQuestion(questionUid){
 
 //create new question
 function setNewQuestionToDB (title, description, type, limitedOptionsArray){
-
+   console.log("type: "+type)
    if (title == undefined){
       title = "";
       console.log("Error: new topic do not have title");
@@ -145,9 +145,9 @@ function setNewQuestionToDB (title, description, type, limitedOptionsArray){
    if (description == undefined){
       description = "";
    };
-   if (type == undefined){
-      explanation = "";
-   };
+   //   if (type == undefined){
+   //      explanation = "";
+   //   };
 
    for (i=1;i<9;i++){
       if (optionsTempInput["option"+i].title == ""){
@@ -162,7 +162,11 @@ function setNewQuestionToDB (title, description, type, limitedOptionsArray){
    var parentEntityType = activeEntity.entityType;
    var parentUid = activeEntity.uid;
 
-   var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptions_g, options:limitedOptionsArray, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+   if (type == "limitedOptions"){
+      var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptions_g, options:limitedOptionsArray, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+   } else {
+      var questionId = DB.child("questions").push({dateAdded: firebase.database.ServerValue.TIMESTAMP, title: title, description: description, type: type, numberOfOptions: numberOfOptions_g, owner: userUuid, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+   }
 
 
    //set questio to be subEntity of parent entity
