@@ -165,18 +165,21 @@ function updatesListener() {
         });
     });
 
-    feedManager.inbox = {
-        get: function () {
-            var val;
-            DB.child('users/'+userUuid+'/feedInbox').once('value',function (snapshot){
-                val = snapshot.val();
-            });
 
-            return val;
+    Object.defineProperty(feedManager , 'inbox', {
+         get: function () {
+
+             var val;
+             return DB.child('users/'+userUuid+'/feedInbox').once('value',function (snapshot){
+                 val = snapshot.val();
+             }).then(function (){
+                 return val;
+             });
         },
         set: function (val) {
             DB.child('users/'+userUuid+'/feedInbox').set(val);
-        }};
+        }
+    });
 }
 
 
@@ -219,10 +222,12 @@ function feedBuilder (entityDatum, entityType, variation) {
     if(Object.keys(feedManager.queue).length >= feedManager.volume + 1)
         feedManager.queue.pop();
 
-    // triggering feedPushed event
-    $.event.trigger('feedPushed');
-
-    feedManager.inbox.set(2);
-    console.log(feedManager.inbox.get());
+    feedManager.inbox.then(function(val){
+        feedManager.inbox = ++val;
+            console.log(val);
+    }).then( function () {
+        // triggering feedPushed event
+        $.event.trigger('feedPushed');
+    });
 
 }
