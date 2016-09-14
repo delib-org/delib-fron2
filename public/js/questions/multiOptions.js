@@ -16,7 +16,8 @@ function showMultiOptions(questionUid){
    var indexDiv = 0;
 
    var votesCallBack = function(currentVote){
-      $("#"+optionUid+"voteCount").text("בעד: "+ currentVote.val());
+      console.log("currentVote.key:", currentVote.key)
+      $("#"+currentVote.key+"voteCount").text("בעד: "+ currentVote.val().votes);
 
       //see if changes in locations
       //get new order
@@ -105,7 +106,7 @@ function showMultiOptions(questionUid){
          }
       })
       //if changes in votes, update text and position
-      DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").on("value", votesCallBack)
+      DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", votesCallBack)
    };
 
    DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
