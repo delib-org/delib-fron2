@@ -8,8 +8,9 @@ function showGroup(groupUid){
       //show header
       var title = dataSnapshot.val().title;
       renderTemplate("#groupHeaderTitle-tmpl", {group: title}, "#headerTitle");
+      renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
       showBreadCrumb("groups", groupUid, title);
-      renderTemplate("#headerMenu-tmpl", {chatUid: groupUid, entityType: "groups"}, "#headerMenu");
+
 
 
       //    getLocalNotifications();

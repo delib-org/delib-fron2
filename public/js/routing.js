@@ -148,7 +148,8 @@ function showEntities(entity, uid){
       case "chats":
          DB.child("chats/"+uid).once("value", function (question){
             if (question.exists()){
-               showChat(uid);
+               var entityType = question.val().entity.typeInDB;
+               showChat(entityType, uid);
             } else {
                console.log("question "+uid+" do not exist");
                showMain("public");

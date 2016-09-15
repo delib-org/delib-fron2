@@ -5,8 +5,9 @@ function showTopic(topicUid){
    DB.child("topics/"+topicUid).once("value", function(dataSnapshot){
       var title = dataSnapshot.val().title;
       renderTemplate("#topicHeaderTitle-tmpl", {topic: title}, "#headerTitle");
+      renderTemplate("#headerMenu-tmpl",{type:"topics", uid:topicUid},"#headerMenu");
       showBreadCrumb("topics", topicUid, title);
-      renderTemplate("#headerMenu-tmpl", {chatUid: topicUid, entityType: "topics"}, "#headerMenu");
+
       $("wrapper").css("overflow","auto");
    }).then(function(rendered) {
       subsManager.isUpdatesSet();

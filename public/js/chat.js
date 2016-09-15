@@ -18,26 +18,28 @@ var chatsCallback = function (chats) {
    }
 };
 
-function showChat() {
+function showChat(entityType, uid) {
+   console.log("entityType:", entityType)
 
    clearChat();
 
+   renderTemplate("#chatMenu-tmpl", {type: entityType, uid:uid}, "#headerMenu")
+
    var headerContent ={};
-   var chatUid = activeEntity.uid;
 
    // encapsulated .off() firebase call
    var turnOff = function () {
-      DB.child("chats/"+chatUid+"/messages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
+      DB.child("chats/"+uid+"/messages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
    };
 
    // get specific chat room stuff (== messages and entity content)
-   DB.child("chats/" + chatUid).once('value',function(snapshot) {
+   DB.child("chats/" + uid).once('value',function(snapshot) {
 
       // setActiveEntity should always be called first
-      setActiveEntity("chats", chatUid, "child_added", chatsCallback, turnOff);
+      setActiveEntity("chats", uid, "child_added", chatsCallback, turnOff);
 
       // get actual content, create chat header if needed, implement existing header otherwise
-      DB.child(activeEntity.previuosEntity + "/" + chatUid).once('value', function(actualContent) {
+      DB.child(entityType + "/" + uid).once('value', function(actualContent) {
       if (snapshot.exists()) {
 
             // get existing header
@@ -49,15 +51,15 @@ function showChat() {
 
             // create header for chat room
             headerContent = {
-               entityType: entityTypeToHebrew(activeEntity.previuosEntity),
+               entityType: entityTypeToHebrew(entityType),
                title: actualContent.val().title
             };
 
             // set new header for latter use
-            DB.child("chats/" + chatUid + "/entity").set({
-               entityType: entityTypeToHebrew(activeEntity.previuosEntity),
+            DB.child("chats/" + uid + "/entity").set({
+               entityType: entityTypeToHebrew(entityType),
                title: actualContent.val().title,
-               typeInDB: activeEntity.previuosEntity
+               typeInDB: entityType
             });
          }
 
@@ -66,20 +68,20 @@ function showChat() {
 
          // header rendering
          renderTemplate("#chatsHeader-tmpl",headerContent,"#headerTitle");
-         showBreadCrumb(activeEntity.entityType, activeEntity.uid, "chat")
+         showBreadCrumb(entityType, uid, "chat")
 
          // footer rendering
          renderTemplate("#chatInput-tmpl",{},"footer");
          subsManager.isUpdatesSet();
 
          // render chat and keep .on() listening for coming messages
-         DB.child("chats/"+chatUid+"/messages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
+         DB.child("chats/"+uid+"/messages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
 
          //listen to enter from input, should be called lastly.
          $("#chatInputTxt").keypress(function (e) {
             if (e.keyCode == 13) {
                e.preventDefault();
-               addChatMessagePre(chatUid);
+               addChatMessagePre(uid);
             }
          });
       });

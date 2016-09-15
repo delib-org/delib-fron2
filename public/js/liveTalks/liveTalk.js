@@ -7,7 +7,7 @@ function showLiveTalk(liveTalkUid){
 
       renderTemplate("#liveTalksHeaderTitle-tmpl", {title:title}, "#headerTitle");
       showBreadCrumb("topics", liveTalkUid, title);
-      renderTemplate("#headerMenu-tmpl", {chatUid: liveTalkUid, entityType: "liveTalks"}, "#headerMenu");
+      renderTemplate("#headerMenu-tmpl",{type:"liveTalks", uid:liveTalkUid},"#headerMenu");
 
       //show footer
       renderTemplate("#liveTalkFooter-tmpl",{liveTalkUid: liveTalkUid, entityType:parentEntityType, uid: parentEntityUid},"footer")

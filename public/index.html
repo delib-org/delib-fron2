@@ -137,7 +137,7 @@
 
 <div class="material-ripple clickables headerMenuBtn" onclick="showMain('public')"><i class="fa fa-home fa-2x"></i></div>
 <div class="material-ripple clickables headerMenuBtn" onclick="someFunction()"><i class="fa fa-info-circle fa-2x"></i></div>
-<div class="material-ripple clickables headerMenuBtn" onclick="showChat()"><i class="fa fa-comments-o fa-2x"></i></div>
+<div class="material-ripple clickables headerMenuBtn" onclick="showChat('{{type}}','{{uid}}')"><i class="fa fa-comments-o fa-2x"></i></div>
 <div class="material-ripple clickables headerMenuBtn" onclick="someFunction()"><i class="fa fa-share-alt fa-2x"></i></div>
 <div id="feedSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setFeed()"><i class="fa fa-globe fa-2x"></i></div>
 <div id="notificationsSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
@@ -711,5 +711,12 @@ Tow options
 {{/each}}
 
       </script>
+
+      <script type="text/x-handlebars-template" id="chatMenu-tmpl">
+         <div class="chatMenu clickables" onclick="showEntities('{{type}}','{{uid}}')">
+            <span><i class="fa fa-chevron-right" aria-hidden="true"></i> Back</span>
+         </div>
+      </script?
+
       </body>
 </html>
