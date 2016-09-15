@@ -1,6 +1,7 @@
 
 
 function showMultiOptions(questionUid){
+   console.log("startNewOptions")
 
    var optionsPosition = new Array();
    var optionsObject = new Array();
@@ -16,7 +17,6 @@ function showMultiOptions(questionUid){
    var indexDiv = 0;
 
    var votesCallBack = function(currentVote){
-      console.log("currentVote.key:", currentVote.key)
       $("#"+currentVote.key+"voteCount").text("בעד: "+ currentVote.val().votes);
 
       //see if changes in locations
@@ -50,7 +50,7 @@ function showMultiOptions(questionUid){
 
    var multiOptionsCallback = function(option){
 
-      console.log("question is called, off dysfunc.");
+
       var optionUid = option.key;
       var description = option.val().description;
       description = replaceAll(description, "<br>", ". ");
@@ -109,6 +109,7 @@ function showMultiOptions(questionUid){
       DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", votesCallBack)
    };
 
+   console.log("build new options")
    DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
 
    var turnOff = function (){

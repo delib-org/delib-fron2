@@ -16,7 +16,7 @@ $(function(){
    var currentUrl = getUrl();
    console.log("URL: "+currentUrl)
    startingUrl = currentUrl;
-   routTo(currentUrl);
+//   routTo(currentUrl);
 
    listenToAuth(currentUrl);
 
