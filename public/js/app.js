@@ -14,10 +14,11 @@ $(function(){
    });
 
    var currentUrl = getUrl();
+   console.log("URL: "+currentUrl)
    startingUrl = currentUrl;
    routTo(currentUrl);
 
-   listenToAuth();
+   listenToAuth(currentUrl);
 
 
    $(window).on('popstate', function() {

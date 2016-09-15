@@ -1,4 +1,4 @@
-function listenToAuth(){
+function listenToAuth(currentUrl){
 
    firebase.auth().onAuthStateChanged(function(user) {
 
@@ -17,7 +17,7 @@ function listenToAuth(){
 
          console.log("login: "+ user.displayName);
 
-         showEntities("main", "public");
+         routTo(currentUrl);
 
       } else {
          // No user is signed in.
