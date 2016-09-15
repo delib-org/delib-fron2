@@ -1,7 +1,7 @@
 
 
 function showMultiOptions(questionUid){
-   console.log("startNewOptions")
+
 
    var optionsPosition = new Array();
    var optionsObject = new Array();
@@ -109,7 +109,6 @@ function showMultiOptions(questionUid){
       DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", votesCallBack)
    };
 
-   console.log("build new options")
    DB.child("questions/"+questionUid+"/options").orderByChild("votes").on("child_added", multiOptionsCallback);
 
    var turnOff = function (){
