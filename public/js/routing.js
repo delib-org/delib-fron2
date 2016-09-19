@@ -54,6 +54,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    activeEntity.previuosEntity = previuosEntityType;
    activeEntity.previuosUid = previuosUid;
 
+   checkChatsUpdates(newEntity, newUid);
+
 
    //   if (previuosEntityType != "main"){
    //      if (previuosEventType != undefined){

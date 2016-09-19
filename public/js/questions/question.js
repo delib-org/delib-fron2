@@ -9,9 +9,6 @@ function showQuestion(questionUid){
       renderTemplate("#headerMenu-tmpl",{type:"questions", uid:questionUid},"#headerMenu");
       showBreadCrumb("questions", questionUid)
 
-
-
-
       var description = dataSnapshot.val().description;
       var typeOfQuestion = dataSnapshot.val().type;
       var numberOfOptions = dataSnapshot.val().numberOfOptions;

@@ -111,6 +111,11 @@ function addChatMessagePre(chatUid) {
 }
 
 
-
+function checkChatsUpdates(type, uid){
+   //check last massage time
+   DB.child("chats/"+uid+"/messages").orderByChild("dateAdded").limitToLast(1).on("child_added", function(dataSnapshot){
+      console.log("last massage:", dataSnapshot.val());
+   })
+}
 
 
