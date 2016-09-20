@@ -67,11 +67,9 @@ function showMultiOptions(questionUid){
 
       if (isSomebodyVoted){
          var isUserVoted = option.val().thumbUp.hasOwnProperty(userUuid);
-
       } else {
          isUserVoted = false;
       }
-
       if (!isUserVoted){
          DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(false);
          var userVote = false;
@@ -81,6 +79,7 @@ function showMultiOptions(questionUid){
 
       }
 
+      //show thumbUp as active if user is voted, on to inactive if user didn't vote
       var votes = option.val().votes;
       if (votes == undefined){ votes = 0}
 
@@ -89,6 +88,7 @@ function showMultiOptions(questionUid){
       } else {
          userVote = "img/thumbUpInactive.png";
       }
+
       optionsPosition.push(optionUid);
 
       prependTemplate("#multiOption-tmpl",{title:title, description: description, questionUid: questionUid, optionUid: optionUid, optionColor:optionColor, votes:votes, userVote: userVote}, "wrapper");
