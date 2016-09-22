@@ -1,93 +1,94 @@
 function showGroup(groupUid){
 
+    //show footer&header
 
-
-   //show footer&header
-
-   DB.child("groups/"+groupUid).once("value", function(dataSnapshot){
-      //show header
-      var title = dataSnapshot.val().title;
-      renderTemplate("#groupHeaderTitle-tmpl", {group: title}, "#headerTitle");
-      renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
-      showBreadCrumb("groups", groupUid, title);
+    DB.child("groups/"+groupUid).once("value", function(dataSnapshot){
+        //show header
+        var title = dataSnapshot.val().title;
+        renderTemplate("#groupHeaderTitle-tmpl", {group: title}, "#headerTitle");
+        renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
+        showBreadCrumb("groups", groupUid, title);
 
 
 
-      //    getLocalNotifications();
+        //    getLocalNotifications();
 
 
-      //show footer
-      renderTemplate("#showEntityPanel-tmpl", {}, "footer");
-      $("wrapper").css("overflow","auto");
+        //show footer
+        renderTemplate("#showEntityPanel-tmpl", {}, "footer");
+        $("wrapper").css("overflow","auto");
 
-      isMembership();
-   }).then(function(rendered) {
-      subsManager.isUpdatesSet();
-   });
+        isMembership();
+    }).then(function(rendered) {
+        subsManager.isUpdatesSet();
+    });
 
 
-   var showGroupCallback = function(subEntities){
+    var showGroupCallback = function(subEntities){
 
-      if(subEntities.exists()){
+        if(subEntities.exists()){
 
-         var subEntitiesUnderGroup = subEntities.val();
-         var numberOfSubEntities = Object.keys(subEntitiesUnderGroup).length;
-         var subEntitiesUnderGroupArray = new Array();
+            var subEntitiesUnderGroup = subEntities.val();
+            var numberOfSubEntities = Object.keys(subEntitiesUnderGroup).length;
 
-         var i = 1;
+            var subEntitiesUnderGroupArray = new Array();
 
-         subEntities.forEach(function(subEntity){
+            var i = 1;
 
-            DB.child(subEntity.val().entityType+"/"+subEntity.key).once("value", function(data){
+            subEntities.forEach(function(subEntity){
 
-               var preContext = new Object();
+                var pathToSubEntity = subEntity.val().entityType+"/"+subEntity.key;
 
-               if (data.exists()){
+                DB.child(pathToSubEntity).once("value", function(data){
 
-                  var title = data.val().title;
-                  var description = data.val().description;
-                  //          console.log("t: "+ title + ", d: "+ description);
+                    var preContext = new Object();
 
-                  preContext = {
-                     uuid: subEntity.key,
-                     entityType: subEntity.val().entityType,
-                     title: title,
-                     description: description,
-                     symbol: symbols[subEntity.val().entityType]
-                  }
+                    if (data.exists()){
 
-                  subEntitiesUnderGroupArray.push(preContext);
-               }
+                        var title = data.val().title;
+                        var description = data.val().description;
 
-               if (i === numberOfSubEntities){
-                  var context = {subEntities: subEntitiesUnderGroupArray};
-                  renderTemplate("#groupPage-tmpl", context, "wrapper");
-                  $("wrapper").hide();
-                  $("wrapper").fadeIn();
-               }
+                        preContext = {
+                            uuid: subEntity.key,
+                            entityType: subEntity.val().entityType,
+                            title: title,
+                            description: description,
+                            symbol: symbols[subEntity.val().entityType]
+                        }
 
-               i++;
+                        subEntitiesUnderGroupArray.push(preContext);
+                    }
+
+                    if (i === numberOfSubEntities){
+
+                        var context = {subEntities: subEntitiesUnderGroupArray};
+                        renderTemplate("#groupPage-tmpl", context, "wrapper");
+                        $("wrapper").hide();
+                        $("wrapper").fadeIn();
+                    }
+
+                    i++;
+                })
             })
-         })
-      } else {
-         renderTemplate("#groupPage-tmpl",{}, "wrapper");
-      }
-   };
+        } else {
+            renderTemplate("#groupPage-tmpl",{}, "wrapper");
+        }
+    };
 
 
-   //show wrapper
-   DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+    //show wrapper
+    DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
 
-   var turnOff = function () {
-      DB.child("groups/"+groupUid+"/subEntities").off("value", showGroupCallback);
-   };
+    var turnOff = function () {
+        DB.child("groups/"+groupUid+"/subEntities").off("value", showGroupCallback);
+    };
 
-   setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
+    setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
 
 
-   if(!back){
-      setUrl("group", groupUid);
-   }
+    if(!back){
+        setUrl("group", groupUid);
+    }
 
 
 }

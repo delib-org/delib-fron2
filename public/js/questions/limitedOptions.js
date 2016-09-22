@@ -1,13 +1,10 @@
 function showLimitedOptionsQuestion(questionUid, numberOfOptions){
 
-   console.log("limOpt: "+ questionUid, numberOfOptions)
-
    var questionDB = DB.child("questions/"+questionUid+"/options"); DB.child("questions/"+questionUid+"/options").orderByChild("votes").limitToLast(numberOfOptions).once("value",function(options){
 
       //adjust the votes to a counting of votes
       DB.child("questions/"+questionUid+"/simpleVoting").once("value", function(voters){
 
-         console.log("adjust the votes to a counting of votes");
          var counts = new Object();
          //get all options
          DB.child("questions/"+questionUid+"/options").once("value", function(options){
@@ -44,7 +41,6 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
          preContext.push({questionUuid: questionUid ,uuid: optionsObject[i].uuid, title: optionsObject[i].title, votes: optionsObject[i].votes , color: optionsObject[i].color});
       };
       var context = {options: preContext};
-      console.dir(context);
 
       renderTemplate("#simpleVote-tmpl", context, "wrapper");
       renderTemplate("#simpleVoteBtns-tmpl", context, "footer");
