@@ -3,7 +3,7 @@ function listenToAuth(currentUrl){
   firebase.auth().onAuthStateChanged(function(user) {
 
     console.log("auth changed");
-    console.dir(user);
+
     if (user) {
 
       // User is signed in.

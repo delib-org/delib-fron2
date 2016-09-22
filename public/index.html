@@ -721,9 +721,16 @@ Tow options
     <span><i class="fa fa-chevron-right" aria-hidden="true"></i> Back</span>
             </div>
         </script>
-
+<!---- admin panel ------>
         <script type="text/x-handlebars-template" id="adminControl-tmpl">
+          <div id="pendingMembersTable"></div>
+          <div id="CurrentMembersTable"></div>
+        </script>
+
+
+        <script type="text/x-handlebars-template" id="adminControlPending-tmpl">
           <div class="adminControlPanel">
+            <h2>בקשות חברות</h2>
             <table class="membershipTable">
               <tr class="membershipTableHeader">
                 <th>משתמש</th>
@@ -731,12 +738,36 @@ Tow options
                 <th>דוא"ל</th>
                 <th>אישור</th>
               </tr>
+              {{#each pendings}}
               <tr>
-                <td>Jill</td>
-                <td>Smith</td>
-                <td>50</td>
-                <td>50</td>
+                <td>{{name}}</td>
+                <td>{{date}}</td>
+                <td>{{email}}</td>
+                <td><button>Confirm</button></td>
               </tr>
+              {{/each}}
+            </table>
+          </div>
+        </script>
+
+      <script type="text/x-handlebars-template" id="adminControlMembers-tmpl">
+          <div class="adminControlPanel">
+            <h2>חברי הקבוצה</h2>
+            <table class="membershipTable">
+              <tr class="membershipTableHeader">
+                <th>משתמש</th>
+                <th>תאריך בקשה</th>
+                <th>דוא"ל</th>
+                <th>אישור</th>
+              </tr>
+              {{#each members}}
+              <tr>
+                <td>{{name}}</td>
+                <td>{{date}}</td>
+                <td>{{email}}</td>
+                <td><button>Else</button></td>
+              </tr>
+              {{/each}}
             </table>
           </div>
         </script>

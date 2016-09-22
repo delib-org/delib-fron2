@@ -1,25 +1,45 @@
 function setMembership(){
   groupUid = activeEntity.uid;
+  var groupTypeTemp = "";
+  DB.child("groups/"+groupUid+"/type").once("value", function(dataSnapshot){
 
-  DB.child("users/"+userUuid+"/membership/"+groupUid).once("value", function(isMembership){
-    if(isMembership.val() != null){
+    groupTypeTemp = dataSnapshot.val()
+    console.log("groupTypeTemp:", groupTypeTemp);
 
-      if (isMembership.val()){
-        DB.child("users/"+userUuid+"/membership/"+groupUid).remove();
-        DB.child("users/"+userUuid+"/updates/groups/"+groupUid+"/ownerCalls").remove();
-        DB.child("groups/"+groupUid+"/pendings/"+userUuid).update({role:"removedSelf"});
-        $("#isMembership").css("color",inactiveColor);
+    DB.child("users/"+userUuid+"/membership/"+groupUid).once("value", function(isMembership){
+      if(isMembership.val() != null){
+        console.log("Turn off membership");
+        if (isMembership.val()){
+          DB.child("users/"+userUuid+"/membership/"+groupUid).remove();
+          DB.child("users/"+userUuid+"/updates/groups/"+groupUid+"/ownerCalls").remove();
+
+          if (groupTypeTemp == "public"){
+            DB.child("groups/"+groupUid+"/members/"+userUuid).remove();
+          } else{
+            DB.child("groups/"+groupUid+"/pendings/"+userUuid).remove();
+          }
+
+          $("#isMembership").css("color",inactiveColor);
+        } else {
+          DB.child("users/"+userUuid+"/membership/"+groupUid).set(true);
+          DB.child("users/"+userUuid+"/updates/groups/"+groupUid+"/ownerCalls").set(true);
+          $("#isMembership").css("color",activeColor);
+        }
       } else {
+        console.log("Turn on membership");
         DB.child("users/"+userUuid+"/membership/"+groupUid).set(true);
-        DB.child("users/"+userUuid+"/updates/groups/"+groupUid+"/ownerCalls").set(true);
-        DB.child("groups/"+groupUid+"/pendings/"+userUuid).update({role:"Asking", userName: userName, email:userEmail});
+        if (groupTypeTemp == "public"){
+          DB.child("groups/"+groupUid+"/members/"+userUuid).update({role:"member", name: userName, email:userEmail, dateAdded: firebase.database.ServerValue.TIMESTAMP});
+        } else{
+          DB.child("groups/"+groupUid+"/pendings/"+userUuid).update({role:"Asking", name: userName, email:userEmail, dateAdded: firebase.database.ServerValue.TIMESTAMP});
+        }
         $("#isMembership").css("color",activeColor);
       }
-    } else {
-      DB.child("users/"+userUuid+"/membership/"+groupUid).set(true);
-      $("#isMembership").css("color",activeColor);
-    }
+    })
+
   })
+
+
 }
 
 function isMembership(){
