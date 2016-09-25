@@ -44,8 +44,13 @@ function approveMember(groupUid, memberUid, isCofirmed){
 
     var pendingRef = DB.child("groups/"+groupUid+"/pendings/"+memberUid);
     var memberRef = DB.child("groups/"+groupUid+"/members/"+memberUid);
-    console.log("move")
-    moveFbRecord(pendingRef, memberRef);
 
+
+    moveFbRecord(pendingRef, memberRef);
+    DB.child("users/"+memberUid+"/membership/"+groupUid).set(true);
+
+  } else {
+    DB.child("groups/"+groupUid+"/pendings/"+memberUid).remove();
+    DB.child("users/"+memberUid+"/membership/"+groupUid).remove();
   }
 }
