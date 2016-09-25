@@ -1,6 +1,7 @@
 function showAdminPanel(groupUid){
   renderTemplate("#adminControl-tmpl",{},"wrapper");
 
+  //Pending Table
   DB.child("groups/"+groupUid+"/pendings").once("value", function(pendings){
 
     var preContext = [];
@@ -9,14 +10,15 @@ function showAdminPanel(groupUid){
 
         var dateAskedFor = parseDate(pending.val().dateAdded,"DDMMYY");
 
-        preContext.push({name: pending.val().name, email: pending.val().email, date: dateAskedFor})
+        preContext.push({name: pending.val().name, email: pending.val().email, date: dateAskedFor, uid:pending.key, groupUid:groupUid})
       });
-      var context = {pendings: preContext}
-      console.log(JSON.stringify(context));
+      var context = {pendings: preContext};
+
       renderTemplate("#adminControlPending-tmpl",context, "#pendingMembersTable")
     } else {console.log("No pending members")}
   })
 
+  //Members Table
   DB.child("groups/"+groupUid+"/members").once("value", function(members){
 
     var preContext = [];
@@ -28,7 +30,6 @@ function showAdminPanel(groupUid){
         preContext.push({name: member.val().name, email: member.val().email, date: dateAskedFor})
       });
       var context = {members: preContext}
-      console.log(JSON.stringify(context))
 
       renderTemplate("#adminControlMembers-tmpl",context, "#CurrentMembersTable")
     } else {console.log("No members in group")}
@@ -36,3 +37,15 @@ function showAdminPanel(groupUid){
 
 }
 
+function approveMember(groupUid, memberUid, isCofirmed){
+  console.log("moving:",groupUid, memberUid, isCofirmed)
+  if(isCofirmed == undefined){ isCofirmed = false};
+  if (isCofirmed){
+
+    var pendingRef = DB.child("groups/"+groupUid+"/pendings/"+memberUid);
+    var memberRef = DB.child("groups/"+groupUid+"/members/"+memberUid);
+    console.log("move")
+    moveFbRecord(pendingRef, memberRef);
+
+  }
+}

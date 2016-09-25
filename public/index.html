@@ -6,8 +6,8 @@
         <meta charset="utf-8">
         <meta name="mobile-web-app-capable" content="yes">
 
-        <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
-        <!--      <script src="js/helpers/jquery-3.1.0.min.js"></script>-->
+<!--        <script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>-->
+              <script src="js/helpers/jquery-3.1.1.min.js"></script>
 
         <!--
 <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
@@ -743,7 +743,7 @@ Tow options
                 <td>{{name}}</td>
                 <td>{{date}}</td>
                 <td>{{email}}</td>
-                <td><button>Confirm</button></td>
+                <td class="approveBtnTD"><button class="approveBtn approveBtnV" onclick="approveMember('{{groupUid}}','{{uid}}', true)"><i class="fa fa-check" aria-hidden="true"></i></button><button class="approveBtn approveBtnX" onclick="approveMember('{{groupUid}}','{{uid}}', false)"><i class="fa fa-close" aria-hidden="true"></i></button></td>
               </tr>
               {{/each}}
             </table>
