@@ -6,7 +6,7 @@ function showGroup(groupUid){
     //show header
     var title = dataSnapshot.val().title;
     var groupType = dataSnapshot.val().type;
-    renderTemplate("#groupHeaderTitle-tmpl", {group: title}, "#headerTitle");
+    renderTemplate("#groupHeaderTitle-tmpl", {group: title, groupUid:groupUid}, "#headerTitle");
     renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
     showBreadCrumb("groups", groupUid, title);
 

@@ -306,6 +306,7 @@
 
         <!-- header    -->
         <script type="text/x-handlebars-template" id="groupHeaderTitle-tmpl">
+          <div class="clickables" onclick="showEntities('groups',groupUid)"
 קבוצה: <span>{{group}}</span>
         </script>
 
@@ -505,15 +506,21 @@ Tow options
         <!-- simple voting buttons -->
         <script type="text/x-handlebars-template" id="simpleVoteBtns-tmpl">
 <div id="limitedOptionsVoteBtns">
-
     <div class="voteBtnContainer">
         {{#each options}}
-        <div class="voteBtn clickables material-ripple" onclick="voteSimple('{{questionUuid}}','{{uuid}}')" id={{uuid}}_btn><span>{{title}}</span></div>
+        <div class="voteBtn clickables material-ripple" style="background-color: '{{color}}'" onclick="voteSimple('{{questionUuid}}','{{uuid}}')" id={{uuid}}_btn><span>{{title}}</span></div>
         {{/each}}
             </div>
             </div>
+      </script>
 
-        </script>
+      <script type="text/x-handlebars-template" id="simpleVoteNotMember-tmpl">
+        <div id="limitedOptionsVoteBtns">
+          <div class="voteBtnContainerNotMember clickables" onclick="showEntities('groups', '{{groupUid}}')">
+            To be able to vote, you have to be a member in group: {{groupName}}
+          </div>
+        </div>
+      </script>
 
         <!-- multioptions -->
         <script type="text/x-handlebars-template" id="multiOption-tmpl">
