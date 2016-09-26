@@ -14,7 +14,6 @@ function createQuillEditor(elementUid){
     ];
 
     var options = {
-      debug: 'info',
       modules: {
           toolbar: toolbarOptions
     },
