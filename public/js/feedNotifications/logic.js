@@ -189,6 +189,13 @@ function updatesListener() {
 
 // feed builder
 function feedBuilder (entityDatum, entityType, variation) {
+
+    if(firstRun) {
+        firstRun = false;
+        feedManager.queue = [];
+        console.log("first Run");
+        return;
+    }
     
     switch (entityType) {
         case "chats":
@@ -226,20 +233,10 @@ function feedBuilder (entityDatum, entityType, variation) {
         feedManager.queue.pop();
 
     feedManager.inbox.then(function(val) {
-        if(!localStorage.getItem('firstRun')) {
-            // might be useful on a future occurrence
-
-            localStorage.setItem('firstRun', false);
-            // feedManager.inbox = window.localStorage.getItem('feedInbox');
-
-            console.log("first Run");
-        } else {
-            console.log("not a first Run");
-            feedManager.inbox = ++val;
-            // window.localStorage.getItem('feedInbox');
-        }
-
-            console.log(val);
+        feedManager.inbox = ++val;
+        
+        console.log("not a first Run");
+        console.log(val);
     }).then( function () {
         // triggering feedPushed event
         $.event.trigger('feedPushed');

@@ -57,27 +57,28 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    checkChatsUpdates(newEntity, newUid);
 
 
-   //   if (previuosEntityType != "main"){
-   //      if (previuosEventType != undefined){
-   //         if (previuosUid != undefined){
-   //            previuosTurnOff();
-   //         } else {
-   //            console.log("Error: no previuos entity to close off previous callback");
-   //         }
-   //      }
-   //   } else {
-   //      switch (previuosUid){
-   //         case "member":
-   //         case "owned":
-   //            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
-   //            break;
-   //         case "public":
-   //            DB.child("groups").off(previuosEventType, previuosCallback);
-   //            break;
-   //         default:
-   //            console.log("Error: no such groups cluster in main ("+previuosUid+")");
-   //      }
-   //   }
+     if (previuosEntityType != "main"){
+        if (previuosEventType != undefined){
+           if (previuosUid != undefined){
+              previuosTurnOff();
+           } else {
+              console.log("Error: no previuos entity to close off previous callback");
+           }
+        } else if( previuosEventType == "feed")
+           feedManager.queue = [];
+     } else {
+        switch (previuosUid){
+           case "member":
+           case "owned":
+              DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
+              break;
+           case "public":
+              DB.child("groups").off(previuosEventType, previuosCallback);
+              break;
+           default:
+              console.log("Error: no such groups cluster in main ("+previuosUid+")");
+        }
+     }
 
    activeEntity.entityType = newEntity;
    activeEntity.uid = newUid;

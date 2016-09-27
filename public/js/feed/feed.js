@@ -49,4 +49,7 @@ function showFeed(){
    var context = {feeds: preContext};
 
    renderTemplate("#feedWrapper-tmpl", context, "wrapper");
+
+   //setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
+   setActiveEntity("feed", undefined, undefined, undefined, undefined)
 }
