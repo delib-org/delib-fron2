@@ -169,6 +169,7 @@ function updatesListener() {
     $(document).ready(function () {
         // Function code here.
     });
+
     Object.defineProperty(feedManager , 'inbox', {
          get: function () {
 
@@ -181,6 +182,29 @@ function updatesListener() {
         },
         set: function (val) {
             DB.child('users/'+userUuid+'/feedInbox').set(val);
+        }
+    });
+
+    Object.defineProperty(feedManager , 'queue', {
+         get: function () {
+
+             var val;
+             return DB.child('users/'+userUuid+'/feed').once('value',function (snapshot){
+                 val = snapshot.val();
+             }).then(function (){
+                 return val;
+             });
+        },
+        set: function (json) {
+            if(json !== 'pop')
+                DB.child('users/'+userUuid+'/feed').set(json);
+            else
+            {
+                DB.child('users/'+userUuid+'/feed').orderByChild('date').limitToFirst(1).once('value',function (snapshot) {
+                    DB.child('users/'+userUuid+'/feed/'+snapshot.key).remove();
+                });
+            }
+
         }
     });
 }
@@ -234,7 +258,7 @@ function feedBuilder (entityDatum, entityType, variation) {
 
     feedManager.inbox.then(function(val) {
         feedManager.inbox = ++val;
-        
+
         console.log("not a first Run");
         console.log(val);
     }).then( function () {

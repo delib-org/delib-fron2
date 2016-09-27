@@ -86,8 +86,8 @@ var mostUpdatedContent = null;
 // default feed volume
 const defaultFeedVolume = 10;
 
+// queue and inbox getters and setters defined in logic.js
 var feedManager = {
-   queue: [],
    volume: defaultFeedVolume
 };
 
