@@ -1,6 +1,7 @@
 var chats_cb;
 var entityAdded_cb;
 var ownerCall_cb;
+
 function updatesListener() {
 
     // turn off previous listener
@@ -165,7 +166,9 @@ function updatesListener() {
         });
     });
 
-
+    $(document).ready(function () {
+        // Function code here.
+    });
     Object.defineProperty(feedManager , 'inbox', {
          get: function () {
 
@@ -222,8 +225,20 @@ function feedBuilder (entityDatum, entityType, variation) {
     if(Object.keys(feedManager.queue).length >= feedManager.volume + 1)
         feedManager.queue.pop();
 
-    feedManager.inbox.then(function(val){
-        feedManager.inbox = ++val;
+    feedManager.inbox.then(function(val) {
+        if(!localStorage.getItem('firstRun')) {
+            // might be useful on a future occurrence
+
+            localStorage.setItem('firstRun', false);
+            // feedManager.inbox = window.localStorage.getItem('feedInbox');
+
+            console.log("first Run");
+        } else {
+            console.log("not a first Run");
+            feedManager.inbox = ++val;
+            // window.localStorage.getItem('feedInbox');
+        }
+
             console.log(val);
     }).then( function () {
         // triggering feedPushed event

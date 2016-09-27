@@ -26,6 +26,8 @@ function showFeed(){
    feedManager.inbox.then(function (result) {
       console.dir(result);
    });
+
+
    //show header
 
    renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
@@ -40,7 +42,7 @@ function showFeed(){
    var preContext = new Array();
 
 
-   for (i in entitiesArray){
+   for (i in entitiesArray) {
       preContext.push({type: entitiesArray[i].entityType, uid:entitiesArray[i].entityUid, title: entitiesArray[i].title ,symbol:symbols[entitiesArray[i].entityType]});
    }
 

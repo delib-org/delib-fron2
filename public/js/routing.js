@@ -85,7 +85,6 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    activeEntity.callback = newCallback;
    activeEntity.turnOff = turnOff;
    //activeEntity.previuosEntityType = previuosEntityType;
-   //   activeEntity.onObject = newOnObject;
 
 
    setUrl(newEntity, newUid);
