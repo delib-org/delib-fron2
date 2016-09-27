@@ -1,93 +1,110 @@
 function showGroup(groupUid){
 
+  //show footer&header
 
+  DB.child("groups/"+groupUid).once("value", function(dataSnapshot){
+    //show header
+    var title = dataSnapshot.val().title;
+    var groupType = dataSnapshot.val().type;
+    renderTemplate("#groupHeaderTitle-tmpl", {group: title, groupUid:groupUid}, "#headerTitle");
+    renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
+    showBreadCrumb("groups", groupUid, title);
 
-   //show footer&header
+    //show footer
+    renderTemplate("#showEntityPanel-tmpl", {}, "footer");
+    $("wrapper").css("overflow","auto");
 
-   DB.child("groups/"+groupUid).once("value", function(dataSnapshot){
-      //show header
-      var title = dataSnapshot.val().title;
-      renderTemplate("#groupHeaderTitle-tmpl", {group: title}, "#headerTitle");
-      renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
-      showBreadCrumb("groups", groupUid, title);
-
-
-
-      //    getLocalNotifications();
-
-
-      //show footer
-      renderTemplate("#showEntityPanel-tmpl", {}, "footer");
-      $("wrapper").css("overflow","auto");
-
-      isMembership();
-   }).then(function(rendered) {
-      subsManager.isUpdatesSet();
-   });
-
-
-   var showGroupCallback = function(subEntities){
+    var showGroupCallback = function(subEntities){
 
       if(subEntities.exists()){
 
-         var subEntitiesUnderGroup = subEntities.val();
-         var numberOfSubEntities = Object.keys(subEntitiesUnderGroup).length;
-         var subEntitiesUnderGroupArray = new Array();
+        var subEntitiesUnderGroup = subEntities.val();
+        var numberOfSubEntities = Object.keys(subEntitiesUnderGroup).length;
 
-         var i = 1;
+        var subEntitiesUnderGroupArray = new Array();
 
-         subEntities.forEach(function(subEntity){
+        var i = 1;
 
-            DB.child(subEntity.val().entityType+"/"+subEntity.key).once("value", function(data){
+        subEntities.forEach(function(subEntity){
 
-               var preContext = new Object();
+          var pathToSubEntity = subEntity.val().entityType+"/"+subEntity.key;
 
-               if (data.exists()){
+          DB.child(pathToSubEntity).once("value", function(data){
 
-                  var title = data.val().title;
-                  var description = data.val().description;
-                  //          console.log("t: "+ title + ", d: "+ description);
+            var preContext = new Object();
 
-                  preContext = {
-                     uuid: subEntity.key,
-                     entityType: subEntity.val().entityType,
-                     title: title,
-                     description: description,
-                     symbol: symbols[subEntity.val().entityType]
-                  }
+            if (data.exists()){
 
-                  subEntitiesUnderGroupArray.push(preContext);
-               }
+              var title = data.val().title;
+              var description = data.val().description;
 
-               if (i === numberOfSubEntities){
-                  var context = {subEntities: subEntitiesUnderGroupArray};
-                  renderTemplate("#groupPage-tmpl", context, "wrapper");
-                  $("wrapper").hide();
-                  $("wrapper").fadeIn();
-               }
+              preContext = {
+                uuid: subEntity.key,
+                entityType: subEntity.val().entityType,
+                title: title,
+                description: description,
+                symbol: symbols[subEntity.val().entityType]
+              }
 
-               i++;
-            })
-         })
+              subEntitiesUnderGroupArray.push(preContext);
+            }
+
+            if (i === numberOfSubEntities){
+
+              var context = {subEntities: subEntitiesUnderGroupArray};
+              renderTemplate("#groupPage-tmpl", context, "wrapper");
+              $("wrapper").hide();
+              $("wrapper").fadeIn();
+            }
+
+            i++;
+          })
+        })
       } else {
-         renderTemplate("#groupPage-tmpl",{}, "wrapper");
+        renderTemplate("#groupPage-tmpl",{}, "wrapper");
       }
-   };
+    };
 
 
-   //show wrapper
-   DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+    //showing wrapper
+    //check group type
+    if (groupType == "public" || groupType == "close"){
 
-   var turnOff = function () {
+      //show sub entities
+      DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+    } else {
+      //in case of secret group, check to see if user is a member
+      var isMember = dataSnapshot.val().members[userUuid];
+      DB.child("groups/"+groupUid+"/owner").once("value",function(ownership){
+        if (userUuid == ownership.val() || isMember != null){
+          //show sub entities
+          DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+        } else {
+          //dont show...
+          $("wrapper").html("<h2>To see this group, you have to be a member</h2><p>To join, use the membership request button</p><button onclick='setMembership()'>Join Request</button>")
+        }
+      })
+
+    }
+
+    var turnOff = function () {
       DB.child("groups/"+groupUid+"/subEntities").off("value", showGroupCallback);
-   };
+    };
 
-   setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
+    setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
+
+    isMembership();
+  }).then(function(rendered) {
+    subsManager.isUpdatesSet();
+  });
 
 
-   if(!back){
-      setUrl("group", groupUid);
-   }
+
+
+
+  if(!back){
+    setUrl("group", groupUid);
+  }
 
 
 }

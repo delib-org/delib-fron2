@@ -74,7 +74,7 @@ function updatesListener() {
                     DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                         DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
 
-                            console.log("actualContent: " + entityAddedUid.val().dateAdded);
+//                            console.log("actualContent: " + entityAddedUid.val().dateAdded);
 
                             // ==== regulation chunk ==== //
                             // will make sure we will get the latest whatever..

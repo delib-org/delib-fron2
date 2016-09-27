@@ -169,8 +169,11 @@ function setNewQuestionToDB (title, description, type, limitedOptionsArray){
    }
 
 
-   //set questio to be subEntity of parent entity
-   DB.child(activeEntity.entityType+"/"+activeEntity.uid+"/subEntities/"+questionId.key).set({entityType: "questions", dateAdded: firebase.database.ServerValue.TIMESTAMP, order: 1})
+   //set question to be subEntity of parent entity
+   DB.child(activeEntity.entityType+"/"+activeEntity.uid+"/subEntities/"+questionId.key).set({entityType: "questions", dateAdded: firebase.database.ServerValue.TIMESTAMP, order: 1});
+
+  //set in question who is it's parentEntities
+  DB.child("questions/"+questionId+"/parentEntities/"+activeEntity.entityType+"/"+activeEntity.uid).set(true);
 
 
    return questionId;

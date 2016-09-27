@@ -4,7 +4,7 @@ function showQuestion(questionUid){
    DB.child("questions/"+questionUid).once("value", function(dataSnapshot){
       var title = dataSnapshot.val().title;
       var description = dataSnapshot.val().description;
-      console.log("set question chat: ", title, description)
+
       renderTemplate("#questionHeaderTitle-tmpl", {question: title}, "#headerTitle");
       renderTemplate("#headerMenu-tmpl",{type:"questions", uid:questionUid},"#headerMenu");
       showBreadCrumb("questions", questionUid)

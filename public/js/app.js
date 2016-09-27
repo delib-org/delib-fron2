@@ -14,7 +14,7 @@ $(function(){
    });
 
    var currentUrl = getUrl();
-   console.log("URL: "+currentUrl)
+
    startingUrl = currentUrl;
 //   routTo(currentUrl);
 
@@ -37,6 +37,9 @@ $(function(){
 // Global General Variables and Constants
 
 var userUuid;
+var userName;
+var userEmail;
+var userName;
 var startingUrl;
 var activeEntity = new Object();
 var firstRun = true;

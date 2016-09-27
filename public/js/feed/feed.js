@@ -12,7 +12,7 @@ function showNumberOfFeeds(){
    } else{
 
       feedManager.inbox.then(function (result) {
-         console.dir(result);
+//         console.dir(result);
          $("#divCounter").show().text(result);
       })
 

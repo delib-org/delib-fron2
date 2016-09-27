@@ -5,6 +5,7 @@ header {
    width: 100%;
    box-shadow: 0px 20px 10px rgba(128, 128, 128, 0.57);
    z-index:100;
+   background: #cc0000;
 
 }
 
@@ -24,10 +25,12 @@ header {
 #headerBreadCrumbs {
    /*  display: table-row;*/
    height: 20px;
-   width: 100%;
+   width: 95%;
+   margin-right: (100% - 95%)/2;
    background-color: @bg-main700;
    color: white;
-   border-bottom: 1px solid #ce8181;
+   vertical-align: center;
+   /*border-bottom: 1px solid #ce8181;*/
 }
 
 #headerMenu {
@@ -51,7 +54,7 @@ header {
    color: white;
    text-align: center;
    text-decoration: none;
-   border-right: 1px solid #cb4a4a;
+   /*border-right: 1px solid #cb4a4a;*/
    width: 100%;
    height: 50px;
    background-color: @bg-main700;
@@ -89,29 +92,22 @@ header {
    -webkit-box-flex-direction: row;
    -moz-box-flex-direction: row;
    -ms-flex-direction: row;
-   margin-bottom: 5px;
 }
 
 .breadCrumbBlock{
-   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#cc2222+1,cc5f5f+52,6b1b1b+100 */
-   background: #cc2222; /* Old browsers */
-   background: -moz-linear-gradient(top,  #cc2222 1%, #cc5f5f 52%, #6b1b1b 100%); /* FF3.6-15 */
-   background: -webkit-linear-gradient(top,  #cc2222 1%,#cc5f5f 52%,#6b1b1b 100%); /* Chrome10-25,Safari5.1-6 */
-   background: linear-gradient(to bottom,  #cc2222 1%,#cc5f5f 52%,#6b1b1b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc2222', endColorstr='#6b1b1b',GradientType=0 ); /* IE6-9 */
-
 
    color: #ffeaea;
 
-   border-right: 1px solid #a3a3a3;
+   background-color: lighten(#cc0000, 5%);
 
    font-size: 1.05em;
    padding-right: 5px;
    padding-left: 5px;
-   padding-top: 3px;
-   padding-bottom: 3px;
-
-
+   margin-right: 5px;
+   border-radius: 4px;
+   &:after {
+      content: ' ⮜';
+   }
 }
 
 .breadCumbIcons{
@@ -139,20 +135,32 @@ header {
    //   vertical-align: middle;
 }
 
-.feedButtonDivs{
-    position: absolute;
-   top: 50%;
-   left: 50%;
-   height: 30%;
-   width: 50%;
-   margin: -15% 0 0 -25%;
+//.feedButtonDivs{
+//    position: absolute;
+//   top: 50%;
+//   left: 50%;
+//   height: 30%;
+//   width: 50%;
+//   margin: -15% 0 0 -25%;
+//}
+
+.feedButtonDivs {
+	position: absolute;
+	top: 10%;
+	left: 45%;
+	height: 25%;
+	width: 30%;
+	}
+
+div#evelopeDiv {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	position: static;
 }
 
-#evelopeDiv{
-
-}
 #divCounter{
-   background-color: rgba(255, 226, 0, 0.9);
+   background-color: rgba(255, 226, 0, 1);
    padding: 5px;
    border-radius: 10px;
    color: black;
