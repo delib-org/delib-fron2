@@ -6,11 +6,17 @@ function openGroupMenu(groupUid){
   }
 }
 
+function groupSettings(groupUid){
+  console.log("render editing")
+  renderTemplate("#createGroup-tmpl",{uid:groupUid},"wrapper");
+  openTab("settings", groupUid)
+}
+
 function groupsEdit(groupUid){
 
-  renderTemplate("#createGroup-tmpl",{uid:groupUid},"#editGroupPages");
-  console.log("groupsEdit:", groupUid)
-  openTab('settings',groupUid);
+  renderTemplate("#createGroupSettings-tmpl",{uid:groupUid},"#editGroupPages");
+  console.log("groupsEdit:", groupUid);
+  
 
   renderTemplate("#editGroupFooter-tmpl", {groupUid:groupUid}, "footer");
 
@@ -32,7 +38,7 @@ function updateGroupToDB(groupUid){
 
   DB.child("groups/"+groupUid).update({title:title, description:description });
 
-  showOwnedGroups();
+  showEntities('groups', groupUid);
 
 }
 

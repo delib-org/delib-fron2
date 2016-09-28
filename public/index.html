@@ -314,7 +314,7 @@
         <script type="text/x-handlebars-template" id="groupHeaderTitle-tmpl">
           <div class="headerDiv">
              <div class="headerTitleName clickables" onclick="showEntities('groups','{{uid}}')">קבוצה: <span>{{title}}</span></div>
-            <div class="headerMenuDots clickables" onclick="groupsEdit('{{uid}}')" hidden><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+            <div class="headerMenuDots clickables" onclick="groupSettings('{{uid}}')" hidden><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
           </div>
         </script>
 
@@ -334,10 +334,28 @@
 {{/each}}
 <!--<button id="btnAddTopic" class="action btnAddEntity" onclick="showAddTopicScreen()"><i class="fa fa-plus" aria-hidden="true"></button>-->
         </script>
+        
+      <!---- create group --->
 
-
-        <!--    create group page-->
         <script type="text/x-handlebars-template" id="createGroup-tmpl">
+          <div class="addEntityDiv">
+            <form>
+              <input id="createGroupName" name="name" placeholder="שם הקכוצה">
+              <br>
+              <textarea id="createGroupDescription" class="inputErea" name="description" placeholder="תיאור הקבוצה"></textarea>
+              <br>
+              <input type="radio" class="radioInput" name="type" value="public" checked><span> פתוחה</span>
+              <br>
+              <input type="radio" class="radioInput" name="type" value="close"> סגורה
+              <br>
+              <input type="radio" class="radioInput" name="type" value="secret"> סודית
+            </form>
+            <div id="editGroupPages"></div>
+          </div>
+        </script>
+      
+        <!--    Edit group page-->
+        <script type="text/x-handlebars-template" id="editGroup-tmpl">
           <div class="addEntityDiv">
             <ul class="tab">
               <li><div class="tablinks clickables" onclick="openTab('settings','{{uid}}')">הגדרות</div></li>
@@ -346,6 +364,7 @@
             <div id="editGroupPages"></div>
           </div>
         </script>
+      
       <script type="text/x-handlebars-template" id="createGroupSettings-tmpl">
         <form>
           <input id="createGroupName" name="name" placeholder="שם הקכוצה">
