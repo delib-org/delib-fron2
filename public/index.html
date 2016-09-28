@@ -762,6 +762,8 @@ Tow options
 
         <script type="text/x-handlebars-template" id="chatMenu-tmpl">
 <div class="chatMenu clickables" onclick="showEntities('{{type}}','{{uid}}')">
+  <div id="notificationsSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
+<div id="isMembership" class="material-ripple clickables headerMenuBtn" onclick="setMembership()"><i class="fa fa-heart fa-2x"></i></div>
     <span><i class="fa fa-chevron-right" aria-hidden="true"></i> Back</span>
             </div>
         </script>
