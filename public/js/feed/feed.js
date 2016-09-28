@@ -38,15 +38,20 @@ function showFeed(){
       var preContext = new Array();
 
       for (var key in entitiesArray) {
-         preContext.push({type: entitiesArray[key].entityType, uid:entitiesArray[key].entityUid, title: entitiesArray[key].title ,symbol:symbols[entitiesArray[key].entityType]});
+
+         console.log('')
+         preContext.push({type: entitiesArray[key].entityType, uid: entitiesArray[key].entityUid, title: entitiesArray[key].title ,symbol: symbols[entitiesArray[key].entityType]});
       }
 
       var context = {feeds: preContext};
 
       renderTemplate("#feedWrapper-tmpl", context, "wrapper");
 
-      
-      setActiveEntity("feed", undefined, undefined, undefined, undefined)
+      var turnOff = function () {
+         feedManager.queue = "popAll";
+         feedManager.inbox = 0;
+      };
+      setActiveEntity("feed", undefined, undefined, undefined, turnOff)
    });
 
 }

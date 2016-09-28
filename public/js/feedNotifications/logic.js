@@ -229,10 +229,12 @@ function feedBuilder (entityDatum, entityType, variation) {
     
     switch (entityType) {
         case "chats":
+            console.log(entityDatum);
             feedManager.queue = {
-                    roomName: entityDatum.val().title,
-                    chatMessagesCounter: variation,
-                    date: entityDatum.val().dateAdded
+                entityType: entityDatum.val().title,
+                entityUid: entityDatum.key,
+                chatMessagesCounter: variation,
+                date: entityDatum.val().dateAdded
             };
 
             break;
