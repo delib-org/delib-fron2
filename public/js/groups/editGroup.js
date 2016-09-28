@@ -8,7 +8,10 @@ function openGroupMenu(groupUid){
 
 function groupsEdit(groupUid){
 
-  renderTemplate("#createGroup-tmpl",{},"wrapper");
+  renderTemplate("#createGroup-tmpl",{uid:groupUid},"wrapper");
+  console.log("groupsEdit:", groupUid)
+  openTab('settings',groupUid);
+
   renderTemplate("#editGroupFooter-tmpl", {groupUid:groupUid}, "footer");
 
   DB.child("groups/"+groupUid).once("value", function(dataSnapshot){

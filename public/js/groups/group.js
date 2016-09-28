@@ -117,9 +117,12 @@ function showGroup(groupUid){
 }
 
 
-//show group topics
-//function showGroupTopics(groupUid){
-//   //get group topics
-//
-//   DB.child("groups/"+ groupUid.toString()+"/topics").on("value",
-//}
+function openTab (page, groupUid){
+  console.log(groupUid)
+  if(page == 'settings') {
+    renderTemplate("#createGroupSettings-tmpl",{},"#editGroupPages");
+  } else {
+    showAdminPanel(groupUid);
+    console.log("openTab:", groupUid);
+  }
+}

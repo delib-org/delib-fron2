@@ -1,6 +1,9 @@
 function showAdminPanel(groupUid){
-  renderTemplate("#adminControl-tmpl",{},"wrapper");
-
+  renderTemplate("#adminControl-tmpl",{},"#editGroupPages");
+  DB.child("groups/"+groupUid).once("value", function(dataCC){
+    console.log(groupUid)
+    console.log(dataCC.val())
+  })
   //Pending Table
   DB.child("groups/"+groupUid+"/pendings").once("value", function(pendings){
 
@@ -20,7 +23,7 @@ function showAdminPanel(groupUid){
 
   //Members Table
   DB.child("groups/"+groupUid+"/members").once("value", function(members){
-
+    console.log(members.val())
     var preContext = [];
     if(members.val() !== null){
       members.forEach(function(member){

@@ -338,20 +338,27 @@
 
         <!--    create group page-->
         <script type="text/x-handlebars-template" id="createGroup-tmpl">
-<div class="addEntityDiv">
-    <form>
-        <input id="createGroupName" name="name" placeholder="שם הקבוצה">
-        <br>
-        <textarea id="createGroupDescription" class="inputErea" name="description" placeholder="תיאור הקבוצה"></textarea>
-        <br>
-        <input type="radio" class="radioInput" name="type" value="public" checked><span> פתוחה</span>
-        <br>
-        <input type="radio" class="radioInput" name="type" value="close"> סגורה
-        <br>
-        <input type="radio" class="radioInput" name="type" value="secret"> סודית
-            </form>
-            </div>
+          <div class="addEntityDiv">
+            <ul class="tab">
+              <li><div class="tablinks clickables" onclick="openTab('settings','{{uid}}')">הגדרות</div></li>
+              <li><div class="tablinks clickables" onclick="openTab('members','{{uid}}')">חברים/ות</div></li>
+            </ul>
+            <div id="editGroupPages"></div>
+          </div>
         </script>
+      <script type="text/x-handlebars-template" id="createGroupSettings-tmpl">
+        <form>
+          <input id="createGroupName" name="name" placeholder="שם הקכוצה">
+          <br>
+          <textarea id="createGroupDescription" class="inputErea" name="description" placeholder="תיאור הקבוצה"></textarea>
+          <br>
+          <input type="radio" class="radioInput" name="type" value="public" checked><span> פתוחה</span>
+          <br>
+          <input type="radio" class="radioInput" name="type" value="close"> סגורה
+          <br>
+          <input type="radio" class="radioInput" name="type" value="secret"> סודית
+        </form>
+      </script>
 
         <script type="text/x-handlebars-template" id="createGroupFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
