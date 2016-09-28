@@ -5,9 +5,16 @@ function showQuestion(questionUid){
       var title = dataSnapshot.val().title;
       var description = dataSnapshot.val().description;
 
-      renderTemplate("#questionHeaderTitle-tmpl", {question: title}, "#headerTitle");
+      renderTemplate("#questionHeaderTitle-tmpl", {question: title, uid:questionUid}, "#headerTitle");
       renderTemplate("#headerMenu-tmpl",{type:"questions", uid:questionUid},"#headerMenu");
       showBreadCrumb("questions", questionUid,title)
+
+      //if owner -> show edit menu
+      DB.child("questions/"+questionUid+"/owner").once("value", function(ownerUid){
+        if (ownerUid.val() == userUuid){
+          $(".headerMenuDots").show();
+        }
+      })
 
       var description = dataSnapshot.val().description;
       var typeOfQuestion = dataSnapshot.val().type;

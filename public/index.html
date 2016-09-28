@@ -312,8 +312,10 @@
 
         <!-- header    -->
         <script type="text/x-handlebars-template" id="groupHeaderTitle-tmpl">
-          <div class="clickables" onclick="showEntities('groups',groupUid)"
-קבוצה: <span>{{group}}</span>
+          <div class="headerDiv">
+             <div class="headerTitleName clickables" onclick="showEntities('groups','{{uid}}')">קבוצה: <span>{{title}}</span></div>
+            <div class="headerMenuDots clickables" onclick="groupsEdit('{{uid}}')" hidden><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+          </div>
         </script>
 
         <!-- topics   -->
@@ -413,7 +415,10 @@
         <!-- *************   Question page *************-->
         <!-- header    -->
         <script type="text/x-handlebars-template" id="questionHeaderTitle-tmpl">
-שאלה:<span>{{question}}</span>
+          <div class="headerDiv">
+             <div class="headerTitleName clickables" onclick="showEntities('questions','{{uid}}')">שאלה:<span>{{question}}</span></div>
+            <div class="headerMenuDots clickables" onclick="questionsEdit('{{uid}}')" hidden><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+          </div>
         </script>
 
         <!--    create Question page-->

@@ -6,9 +6,16 @@ function showGroup(groupUid){
     //show header
     var title = dataSnapshot.val().title;
     var groupType = dataSnapshot.val().type;
-    renderTemplate("#groupHeaderTitle-tmpl", {group: title, groupUid:groupUid}, "#headerTitle");
+    renderTemplate("#groupHeaderTitle-tmpl", {title: title, uid:groupUid}, "#headerTitle");
     renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
     showBreadCrumb("groups", groupUid, title);
+
+    //if owner -> show edit menu
+    DB.child("groups/"+groupUid+"/owner").once("value", function(ownerUid){
+      if (ownerUid.val() == userUuid){
+        $(".headerMenuDots").show();
+      }
+    })
 
     //show footer
     renderTemplate("#showEntityPanel-tmpl", {}, "footer");
