@@ -64,12 +64,12 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
            } else {
               console.log("Error: no previuos entity to close off previous callback");
            }
-        } else if( previuosEntityType == "feed"){
+        } else if( previuosEntityType == "feed") {
            feedManager.queue = "popAll";
            feedManager.inbox = 0;
         }
      } else {
-        switch (previuosUid){
+        switch (previuosUid) {
            case "member":
            case "owned":
               DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
@@ -112,7 +112,6 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
    var currentEntity = activeEntity.uid;
 
-   console.log("update feed num");
    showNumberOfFeeds();
 }
 
