@@ -118,6 +118,7 @@
     ".read": "auth !== null",
     ".write": "auth !== null",
     "groups": {
+      ".indexOn":["type"],
       "$group_id": {
         "owner": {
           ".write": "data.val() == auth.uid"
