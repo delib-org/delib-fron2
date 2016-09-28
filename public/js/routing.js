@@ -80,8 +80,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
               console.log("Error: no such groups cluster in main ("+previuosUid+")");
         }
      }
-
-   console.log("bksbvfsbfbf");
+   
    activeEntity.entityType = newEntity;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;

@@ -16,9 +16,8 @@ function listenToAuth(currentUrl){
       if (userPhoto == null){ userPhoto = ""};
 
       DB.child("users/"+user.uid).update({name: user.displayName, email: user.email, userPhoto: userPhoto});
+      initFeedManagerProps();
       updatesListener();
-
-
 
       console.log("login: "+ user.displayName);
 

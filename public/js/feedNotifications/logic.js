@@ -2,6 +2,65 @@ var chats_cb;
 var entityAdded_cb;
 var ownerCall_cb;
 
+function initFeedManagerProps () {
+    Object.defineProperty(feedManager , 'inbox', {
+        get: function () {
+
+            var val;
+            return DB.child('users/'+userUuid+'/feedInbox').once('value',function (snapshot){
+                val = snapshot.val();
+            }).then(function (){
+                return val;
+            });
+        },
+        set: function (val) {
+            DB.child('users/'+userUuid+'/feedInbox').set(val);
+        }
+    });
+
+    Object.defineProperty(feedManager , 'queue', {
+        get: function () {
+
+            return DB.child('users/'+userUuid+'/feed').once('value',function (snapshot){
+                return snapshot;
+            });
+        },
+        set: function (json) {
+
+            console.log(json);
+            switch (json){
+                case 'pop':
+
+                    DB.child('users/'+userUuid+'/feed').orderByChild('date').limitToFirst(1).once('value',function (snapshot) {
+                        DB.child('users/'+userUuid+'/feed/'+snapshot.key).remove();
+                    });
+                    break;
+
+                case 'popAll':
+
+                    DB.child('users/'+userUuid+'/feed').remove();
+                    break;
+
+                default:
+                    DB.child('users/'+userUuid+'/feed').push(json);
+            }
+        }
+    });
+
+    Object.defineProperty(feedManager , 'lastFeedAccess', {
+        get: function () {
+
+            return DB.child('users/'+userUuid+'/lastFeedAccess').once('value',function (snapshot){
+                return snapshot;
+            });
+        },
+        set: function (date) {
+
+            DB.child('users/'+userUuid+'/lastFeedAccess').set(date);
+        }
+    });
+}
+
 function updatesListener() {
 
     // turn off previous listener
@@ -41,178 +100,195 @@ function updatesListener() {
 
                 // if subscribed to ownerCalls
                 if (isOwnerCallReg) {
-                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (ownerCall) {
-
-                        // ==== regulation chunk ==== //
-                        // will make sure we will get the latest whatever..
-                        if (mostUpdatedContent == null) {
-                            mostUpdatedContent = ownerCall;
-                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                        }
-                        else if (mostUpdatedContent.val().dateAdded < ownerCall.val().dateAdded - 400)
-                        {
-                            mostUpdatedContent = ownerCall;
-                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                        }
-                        else
-                            return;
-                        // ============================================================================
-
-                            DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
-                                if(isOwnerCallReg.notifications)
-                                    pushNotification(actualContent, "ownerCalls", ownerCall.val().callText);
-
-                                if(isOwnerCallReg.feed)
-                                    feedBuilder(actualContent, "ownerCalls", ownerCall.val().callText);
-                            });
-                    });
-                }
-
-                // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
-
-                if (isNewSubEntityReg) {
-                    DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
-                        DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
-
-//                            console.log("actualContent: " + entityAddedUid.val().dateAdded);
+                    if(!firstRun) {
+                        DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (ownerCall) {
 
                             // ==== regulation chunk ==== //
                             // will make sure we will get the latest whatever..
                             if (mostUpdatedContent == null) {
-                                mostUpdatedContent = entityAddedUid;
+                                mostUpdatedContent = ownerCall;
                                 // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                             }
-                            else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 400)
+                            else if (mostUpdatedContent.val().dateAdded < ownerCall.val().dateAdded - 400)
                             {
-                                mostUpdatedContent = entityAddedUid;
+                                mostUpdatedContent = ownerCall;
                                 // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
                             }
                             else
                                 return;
                             // ============================================================================
 
-                            if (isNewSubEntityReg.notifications)
-                                pushNotification(actualContent, subEntity[entityUpdates.key]);
+                            DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
+                                if(isOwnerCallReg.notifications)
+                                    pushNotification(actualContent, "ownerCalls", ownerCall.val().callText);
 
-                            if (isNewSubEntityReg.feed)
-                                feedBuilder(actualContent, entityUpdates.key, entityAddedUid);
+                                if(isOwnerCallReg.feed && feedManager.lastEntranceOn)
+                                    feedBuilder(actualContent, "ownerCalls", ownerCall.val().callText);
+                            });
+                        });
+                    } else {
+                        // just copy-paste the correlative code from other chunks..
+                    }
+                }
 
-                        }); //.catch(function (error) { console.log(error, "no entity path") })
-                    });
+                // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
+
+                if (isNewSubEntityReg) {
+                    if(!firstRun) {
+                        DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
+                            DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
+    
+                                // ==== regulation chunk ==== //
+                                // will make sure we will get the latest whatever..
+                                if (mostUpdatedContent == null) {
+                                    mostUpdatedContent = entityAddedUid;
+                                    // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                }
+                                else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 400)
+                                {
+                                    mostUpdatedContent = entityAddedUid;
+                                    // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                }
+                                else
+                                    return;
+                                // ============================================================================
+    
+                                if (isNewSubEntityReg.notifications)
+                                    pushNotification(actualContent, subEntity[entityUpdates.key]);
+    
+                                if (isNewSubEntityReg.feed)
+                                    feedBuilder(actualContent, entityUpdates.key, entityAddedUid);
+    
+                            }); //.catch(function (error) { console.log(error, "no entity path") })
+                        });
+                    } else {
+                        DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (entityAdded) {
+                            feedManager.lastFeedAccess.then(function (lastFeedAccess) {
+                                console.log(entityAdded.val(), lastFeedAccess.val(), firstRun);
+
+                                    DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
+
+                                        if (mostUpdatedContent == null) {
+                                            mostUpdatedContent = entityAdded;
+                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        }
+                                        else if (mostUpdatedContent.val().dateAdded < entityAdded.val().dateAdded - 400)
+                                        {
+                                            mostUpdatedContent = entityAdded;
+                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        }
+
+                                        if (lastFeedAccess !== null && isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded)
+                                            feedBuilder(actualContent, entityUpdates.key, entityAdded);
+                                    });
+                            });
+                        });
+
+                    }
                 }
 
                 // chat logic
 
                 if(isChatReg) {
-                    // check if added message, get last message by date
-                    DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').limitToLast(1).on('child_added', chats_cb = function (lastMessage) {
-                        // get inbox unseen messages counter
-                        DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
-                            // now we need the actual content of the entity related to current chatRoom, note that chat updates bound to groups only..
-                            DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
-                                // don't bring up notificaions and nor count them if already inside subscribed chat room
-                                if(!(activeEntity.entityType == "chats" && activeEntity.uid == entityUpdate.key)) {
-                                    // if no such group, get out
+                    if(!firstRun) {
+                        // check if added message, get last message by date
+                        DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').limitToLast(1).on('child_added', chats_cb = function (lastMessage) {
+                            // get inbox unseen messages counter
+                            DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
+                                // now we need the actual content of the entity related to current chatRoom, note that chat updates bound to groups only..
+                                DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
+                                    // don't bring up notificaions and nor count them if already inside subscribed chat room
+                                    if(!(activeEntity.entityType == "chats" && activeEntity.uid == entityUpdate.key)) {
+                                        // if no such group, get out
+    
+                                        if (chatEntityContent == null)
+                                            return;
+    
+                                        // ==== regulation chunk ==== //
+                                        // will make sure we will get the latest whatever..
+                                        if (mostUpdatedContent == null) {
+                                            mostUpdatedContent = lastMessage;
+                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        }
+                                        else if (mostUpdatedContent.val().dateAdded < lastMessage.val().dateAdded - 400)
+                                        {
+                                            mostUpdatedContent = lastMessage;
+                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        }
+                                        else
+                                            return;
+                                        // ============================================================================
+    
+                                        // create a temporary messagesSentInc to hold inboxMessages.val()
+                                        var messagesSentInc;
+    
+                                        // now we need the inboxMessages to get the number of messages not seen
+                                        messagesSentInc = inboxVolume.val();
+    
+                                        // obvious incrementation, is obvious..
+                                        messagesSentInc++;
+    
+                                        //set incremented inbox volume
+                                        DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
 
-                                    if (chatEntityContent == null)
-                                        return;
-
-                                    // ==== regulation chunk ==== //
-                                    // will make sure we will get the latest whatever..
-                                    if (mostUpdatedContent == null) {
-                                        mostUpdatedContent = lastMessage;
-                                        // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        // send notifications in jumps of 5, might want to consider further manipulations. currently unused.
+                                        if (messagesSentInc % 5 ===  0) {
+                                            if (isChatReg.notifications)
+                                                pushNotification(chatEntityContent, "chats", messagesSentInc);
+                                            if (isChatReg.feed)
+                                                feedBuilder(chatEntityContent,"chats", messagesSentInc);
+                                        }
                                     }
-                                    else if (mostUpdatedContent.val().dateAdded < lastMessage.val().dateAdded - 400)
-                                    {
-                                        mostUpdatedContent = lastMessage;
-                                        // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                    }
-                                    else
-                                        return;
-                                    // ============================================================================
-
-                                    // create a temporary messagesSentInc to hold inboxMessages.val()
-                                    var messagesSentInc;
-
-                                    // now we need the inboxMessages to get the number of messages not seen
-                                    messagesSentInc = inboxVolume.val();
-
-                                    // increment inbox volume
-                                    if (firstRun) {
-                                        firstRun = false;
-                                        return;
-                                    }
-
-                                    // obvious incrementation, is obvious..
-                                    messagesSentInc++;
-
-                                    //set incremented inbox volume
-                                    DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
-
-                                    // send notifications in jumps of 5, might want to consider further manipulations. currently unused.
-                                    if (messagesSentInc % 5 ===  0) {
-                                        if (isChatReg.notifications)
-                                            pushNotification(chatEntityContent, "chats", messagesSentInc);
-                                        if (isChatReg.feed)
-                                            feedBuilder(chatEntityContent,"chats", messagesSentInc);
-                                    }
-                                }
+                                });
                             });
                         });
-                    });
+                    } else {
+                        DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('child_added',function (messageAdded) {
+                            DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
+                                feedManager.lastFeedAccess.then(function (lastFeedAccess) {
+                                    DB.child("/groups/" + messageAdded.key).once('value', function (chatEntityContent) {
+
+                                        if (mostUpdatedContent == null) {
+                                            mostUpdatedContent = messageAdded;
+                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        }
+                                        else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
+                                        {
+                                            mostUpdatedContent = messageAdded;
+                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
+                                        }
+
+                                        if (lastFeedAccess && isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded)
+                                        {
+                                            // create a temporary messagesSentInc to hold inboxMessages.val()
+                                            var messagesSentInc;
+
+                                            // now we need the inboxMessages to get the number of messages not seen
+                                            messagesSentInc = inboxVolume.val();
+
+                                            // obvious incrementation, is obvious..
+                                            messagesSentInc++;
+
+                                            //set incremented inbox volume
+                                            DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
+
+                                            if (messagesSentInc % 5 ===  0)
+                                                feedBuilder(chatEntityContent, "chats", messagesSentInc);
+                                        }
+                                    });
+                                });
+                            });
+                        });
+                    }
                 }
             });
         });
+    }).then(function () {
+        if(firstRun)
+            firstRun = false;
     });
 
-    $(document).ready(function () {
-        // Function code here.
-    });
 
-    Object.defineProperty(feedManager , 'inbox', {
-         get: function () {
-
-             var val;
-             return DB.child('users/'+userUuid+'/feedInbox').once('value',function (snapshot){
-                 val = snapshot.val();
-             }).then(function (){
-                 return val;
-             });
-        },
-        set: function (val) {
-            DB.child('users/'+userUuid+'/feedInbox').set(val);
-        }
-    });
-
-    Object.defineProperty(feedManager , 'queue', {
-         get: function () {
-
-             return DB.child('users/'+userUuid+'/feed').once('value',function (snapshot){
-                 return snapshot;
-             });
-        },
-        set: function (json) {
-
-            console.log(json);
-            switch (json){
-                case 'pop':
-
-                    DB.child('users/'+userUuid+'/feed').orderByChild('date').limitToFirst(1).once('value',function (snapshot) {
-                        DB.child('users/'+userUuid+'/feed/'+snapshot.key).remove();
-                    });
-                    break;
-
-                case 'popAll':
-
-                    DB.child('users/'+userUuid+'/feed').remove();
-                    break;
-
-                default:
-                    DB.child('users/'+userUuid+'/feed').push(json);
-            }
-        }
-    });
 }
 
 
