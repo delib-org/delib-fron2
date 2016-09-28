@@ -82,6 +82,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
         }
      }
 
+   console.log("bksbvfsbfbf");
    activeEntity.entityType = newEntity;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;
