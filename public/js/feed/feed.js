@@ -1,28 +1,21 @@
-$(document).on('feedPushed', function () {
+$(document).on('feedRender', function () {
 
    showNumberOfFeeds();
 
 });
 
-
-
 function showNumberOfFeeds(){
    feedManager.queue.then(function (snapshot) {
-      var length;
-      if (snapshot.val())
-         length = Object.keys(snapshot.val()).length;
-      else
-          return;
+      if (snapshot.val()) {
 
-      console.log(length);
-      if(length == 0 || length == null || length == undefined){
-         $("#divCounter").hide();
-      } else{
          feedManager.inbox.then(function (result) {
             $("#divCounter").show().text(result);
          })
+         
+      } else {
+         $("#divCounter").hide();
       }
-   });
+   })
 }
 
 function showFeed(){
@@ -31,12 +24,6 @@ function showFeed(){
    feedManager.queue.then(function (snapshot) {
 
       var entitiesArray = snapshot.val();
-
-      // initialize inbox
-      feedManager.inbox = 0;
-      feedManager.inbox.then(function (result) {
-         console.dir(result);
-      });
 
 
       //show header

@@ -66,6 +66,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
            }
         } else if( previuosEntityType == "feed"){
            feedManager.queue = "popAll";
+           feedManager.inbox = 0;
         }
      } else {
         switch (previuosUid){
@@ -111,6 +112,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
    var currentEntity = activeEntity.uid;
 
+   console.log("update feed num");
    showNumberOfFeeds();
 }
 
