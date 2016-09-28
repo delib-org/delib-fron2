@@ -781,16 +781,16 @@ Tow options
             <table class="membershipTable">
               <tr class="membershipTableHeader">
                 <th>משתמש</th>
-                <th>תאריך בקשה</th>
+                <th>תאריך</th>
                 <th>דוא"ל</th>
-                <th>אישור</th>
+                <th>הסרה</th>
               </tr>
               {{#each members}}
               <tr>
                 <td>{{name}}</td>
                 <td>{{date}}</td>
                 <td>{{email}}</td>
-                <td><button>Else</button></td>
+                <td><button class="approveBtn approveBtnX" onclick="removeMember('{{groupUid}}','{{memberUid}}', '{{name}}')"><i class="fa fa-close" aria-hidden="true"></i></button></td>
               </tr>
               {{/each}}
             </table>

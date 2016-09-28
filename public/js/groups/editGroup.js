@@ -8,7 +8,7 @@ function openGroupMenu(groupUid){
 
 function groupsEdit(groupUid){
 
-  renderTemplate("#createGroup-tmpl",{uid:groupUid},"wrapper");
+  renderTemplate("#createGroup-tmpl",{uid:groupUid},"#editGroupPages");
   console.log("groupsEdit:", groupUid)
   openTab('settings',groupUid);
 
@@ -34,4 +34,15 @@ function updateGroupToDB(groupUid){
 
   showOwnedGroups();
 
+}
+
+function openTab (page, groupUid){
+  console.log(groupUid)
+  if(page == 'settings') {
+//    renderTemplate("#createGroupSettings-tmpl",{},"#editGroupPages");
+    groupsEdit(groupUid)
+  } else {
+    showAdminPanel(groupUid);
+    console.log("openTab:", groupUid);
+  }
 }

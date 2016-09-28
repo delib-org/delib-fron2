@@ -81,16 +81,25 @@ function showGroup(groupUid){
       DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
     } else {
       //in case of secret group, check to see if user is a member
-      var isMember = dataSnapshot.val().members[userUuid];
-      DB.child("groups/"+groupUid+"/owner").once("value",function(ownership){
-        if (userUuid == ownership.val() || isMember != null){
+      DB.child("groups/"+groupUid+"/members/"+userUuid).once("value",function(memberData){
+        if (memberData.val() != null){
           //show sub entities
-          DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+              DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+
         } else {
-          //dont show...
-          $("wrapper").html("<h2>To see this group, you have to be a member</h2><p>To join, use the membership request button</p><button onclick='setMembership()'>Join Request</button>")
+          DB.child("groups/"+groupUid+"/owner").once("value",function(ownership){
+            if (userUuid == ownership.val()){
+              //show sub entities
+              DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+            } else {
+              //dont show...
+              $("wrapper").html("<h2>To see this group, you have to be a member</h2><p>To join, use the membership request button</p><button onclick='setMembership()'>Join Request</button>")
+            }
+          })
         }
       })
+      //      var isMember = dataSnapshot.val().members[userUuid];
+
 
     }
 
@@ -117,12 +126,4 @@ function showGroup(groupUid){
 }
 
 
-function openTab (page, groupUid){
-  console.log(groupUid)
-  if(page == 'settings') {
-    renderTemplate("#createGroupSettings-tmpl",{},"#editGroupPages");
-  } else {
-    showAdminPanel(groupUid);
-    console.log("openTab:", groupUid);
-  }
-}
+
