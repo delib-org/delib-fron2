@@ -7,49 +7,59 @@ $(document).on('feedPushed', function () {
 
 
 function showNumberOfFeeds(){
-   if(feedManager.queue.length == 0 || feedManager.queue.length == null || feedManager.queue.length == undefined){
-      $("#divCounter").hide();
-   } else{
+   feedManager.queue.then(function (snapshot) {
+      var length;
+      if (snapshot.val())
+         length = Object.keys(snapshot.val()).length;
+      else
+          return;
 
-      feedManager.inbox.then(function (result) {
-//         console.dir(result);
-         $("#divCounter").show().text(result);
-      })
-
-   }
+      console.log(length);
+      if(length == 0 || length == null || length == undefined){
+         $("#divCounter").hide();
+      } else{
+         feedManager.inbox.then(function (result) {
+            $("#divCounter").show().text(result);
+         })
+      }
+   });
 }
 
 function showFeed(){
 
-   // initialize inbox
-   feedManager.inbox = 0;
-   feedManager.inbox.then(function (result) {
-      console.dir(result);
+
+   feedManager.queue.then(function (snapshot) {
+
+      var entitiesArray = snapshot.val();
+
+      // initialize inbox
+      feedManager.inbox = 0;
+      feedManager.inbox.then(function (result) {
+         console.dir(result);
+      });
+
+
+      //show header
+      renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
+      $("#headerBreadCrumbs").html("");
+      $("#headerMenu").html("");
+
+      //show footer
+      renderTemplate("#feedFooter-tmpl",{},"footer");
+
+      //show
+      var preContext = new Array();
+
+      for (var key in entitiesArray) {
+         preContext.push({type: entitiesArray[key].entityType, uid:entitiesArray[key].entityUid, title: entitiesArray[key].title ,symbol:symbols[entitiesArray[key].entityType]});
+      }
+
+      var context = {feeds: preContext};
+
+      renderTemplate("#feedWrapper-tmpl", context, "wrapper");
+
+      
+      setActiveEntity("feed", undefined, undefined, undefined, undefined)
    });
 
-
-   //show header
-
-   renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
-   $("#headerBreadCrumbs").html("");
-   $("#headerMenu").html("");
-
-   //show footer
-   renderTemplate("#feedFooter-tmpl",{},"footer");
-
-   //show
-   var entitiesArray = feedManager.queue;
-   var preContext = new Array();
-
-
-   for (i in entitiesArray) {
-      preContext.push({type: entitiesArray[i].entityType, uid:entitiesArray[i].entityUid, title: entitiesArray[i].title ,symbol:symbols[entitiesArray[i].entityType]});
-   }
-
-   var context = {feeds: preContext};
-
-   renderTemplate("#feedWrapper-tmpl", context, "wrapper");
-
-   //setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
-   setActiveEntity("feed", undefined, undefined, undefined, undefined)
 }

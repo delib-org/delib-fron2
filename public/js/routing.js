@@ -57,15 +57,16 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
    checkChatsUpdates(newEntity, newUid);
 
 
-     if (previuosEntityType != "main"){
+     if (previuosEntityType != "main") {
         if (previuosEventType != undefined){
            if (previuosUid != undefined){
               previuosTurnOff();
            } else {
               console.log("Error: no previuos entity to close off previous callback");
            }
-        } else if( previuosEventType == "feed")
-           feedManager.queue = [];
+        } else if( previuosEntityType == "feed"){
+           feedManager.queue = "popAll";
+        }
      } else {
         switch (previuosUid){
            case "member":
