@@ -65,7 +65,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
               console.log("Error: no previuos entity to close off previous callback");
            }
         } else if( previuosEntityType == "feed") {
-           
+           previuosTurnOff();
         }
      } else {
         switch (previuosUid) {
