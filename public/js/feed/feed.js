@@ -1,50 +1,52 @@
-$(document).on('feedPushed', function () {
+$(document).on('feedRender', function () {
 
    showNumberOfFeeds();
 
 });
 
-
-
 function showNumberOfFeeds(){
-   if(feedManager.queue.length == 0 || feedManager.queue.length == null || feedManager.queue.length == undefined){
-      $("#divCounter").hide();
-   } else{
+   feedManager.queue.then(function (snapshot) {
+      if (snapshot.val()) {
 
-      feedManager.inbox.then(function (result) {
-//         console.dir(result);
-         $("#divCounter").show().text(result);
-      })
-
-   }
+         feedManager.inbox.then(function (result) {
+            $("#divCounter").show().text(result);
+         })
+         
+      } else {
+         $("#divCounter").hide();
+      }
+   })
 }
 
 function showFeed(){
 
-   // initialize inbox
-   feedManager.inbox = 0;
-   feedManager.inbox.then(function (result) {
-      console.dir(result);
+
+   feedManager.queue.then(function (snapshot) {
+
+      var entitiesArray = snapshot.val();
+
+
+      //show header
+      renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
+      $("#headerBreadCrumbs").html("");
+      $("#headerMenu").html("");
+
+      //show footer
+      renderTemplate("#feedFooter-tmpl",{},"footer");
+
+      //show
+      var preContext = new Array();
+
+      for (var key in entitiesArray) {
+         preContext.push({type: entitiesArray[key].entityType, uid:entitiesArray[key].entityUid, title: entitiesArray[key].title ,symbol:symbols[entitiesArray[key].entityType]});
+      }
+
+      var context = {feeds: preContext};
+
+      renderTemplate("#feedWrapper-tmpl", context, "wrapper");
+
+      
+      setActiveEntity("feed", undefined, undefined, undefined, undefined)
    });
-   //show header
 
-   renderTemplate("#feedHeaderTitle-tmpl",{},"#headerTitle");
-   $("#headerBreadCrumbs").html("");
-   $("#headerMenu").html("");
-
-   //show footer
-   renderTemplate("#feedFooter-tmpl",{},"footer");
-
-   //show
-   var entitiesArray = feedManager.queue;
-   var preContext = new Array();
-
-
-   for (i in entitiesArray){
-      preContext.push({type: entitiesArray[i].entityType, uid:entitiesArray[i].entityUid, title: entitiesArray[i].title ,symbol:symbols[entitiesArray[i].entityType]});
-   }
-
-   var context = {feeds: preContext};
-
-   renderTemplate("#feedWrapper-tmpl", context, "wrapper");
 }

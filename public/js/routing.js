@@ -57,35 +57,37 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
   checkChatsUpdates(newEntity, newUid);
 
 
-  //   if (previuosEntityType != "main"){
-  //      if (previuosEventType != undefined){
-  //         if (previuosUid != undefined){
-  //            previuosTurnOff();
-  //         } else {
-  //            console.log("Error: no previuos entity to close off previous callback");
-  //         }
-  //      }
-  //   } else {
-  //      switch (previuosUid){
-  //         case "member":
-  //         case "owned":
-  //            DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
-  //            break;
-  //         case "public":
-  //            DB.child("groups").off(previuosEventType, previuosCallback);
-  //            break;
-  //         default:
-  //            console.log("Error: no such groups cluster in main ("+previuosUid+")");
-  //      }
-  //   }
+     if (previuosEntityType != "main") {
+        if (previuosEventType != undefined){
+           if (previuosUid != undefined){
+              previuosTurnOff();
+           } else {
+              console.log("Error: no previuos entity to close off previous callback");
+           }
+        } else if( previuosEntityType == "feed") {
+           feedManager.queue = "popAll";
+           feedManager.inbox = 0;
+        }
+     } else {
+        switch (previuosUid) {
+           case "member":
+           case "owned":
+              DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
+              break;
+           case "public":
+              DB.child("groups").off(previuosEventType, previuosCallback);
+              break;
+           default:
+              console.log("Error: no such groups cluster in main ("+previuosUid+")");
+        }
+     }
 
-  activeEntity.entityType = newEntity;
-  activeEntity.uid = newUid;
-  activeEntity.eventType = newEventType;
-  activeEntity.callback = newCallback;
-  activeEntity.turnOff = turnOff;
-  //activeEntity.previuosEntityType = previuosEntityType;
-  //   activeEntity.onObject = newOnObject;
+   activeEntity.entityType = newEntity;
+   activeEntity.uid = newUid;
+   activeEntity.eventType = newEventType;
+   activeEntity.callback = newCallback;
+   activeEntity.turnOff = turnOff;
+   //activeEntity.previuosEntityType = previuosEntityType;
 
 
   setUrl(newEntity, newUid);

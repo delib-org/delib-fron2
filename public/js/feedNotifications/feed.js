@@ -13,7 +13,7 @@ subsManager.setFeed = function(isOwnerCall) {
         case "chats":
 
             // re-defining userFeed in chats context
-            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot){
+            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
                 userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
                 
                 userFeed.once("value", function(dataSnapshot) {

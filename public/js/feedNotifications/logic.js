@@ -1,6 +1,7 @@
 var chats_cb;
 var entityAdded_cb;
 var ownerCall_cb;
+
 function updatesListener() {
 
     // turn off previous listener
@@ -165,6 +166,9 @@ function updatesListener() {
         });
     });
 
+    $(document).ready(function () {
+        // Function code here.
+    });
 
     Object.defineProperty(feedManager , 'inbox', {
          get: function () {
@@ -180,54 +184,99 @@ function updatesListener() {
             DB.child('users/'+userUuid+'/feedInbox').set(val);
         }
     });
+
+    Object.defineProperty(feedManager , 'queue', {
+         get: function () {
+
+             return DB.child('users/'+userUuid+'/feed').once('value',function (snapshot){
+                 return snapshot;
+             });
+        },
+        set: function (json) {
+
+            console.log(json);
+            switch (json){
+                case 'pop':
+
+                    DB.child('users/'+userUuid+'/feed').orderByChild('date').limitToFirst(1).once('value',function (snapshot) {
+                        DB.child('users/'+userUuid+'/feed/'+snapshot.key).remove();
+                    });
+                    break;
+
+                case 'popAll':
+
+                    DB.child('users/'+userUuid+'/feed').remove();
+                    break;
+
+                default:
+                    DB.child('users/'+userUuid+'/feed').push(json);
+            }
+        }
+    });
 }
 
 
 
 // feed builder
 function feedBuilder (entityDatum, entityType, variation) {
+
+    if(firstRun) {
+        firstRun = false;
+        // feedManager.queue = [];
+        console.log("first Run");
+        return;
+    }
     
     switch (entityType) {
         case "chats":
-            feedManager.queue.push( {
+            feedManager.queue = {
                     roomName: entityDatum.val().title,
                     chatMessagesCounter: variation,
                     date: entityDatum.val().dateAdded
-            });
+            };
 
             break;
 
         case "ownerCalls":
-            feedManager.queue.push( {
+            feedManager.queue = {
                 roomName: entityDatum.val().title,
                 callText: variation,
                 date: entityDatum.val().dateAdded
-            });
+            };
 
             break;  
 
         default:
-            feedManager.queue.push({
+            feedManager.queue = {
                 title: entityDatum.val().title,
                 description: entityDatum.val().description,
                 date: entityDatum.val().dateAdded,
                 entityType: variation.val().entityType,
                 entityUid: variation.key
-            });
+            };
 
             break;
     }
 
-    // if feedVolume got to 20, also remove last feed in feedQueue
-    if(Object.keys(feedManager.queue).length >= feedManager.volume + 1)
-        feedManager.queue.pop();
+    feedManager.queue.then(function (snapshot) {
 
-    feedManager.inbox.then(function(val){
-        feedManager.inbox = ++val;
-//            console.log(val);
-    }).then( function () {
-        // triggering feedPushed event
-        $.event.trigger('feedPushed');
+        if (snapshot.val()) {
+
+            var length = Object.keys(snapshot.val()).length;
+
+            // if feedVolume got to 20, also remove last feed in feedQueue
+            if(length >= feedManager.volume + 1)
+                feedManager.queue = "pop";
+        }
+    }).then(function () {
+        feedManager.inbox.then(function(val) {
+            feedManager.inbox = ++val;
+
+            console.log("not a first Run");
+            console.log(val);
+        }).then( function () {
+            // triggering feedPushed event
+            $.event.trigger('feedPushed');
+        });
     });
-
 }
