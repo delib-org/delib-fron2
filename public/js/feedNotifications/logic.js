@@ -105,15 +105,10 @@ function updatesListener() {
 
                             // ==== regulation chunk ==== //
                             // will make sure we will get the latest whatever..
-                            if (mostUpdatedContent == null) {
+                            if (mostUpdatedContent == null)
                                 mostUpdatedContent = ownerCall;
-                                // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                            }
                             else if (mostUpdatedContent.val().dateAdded < ownerCall.val().dateAdded - 400)
-                            {
                                 mostUpdatedContent = ownerCall;
-                                // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                            }
                             else
                                 return;
                             // ============================================================================
@@ -140,15 +135,10 @@ function updatesListener() {
     
                                 // ==== regulation chunk ==== //
                                 // will make sure we will get the latest whatever..
-                                if (mostUpdatedContent == null) {
+                                if (mostUpdatedContent == null)
                                     mostUpdatedContent = entityAddedUid;
-                                    // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                }
                                 else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 400)
-                                {
                                     mostUpdatedContent = entityAddedUid;
-                                    // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                }
                                 else
                                     return;
                                 // ============================================================================
@@ -165,20 +155,16 @@ function updatesListener() {
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (entityAdded) {
                             feedManager.lastFeedAccess.then(function (lastFeedAccess) {
                                 console.log(entityAdded.val(), lastFeedAccess.val(), firstRun);
-
+                                    if(lastFeedAccess !== null)
+                                        return;
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
 
-                                        if (mostUpdatedContent == null) {
+                                        if (mostUpdatedContent == null)
                                             mostUpdatedContent = entityAdded;
-                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                        }
                                         else if (mostUpdatedContent.val().dateAdded < entityAdded.val().dateAdded - 400)
-                                        {
                                             mostUpdatedContent = entityAdded;
-                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                        }
 
-                                        if (lastFeedAccess !== null && isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded)
+                                        if (isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded)
                                             feedBuilder(actualContent, entityUpdates.key, entityAdded);
                                     });
                             });
@@ -206,15 +192,10 @@ function updatesListener() {
     
                                         // ==== regulation chunk ==== //
                                         // will make sure we will get the latest whatever..
-                                        if (mostUpdatedContent == null) {
+                                        if (mostUpdatedContent == null)
                                             mostUpdatedContent = lastMessage;
-                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                        }
                                         else if (mostUpdatedContent.val().dateAdded < lastMessage.val().dateAdded - 400)
-                                        {
                                             mostUpdatedContent = lastMessage;
-                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                        }
                                         else
                                             return;
                                         // ============================================================================
@@ -248,17 +229,15 @@ function updatesListener() {
                                 feedManager.lastFeedAccess.then(function (lastFeedAccess) {
                                     DB.child("/groups/" + messageAdded.key).once('value', function (chatEntityContent) {
 
-                                        if (mostUpdatedContent == null) {
-                                            mostUpdatedContent = messageAdded;
-                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                        }
-                                        else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
-                                        {
-                                            mostUpdatedContent = messageAdded;
-                                            // console.log("mostUpdatedContent: " + mostUpdatedContent.val().dateAdded);
-                                        }
+                                        if(lastFeedAccess !== null)
+                                            return;
 
-                                        if (lastFeedAccess && isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded)
+                                        if (mostUpdatedContent == null)
+                                            mostUpdatedContent = messageAdded;
+                                        else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
+                                            mostUpdatedContent = messageAdded;
+
+                                        if (isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded)
                                         {
                                             // create a temporary messagesSentInc to hold inboxMessages.val()
                                             var messagesSentInc;
@@ -283,12 +262,10 @@ function updatesListener() {
                 }
             });
         });
-    }).then(function () {
+
         if(firstRun)
             firstRun = false;
     });
-
-
 }
 
 
