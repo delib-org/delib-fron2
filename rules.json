@@ -151,3 +151,46 @@
     }
   }
 }
+//// rules
+
+{
+  "rules": {
+    ".read": "auth !== null",
+    ".write": "auth !== null",
+    "groups": {
+      ".indexOn":["type"],
+      "$group_id": {
+        "owner": {
+          ".write": "data.val() == auth.uid"
+        },
+        "subEntities":{
+          ".indexOn":["dateAdded"]
+        }
+      }
+    },
+    "users": {
+      ".read": "auth !== null",
+      ".write": false,
+      "$user_id": {
+        ".write": "$user_id === auth.uid",
+          "role": {
+            ".indexOn":[".value"]
+          }
+      }
+    },
+    "chats": {
+      "$chats":{
+        "messages":{
+          ".indexOn": ["dateAdded"]
+        }
+      }
+    },
+    "topics": {
+      "$topic": {
+        "subEntities":{
+          ".indexOn":["dateAdded"]
+        }
+      }
+    }
+  }
+}
