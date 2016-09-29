@@ -1,5 +1,4 @@
 function listenToAuth(currentUrl){
-
   firebase.auth().onAuthStateChanged(function(user) {
 
     console.log("auth changed");
@@ -16,8 +15,10 @@ function listenToAuth(currentUrl){
       if (userPhoto == null){ userPhoto = ""};
 
       DB.child("users/"+user.uid).update({name: user.displayName, email: user.email, userPhoto: userPhoto});
+      console.log("before");
       initFeedManagerProps();
       updatesListener();
+      console.log("agter");
 
       console.log("login: "+ user.displayName);
 

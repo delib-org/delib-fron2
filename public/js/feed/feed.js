@@ -1,4 +1,4 @@
-$(document).on('feedRender', function () {
+$(document).on('feedPushed', function () {
 
    showNumberOfFeeds();
 
@@ -8,11 +8,14 @@ function showNumberOfFeeds(){
    feedManager.queue.then(function (snapshot) {
       if (snapshot.val()) {
 
+         console.log('render snapshot')
+
          feedManager.inbox.then(function (result) {
             $("#divCounter").show().text(result);
          })
          
       } else {
+         console.log('false')
          $("#divCounter").hide();
       }
    })
