@@ -81,6 +81,7 @@ function addNewQuestion(questionUid){
     return;
   }
 
+
   //get options
   //   $('input[name=radioName]:checked', '#myForm').val()
   var radioInput  = $('input[type=radio][name=type]:checked').val();
@@ -99,7 +100,7 @@ function addNewQuestion(questionUid){
       }
     }
 
-    if (limitiedOptionsArray.length <2){
+    if (Object.keys(limitiedOptionsArray).length <2){
       alert("Not enough options. Please add more options bellow");
       return;
     }
