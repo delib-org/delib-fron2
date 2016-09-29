@@ -32,7 +32,8 @@ function showFeed(){
 
       //show footer
       renderTemplate("#feedFooter-tmpl",{},"footer");
-
+     //
+     console.log("Hai: "+entitiesArray)
       //show
       var preContext = new Array();
 
