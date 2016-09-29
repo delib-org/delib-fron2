@@ -156,10 +156,11 @@ function updatesListener() {
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
                             feedManager.lastFeedAccess.then(function (lastFeedAccess) {
                                 subEnities.forEach(function (entityAdded) {
-                                    console.log(lastFeedAccess.val() < entityAdded.val().dateAdded, lastFeedAccess.val(), entityAdded.val());
-                                    if(lastFeedAccess !== null)
+                                    console.log(lastFeedAccess.val() !== null, isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded,entityAdded.val().dateAdded);
+                                    if(lastFeedAccess.val() == null)
                                         return;
 
+                                    console.log('blae');
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
 
                                         if (mostUpdatedContent == null)
@@ -234,7 +235,7 @@ function updatesListener() {
                                 feedManager.lastFeedAccess.then(function (lastFeedAccess) {
                                     DB.child("/groups/" + messages.key).once('value', function (chatEntityContent) {
                                         messages.forEach(function (messageAdded) {
-                                            if(lastFeedAccess !== null)
+                                            if(lastFeedAccess == null)
                                                 return;
 
                                             if (mostUpdatedContent == null)

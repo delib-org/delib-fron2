@@ -8,6 +8,8 @@ function showNumberOfFeeds(){
    feedManager.queue.then(function (snapshot) {
       if (snapshot.val()) {
 
+         console.log('render snapshot')
+
          feedManager.inbox.then(function (result) {
             $("#divCounter").show().text(result);
          })
