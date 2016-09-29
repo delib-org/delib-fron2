@@ -51,16 +51,16 @@ function initFeedManagerProps () {
         }
     });
 
-    Object.defineProperty(feedManager , 'lastFeedAccess', {
+    Object.defineProperty(feedManager , 'lastAccess', {
         get: function () {
 
-            return DB.child('users/'+userUuid+'/lastFeedAccess').once('value',function (snapshot){
+            return DB.child('users/'+userUuid+'/lastAccess').once('value',function (snapshot){
                 return snapshot;
             });
         },
         set: function (date) {
 
-            DB.child('users/'+userUuid+'/lastFeedAccess').set(date);
+            DB.child('users/'+userUuid+'/lastAccess').set(date);
         }
     });
 }
@@ -76,10 +76,11 @@ function updatesListener() {
         return regObject;
     }
 
-    var flags ={};
+    var flags = {};
 
     // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
+        console.log("on");
         // search inside entities
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
@@ -135,10 +136,13 @@ function updatesListener() {
                 // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
 
                 if (isNewSubEntityReg) {
+                    console.log("newSubENtity");
                     if(!firstRun) {
+                        console.log("!firstRun");
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                             DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
-    
+
+                                console.log("newSubENtity");
                                 // ==== regulation chunk ==== //
                                 // will make sure we will get the latest whatever..
                                 if (mostUpdatedContent == null)
@@ -160,9 +164,9 @@ function updatesListener() {
                     } else {
                         // feed catch-up chunk
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
-                            feedManager.lastFeedAccess.then(function (lastFeedAccess) {
+                            feedManager.lastAccess.then(function (lastAccess) {
                                 subEnities.forEach(function (entityAdded) {
-                                    if(lastFeedAccess.val() == null)
+                                    if(lastAccess.val() == null)
                                         return;
 
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
@@ -173,10 +177,12 @@ function updatesListener() {
                                             mostUpdatedContent = entityAdded;
 
 
-                                        if (isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded)
+                                        if (isNewSubEntityReg.feed && lastAccess.val() < entityAdded.val().dateAdded)
                                             feedBuilder(actualContent, entityUpdates.key, entityAdded, {on: true, lastRun: false});
                                         else {
                                             flags.subEntities = true;
+                                            if(flags.chats && flags.subEntities)
+                                                $.event.trigger('catchUpDone');
                                         }
                                     });
                                 });
@@ -240,10 +246,10 @@ function updatesListener() {
                         // feed catch-up chunk
                         DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('value',function (messages) {
                             DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
-                                feedManager.lastFeedAccess.then(function (lastFeedAccess) {
+                                feedManager.lastAccess.then(function (lastAccess) {
                                     DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                         messages.forEach(function (messageAdded) {
-                                            if(lastFeedAccess == null)
+                                            if(lastAccess == null)
                                                 return;
 
                                             if (mostUpdatedContent == null)
@@ -251,7 +257,7 @@ function updatesListener() {
                                             else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
                                                 mostUpdatedContent = messageAdded;
 
-                                            if (isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded) {
+                                            if (isNewSubEntityReg.feed && lastAccess.val() < messageAdded.val().dateAdded) {
                                                 // create a temporary messagesSentInc to hold inboxMessages.val()
                                                 var messagesSentInc;
 
@@ -269,6 +275,8 @@ function updatesListener() {
                                                     feedBuilder(chatEntityContent, "chats", messagesSentInc, {on: true, lastRun: false});
                                             } else {
                                                 flags.chats = true;
+                                                if(flags.chats && flags.subEntities)
+                                                    $.event.trigger('catchUpDone');
                                             }
                                         });
                                     });
@@ -279,17 +287,14 @@ function updatesListener() {
                 }
             });
         });
-
     });
-
-    if(flags.chats && flags.subEntities)
-        $.event.trigger('catchUpDone');
 
     $(document).on('catchUpDone', function () {
         if(firstRun) {
             console.log("true true");
             firstRun = false;
             feedBuilder(undefined, undefined, undefined, {on: true, lastRun: true});
+            updatesListener();
         }
     });
 }
@@ -381,7 +386,6 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
 
         if(catchUpMode.on && catchUpMode.lastRun) {
 
-            console.log(feedManager.catchUpArray[3]);
             console.log(Object.keys(feedManager.catchUpArray).length);
 
             for( var key = 0 ; key <feedManager.catchUpArrayIndex; key++ ) {
