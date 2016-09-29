@@ -19,8 +19,7 @@ function showNumberOfFeeds(){
 }
 
 function showFeed(){
-
-
+   
    feedManager.queue.then(function (snapshot) {
 
       var entitiesArray = snapshot.val();
@@ -39,15 +38,20 @@ function showFeed(){
       var preContext = new Array();
 
       for (var key in entitiesArray) {
-         preContext.push({type: entitiesArray[key].entityType, uid:entitiesArray[key].entityUid, title: entitiesArray[key].title ,symbol:symbols[entitiesArray[key].entityType]});
+
+         preContext.push({type: entitiesArray[key].entityType, uid: entitiesArray[key].entityUid, title: entitiesArray[key].title ,symbol: symbols[entitiesArray[key].entityType]});
       }
 
       var context = {feeds: preContext};
 
       renderTemplate("#feedWrapper-tmpl", context, "wrapper");
 
-      
-      setActiveEntity("feed", undefined, undefined, undefined, undefined)
+      var turnOff = function () {
+         feedManager.queue = "popAll";
+         feedManager.inbox = 0;
+         feedManager.lastFeedAccess = firebase.database.ServerValue.TIMESTAMP;
+      };
+      setActiveEntity("feed", undefined, undefined, undefined, turnOff)
    });
 
 }

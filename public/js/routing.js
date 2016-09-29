@@ -65,8 +65,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
               console.log("Error: no previuos entity to close off previous callback");
            }
         } else if( previuosEntityType == "feed") {
-           feedManager.queue = "popAll";
-           feedManager.inbox = 0;
+           previuosTurnOff();
         }
      } else {
         switch (previuosUid) {
@@ -81,8 +80,7 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
               console.log("Error: no such groups cluster in main ("+previuosUid+")");
         }
      }
-
-   console.log("bksbvfsbfbf");
+   
    activeEntity.entityType = newEntity;
    activeEntity.uid = newUid;
    activeEntity.eventType = newEventType;

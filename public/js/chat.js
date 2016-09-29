@@ -4,8 +4,6 @@ function clearChat(){
 }
 
 var chatsCallback = function (chats) {
-   console.log('chatsCallback called');
-   // debugger;
    if (chats.val().text != undefined) {
       var text = chats.val().text;
       var time = parseDate(chats.val().dateAdded);
@@ -30,6 +28,7 @@ function showChat(entityType, uid) {
    // encapsulated .off() firebase call
    var turnOff = function () {
       DB.child("chats/"+uid+"/messages").orderByChild("dateAdded").limitToLast(20).off("child_added", chatsCallback);
+      DB.child("users/" + userUuid + "/chatInboxes/" + uid).set(0);
    };
 
    // get specific chat room stuff (== messages and entity content)
