@@ -1,5 +1,4 @@
 function listenToAuth(currentUrl){
-debugger;
   firebase.auth().onAuthStateChanged(function(user) {
 
     console.log("auth changed");

@@ -152,11 +152,12 @@ function updatesListener() {
                             }); //.catch(function (error) { console.log(error, "no entity path") })
                         });
                     } else {
+                        // feed catch-up chunk
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (entityAdded) {
                             feedManager.lastFeedAccess.then(function (lastFeedAccess) {
-                                console.log(entityAdded.val(), lastFeedAccess.val(), firstRun);
                                     if(lastFeedAccess !== null)
                                         return;
+
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
 
                                         if (mostUpdatedContent == null)
@@ -224,6 +225,7 @@ function updatesListener() {
                             });
                         });
                     } else {
+                        // feed catch-up chunk
                         DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('child_added',function (messageAdded) {
                             DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
                                 feedManager.lastFeedAccess.then(function (lastFeedAccess) {
