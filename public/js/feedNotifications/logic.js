@@ -153,8 +153,10 @@ function updatesListener() {
                         });
                     } else {
                         // feed catch-up chunk
-                        DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (entityAdded) {
+                        DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
                             feedManager.lastFeedAccess.then(function (lastFeedAccess) {
+                                subEnities.forEach(function (entityAdded) {
+                                    console.log(lastFeedAccess.val() < entityAdded.val().dateAdded, lastFeedAccess.val(), entityAdded.val());
                                     if(lastFeedAccess !== null)
                                         return;
 
@@ -168,6 +170,7 @@ function updatesListener() {
                                         if (isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded)
                                             feedBuilder(actualContent, entityUpdates.key, entityAdded);
                                     });
+                                });
                             });
                         });
 
@@ -226,36 +229,37 @@ function updatesListener() {
                         });
                     } else {
                         // feed catch-up chunk
-                        DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('child_added',function (messageAdded) {
+                        DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('value',function (messages) {
                             DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
                                 feedManager.lastFeedAccess.then(function (lastFeedAccess) {
-                                    DB.child("/groups/" + messageAdded.key).once('value', function (chatEntityContent) {
+                                    DB.child("/groups/" + messages.key).once('value', function (chatEntityContent) {
+                                        messages.forEach(function (messageAdded) {
+                                            if(lastFeedAccess !== null)
+                                                return;
 
-                                        if(lastFeedAccess !== null)
-                                            return;
+                                            if (mostUpdatedContent == null)
+                                                mostUpdatedContent = messageAdded;
+                                            else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
+                                                mostUpdatedContent = messageAdded;
 
-                                        if (mostUpdatedContent == null)
-                                            mostUpdatedContent = messageAdded;
-                                        else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
-                                            mostUpdatedContent = messageAdded;
+                                            if (isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded)
+                                            {
+                                                // create a temporary messagesSentInc to hold inboxMessages.val()
+                                                var messagesSentInc;
 
-                                        if (isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded)
-                                        {
-                                            // create a temporary messagesSentInc to hold inboxMessages.val()
-                                            var messagesSentInc;
+                                                // now we need the inboxMessages to get the number of messages not seen
+                                                messagesSentInc = inboxVolume.val();
 
-                                            // now we need the inboxMessages to get the number of messages not seen
-                                            messagesSentInc = inboxVolume.val();
+                                                // obvious incrementation, is obvious..
+                                                messagesSentInc++;
 
-                                            // obvious incrementation, is obvious..
-                                            messagesSentInc++;
+                                                //set incremented inbox volume
+                                                DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
 
-                                            //set incremented inbox volume
-                                            DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
-
-                                            if (messagesSentInc % 5 ===  0)
-                                                feedBuilder(chatEntityContent, "chats", messagesSentInc);
-                                        }
+                                                if (messagesSentInc % 5 ===  0)
+                                                    feedBuilder(chatEntityContent, "chats", messagesSentInc);
+                                            }
+                                        });
                                     });
                                 });
                             });
