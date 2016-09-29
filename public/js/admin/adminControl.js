@@ -1,5 +1,7 @@
 var pendingTableCallback;
 var membersTableCallback;
+var promise1;
+var promise2;
 
 function showAdminPanel(groupUid){
   renderTemplate("#adminControl-tmpl",{},"#editGroupPages");
@@ -22,7 +24,9 @@ function showAdminPanel(groupUid){
       console.log("No pending members");
       $("#pendingMembersTable").html("");
     }
-  })
+
+    promise1 = Promise.resolve(true);
+  });
 
   //Members Table
   DB.child("groups/"+groupUid+"/members").on("value", membersTableCallback = function(members){
@@ -42,7 +46,21 @@ function showAdminPanel(groupUid){
       console.log("No members in group");
       $("#CurrentMembersTable").text("There arn't any members in the group")
     }
-  })
+
+    promise2 = Promise.resolve(true);
+
+  });
+
+  Promise.all([promise1, promise2]).then(function() {
+    var turnOff = function () {
+      DB.child("groups/"+groupUid+"/pendings").off("value", pendingTableCallback);
+      DB.child("groups/"+groupUid+"/members").off("value", membersTableCallback);
+      console.log("turnOff function:"+pendingTableCallback,membersTableCallback)
+    };
+
+    setActiveEntity("adminControl", undefined, undefined, undefined, turnOff);
+  });
+
 
 }
 

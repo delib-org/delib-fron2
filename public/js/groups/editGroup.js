@@ -29,22 +29,16 @@ function groupsEdit(groupUid){
     $("#createGroupName").val(title);
     $("#createGroupDescription").text(description);
 
-  })
+  });
 }
 
-function updateGroupToDB(groupUid){
+function updateGroupToDB(groupUid) {
+  
   var title=$("#createGroupName").val();
   var description = $("#createGroupDescription").val();
   if (title !== undefined){
     DB.child("groups/"+groupUid).update({title:title, description:description });
   }
-
-  var turnOff = function () {
-         DB.child("groups/"+groupUid+"/pendings").off("value", pendingTableCallback);
-         DB.child("groups/"+groupUid+"/members").off("value", membersTableCallback);
-          console.log("turnOff function:"+pendingTableCallback,membersTableCallback)
-      };
-      setActiveEntity("adminControl", undefined, undefined, undefined, turnOff)
 
   showEntities('groups', groupUid);
 
