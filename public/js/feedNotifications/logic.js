@@ -3,6 +3,10 @@ var entityAdded_cb;
 var ownerCall_cb;
 
 function initFeedManagerProps () {
+
+    feedManager.catchUpArray = {};
+    feedManager.catchUpArrayIndex = 0;
+
     Object.defineProperty(feedManager , 'inbox', {
         get: function () {
 
@@ -71,6 +75,8 @@ function updatesListener() {
             regObject = false;
         return regObject;
     }
+
+    var flags ={};
 
     // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
@@ -156,11 +162,9 @@ function updatesListener() {
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
                             feedManager.lastFeedAccess.then(function (lastFeedAccess) {
                                 subEnities.forEach(function (entityAdded) {
-                                    console.log(lastFeedAccess.val() !== null, isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded,entityAdded.val().dateAdded);
                                     if(lastFeedAccess.val() == null)
                                         return;
 
-                                    console.log('blae');
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
 
                                         if (mostUpdatedContent == null)
@@ -168,8 +172,12 @@ function updatesListener() {
                                         else if (mostUpdatedContent.val().dateAdded < entityAdded.val().dateAdded - 400)
                                             mostUpdatedContent = entityAdded;
 
+
                                         if (isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded)
-                                            feedBuilder(actualContent, entityUpdates.key, entityAdded);
+                                            feedBuilder(actualContent, entityUpdates.key, entityAdded, {on: true, lastRun: false});
+                                        else {
+                                            flags.subEntities = true;
+                                        }
                                     });
                                 });
                             });
@@ -233,7 +241,7 @@ function updatesListener() {
                         DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('value',function (messages) {
                             DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
                                 feedManager.lastFeedAccess.then(function (lastFeedAccess) {
-                                    DB.child("/groups/" + messages.key).once('value', function (chatEntityContent) {
+                                    DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                         messages.forEach(function (messageAdded) {
                                             if(lastFeedAccess == null)
                                                 return;
@@ -243,8 +251,7 @@ function updatesListener() {
                                             else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
                                                 mostUpdatedContent = messageAdded;
 
-                                            if (isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded)
-                                            {
+                                            if (isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded) {
                                                 // create a temporary messagesSentInc to hold inboxMessages.val()
                                                 var messagesSentInc;
 
@@ -257,8 +264,11 @@ function updatesListener() {
                                                 //set incremented inbox volume
                                                 DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
 
+
                                                 if (messagesSentInc % 5 ===  0)
-                                                    feedBuilder(chatEntityContent, "chats", messagesSentInc);
+                                                    feedBuilder(chatEntityContent, "chats", messagesSentInc, {on: true, lastRun: false});
+                                            } else {
+                                                flags.chats = true;
                                             }
                                         });
                                     });
@@ -270,71 +280,137 @@ function updatesListener() {
             });
         });
 
-        if(firstRun)
+    });
+
+    if(flags.chats && flags.subEntities)
+        $.event.trigger('catchUpDone');
+
+    $(document).on('catchUpDone', function () {
+        if(firstRun) {
+            console.log("true true");
             firstRun = false;
+            feedBuilder(undefined, undefined, undefined, {on: true, lastRun: true});
+        }
     });
 }
 
+function feedCatchUp (json) {
+    console.log("offline feed pushed");
+    feedManager.catchUpArray[feedManager.catchUpArrayIndex] = json;
+    feedManager.catchUpArrayIndex++;
 
+    console.log(Object.keys(feedManager.catchUpArray).length);
+}
 
 // feed builder
-function feedBuilder (entityDatum, entityType, variation) {
+function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
 
-    if(firstRun) {
-        firstRun = false;
-        // feedManager.queue = [];
-        console.log("first Run");
-        return;
-    }
-    
-    switch (entityType) {
-        case "chats":
-            console.log(entityDatum);
-            feedManager.queue = {
-                entityType: entityDatum.val().title,
-                entityUid: entityDatum.key,
-                chatMessagesCounter: variation,
-                date: entityDatum.val().dateAdded
-            };
+    // if(firstRun) {
+    //     firstRun = false;
+    //     // feedManager.queue = [];
+    //     console.log("first Run");
+    //     return;
+    // }
 
-            break;
+    if(catchUpMode == undefined)
+        catchUpMode = {on: false, lastRun: false};
 
-        case "ownerCalls":
-            feedManager.queue = {
-                roomName: entityDatum.val().title,
-                callText: variation,
-                date: entityDatum.val().dateAdded
-            };
+    var feedContentJson;
 
-            break;  
+    if(!(catchUpMode.on && catchUpMode.lastRun))
+        switch (entityType) {
+            case "chats":
+                feedContentJson = {
+                    entityType: entityDatum.val().title,
+                    entityUid: entityDatum.key,
+                    chatMessagesCounter: variation,
+                    date: entityDatum.val().dateAdded
+                };
 
-        default:
-            feedManager.queue = {
-                title: entityDatum.val().title,
-                description: entityDatum.val().description,
-                date: entityDatum.val().dateAdded,
-                entityType: variation.val().entityType,
-                entityUid: variation.key
-            };
+                if(catchUpMode.on) {
+                    feedCatchUp(feedContentJson);
+                    $.event.trigger('catchUpDone');
+                    return;
+                }
 
-            break;
-    }
+                feedManager.queue = feedContentJson;
+                break;
+
+            case "ownerCalls":
+                feedContentJson = {
+                    roomName: entityDatum.val().title,
+                    callText: variation,
+                    date: entityDatum.val().dateAdded
+                };
+
+                if(catchUpMode.on) {
+                    feedCatchUp(feedContentJson);
+                    return;
+                }
+
+                feedManager.queue = feedContentJson;
+                break;
+
+            default:
+
+                feedContentJson = {
+                    title: entityDatum.val().title,
+                    description: entityDatum.val().description,
+                    date: entityDatum.val().dateAdded,
+                    entityType: variation.val().entityType,
+                    entityUid: variation.key
+                };
+
+                if(catchUpMode.on) {
+                    feedCatchUp(feedContentJson);
+                    return;
+                }
+
+                feedManager.queue = feedContentJson;
+                break;
+        }
 
     feedManager.queue.then(function (snapshot) {
 
-        if (snapshot.val()) {
+        var length;
 
-            var length = Object.keys(snapshot.val()).length;
+        if (snapshot.val() !== null)
+            length = Object.keys(snapshot.val()).length;
+                else
+            length = 0;
 
-            // if feedVolume got to 20, also remove last feed in feedQueue
-            if(length >= feedManager.volume + 1)
-                feedManager.queue = "pop";
+        if(catchUpMode.on && catchUpMode.lastRun) {
+
+            console.log(feedManager.catchUpArray[3]);
+            console.log(Object.keys(feedManager.catchUpArray).length);
+
+            for( var key = 0 ; key <feedManager.catchUpArrayIndex; key++ ) {
+                console.dir(feedManager.catchUpArray[key]);
+                feedManager.queue = feedManager.catchUpArray[key];
+
+                // if feedVolume got to 20, also remove last feed in feedQueue
+                if(length >= feedManager.volume + 1)
+                    feedManager.queue = "pop";
+            }
+
+            return;
         }
+
+        // if feedVolume got to 20, also remove last feed in feedQueue
+        if(length >= feedManager.volume + 1)
+            feedManager.queue = "pop";
+
     }).then(function () {
         feedManager.inbox.then(function(val) {
+
+            if(catchUpMode.on && catchUpMode.lastRun) {
+
+                feedManager.inbox = val + feedManager.catchUpArrayIndex;
+                return;
+            }
+
             feedManager.inbox = ++val;
 
-            console.log("not a first Run");
             console.log(val);
         }).then( function () {
             // triggering feedPushed event

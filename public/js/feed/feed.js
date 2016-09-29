@@ -1,4 +1,4 @@
-$(document).on('feedRender', function () {
+$(document).on('feedPushed', function () {
 
    showNumberOfFeeds();
 
@@ -15,6 +15,7 @@ function showNumberOfFeeds(){
          })
          
       } else {
+         console.log('false')
          $("#divCounter").hide();
       }
    })
