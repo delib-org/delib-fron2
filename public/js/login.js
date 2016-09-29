@@ -103,3 +103,24 @@ $("#login-form").submit(function(e){
     console.log("Error: "+ errorMessage+" : "+ errorCode);
   });
 });
+
+function emailSignin(email, password, name){
+  firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorCode, errorMessage);
+
+    user.displayName = name;
+    user.email = email;
+  });
+}
+
+function emailLogin(email, password) {
+  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorCode, errorMessage);
+  });
+}

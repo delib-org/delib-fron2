@@ -66,6 +66,8 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
            }
         } else if( previuosEntityType == "feed") {
            previuosTurnOff();
+        } else if (previuosEntityType == "adminControl"){
+          previuosTurnOff();
         }
      } else {
         switch (previuosUid) {

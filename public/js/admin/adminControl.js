@@ -1,12 +1,12 @@
+var pendingTableCallback;
+var membersTableCallback;
+
 function showAdminPanel(groupUid){
   renderTemplate("#adminControl-tmpl",{},"#editGroupPages");
-  DB.child("groups/"+groupUid).once("value", function(dataCC){
-    console.log(groupUid)
-    console.log(dataCC.val())
-  })
-  //Pending Table
-  DB.child("groups/"+groupUid+"/pendings").once("value", function(pendings){
 
+  //Pending Table
+  DB.child("groups/"+groupUid+"/pendings").on("value", pendingTableCallback = function(pendings){
+    console.log("panding changed")
     var preContext = [];
     if(pendings.val() !== null){
       pendings.forEach(function(pending){
@@ -18,12 +18,15 @@ function showAdminPanel(groupUid){
       var context = {pendings: preContext};
 
       renderTemplate("#adminControlPending-tmpl",context, "#pendingMembersTable")
-    } else {console.log("No pending members")}
+    } else {
+      console.log("No pending members");
+      $("#pendingMembersTable").html("");
+    }
   })
 
   //Members Table
-  DB.child("groups/"+groupUid+"/members").once("value", function(members){
-    console.log(members.val())
+  DB.child("groups/"+groupUid+"/members").on("value", membersTableCallback = function(members){
+
     var preContext = [];
     if(members.val() !== null){
       members.forEach(function(member){
@@ -46,11 +49,10 @@ function showAdminPanel(groupUid){
 function approveMember(groupUid, memberUid, isCofirmed){
   console.log("moving:",groupUid, memberUid, isCofirmed)
   if(isCofirmed == undefined){ isCofirmed = false};
-  if (isCofirmed){
 
+  if (isCofirmed){
     var pendingRef = DB.child("groups/"+groupUid+"/pendings/"+memberUid);
     var memberRef = DB.child("groups/"+groupUid+"/members/"+memberUid);
-
 
     moveFbRecord(pendingRef, memberRef);
     DB.child("users/"+memberUid+"/membership/"+groupUid).set(true);

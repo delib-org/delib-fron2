@@ -16,7 +16,7 @@ function groupsEdit(groupUid){
 
   renderTemplate("#createGroupSettings-tmpl",{uid:groupUid},"#editGroupPages");
   console.log("groupsEdit:", groupUid);
-  
+
 
   renderTemplate("#editGroupFooter-tmpl", {groupUid:groupUid}, "footer");
 
@@ -35,8 +35,16 @@ function groupsEdit(groupUid){
 function updateGroupToDB(groupUid){
   var title=$("#createGroupName").val();
   var description = $("#createGroupDescription").val();
+  if (title !== undefined){
+    DB.child("groups/"+groupUid).update({title:title, description:description });
+  }
 
-  DB.child("groups/"+groupUid).update({title:title, description:description });
+  var turnOff = function () {
+         DB.child("groups/"+groupUid+"/pendings").off("value", pendingTableCallback);
+         DB.child("groups/"+groupUid+"/members").off("value", membersTableCallback);
+          console.log("turnOff function:"+pendingTableCallback,membersTableCallback)
+      };
+      setActiveEntity("adminControl", undefined, undefined, undefined, turnOff)
 
   showEntities('groups', groupUid);
 
@@ -45,7 +53,7 @@ function updateGroupToDB(groupUid){
 function openTab (page, groupUid){
 
   if(page == 'settings') {
-//    renderTemplate("#createGroupSettings-tmpl",{},"#editGroupPages");
+    //    renderTemplate("#createGroupSettings-tmpl",{},"#editGroupPages");
     groupsEdit(groupUid)
   } else {
     showAdminPanel(groupUid);
