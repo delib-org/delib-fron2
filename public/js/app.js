@@ -61,6 +61,8 @@ const toHebrew = {
 };
 var inactiveColor = "#5f1f1f";
 var activeColor = "white";
+var pendingColor = "#c78100";
+
 // Updates Variables and Constants
 
 // subsManager Def.

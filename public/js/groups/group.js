@@ -99,8 +99,6 @@ function showGroup(groupUid){
         }
       })
       //      var isMember = dataSnapshot.val().members[userUuid];
-
-
     }
 
     var turnOff = function () {

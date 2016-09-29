@@ -25,7 +25,23 @@ function setMembership(){
 
         } else {
           //if group is secert or close, user must ask for membership
-          DB.child("groups/"+groupUid+"/pendings/"+userUuid).update({name: userName, email: userEmail, photo: userPhoto, dateAdded: firebase.database.ServerValue.TIMESTAMP});
+          var userPendingDB = DB.child("groups/"+groupUid+"/pendings/"+userUuid);
+
+          userPendingDB.once("value", function(pendingData){
+            if (pendingData.val() != null){
+              userPendingDB.remove();
+              $("#isMembership").css("color",inactiveColor);
+            } else {
+              userPendingDB.update({name: userName, email: userEmail, photo: userPhoto, dateAdded: firebase.database.ServerValue.TIMESTAMP});
+              //set "haert" to orange
+              $("#isMembership").css("color",pendingColor);
+            }
+          })
+
+
+
+
+
         }
       })
 
@@ -45,6 +61,7 @@ function setMembership(){
 function isMembership(){
   groupUid = activeEntity.uid;
 
+  //check if member
   DB.child("groups/"+groupUid+"/members/"+userUuid).once("value", function(isMembership){
     if(isMembership.val() != null){
       if (isMembership.val()){
@@ -55,7 +72,15 @@ function isMembership(){
     } else {
       $("#isMembership").css("color",inactiveColor);
     }
+
+    //check pending
+    DB.child("groups/"+groupUid+"/pendings/"+userUuid).once("value", function(isMembership){
+      if(isMembership.val() != null){
+        if (isMembership.val()){
+          $("#isMembership").css("color",pendingColor);      }
+      }
+    });
   });
-
-
 }
+
+
