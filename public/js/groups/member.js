@@ -1,10 +1,11 @@
 function setMembership(){
   groupUid = activeEntity.uid;
+  console.log("seeting membership to "+ groupUid)
 
   //check if a member already
 
   DB.child("groups/"+groupUid+"/members/"+userUuid).once("value", function(isMember){
-    console.dir(isMember.val());
+
     if(isMember.val() == null){
 
       //set membership according to public/close/secert
@@ -58,29 +59,30 @@ function setMembership(){
   })
 }
 
-function isMembership(){
-  groupUid = activeEntity.uid;
+var checkMembershipCallback;
 
-  //check if member
-  DB.child("groups/"+groupUid+"/members/"+userUuid).once("value", function(isMembership){
+function isMembership(groupUid){
+
+  //check pending
+  DB.child("groups/"+groupUid+"/pendings/"+userUuid).on("value", function(isMembership){
     if(isMembership.val() != null){
       if (isMembership.val()){
-        $("#isMembership").css("color",activeColor);
-      } else {
-        $("#isMembership").css("color",inactiveColor);
-      }
+        $("#isMembership").css("color",pendingColor);      }
     } else {
-      $("#isMembership").css("color",inactiveColor);
-    }
-
-    //check pending
-    DB.child("groups/"+groupUid+"/pendings/"+userUuid).once("value", function(isMembership){
-      if(isMembership.val() != null){
-        if (isMembership.val()){
-          $("#isMembership").css("color",pendingColor);      }
-      }
-    });
-  });
+      //check membership
+      DB.child("groups/"+groupUid+"/members/"+userUuid).on("value", checkMembershipCallback = function(isMembership){
+        if(isMembership.val() != null){
+          if (isMembership.val()){
+            $("#isMembership").css("color",activeColor);
+          } else {
+            $("#isMembership").css("color",inactiveColor);
+          }
+        } else {
+          $("#isMembership").css("color",inactiveColor);
+        }
+      })
+    };
+  })
 }
 
 

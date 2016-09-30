@@ -10,6 +10,8 @@ function showGroup(groupUid){
     renderTemplate("#headerMenu-tmpl",{type:"groups", uid:groupUid},"#headerMenu");
     showBreadCrumb("groups", groupUid, title);
 
+
+
     //if owner -> show edit menu
     DB.child("groups/"+groupUid+"/owner").once("value", function(ownerUid){
       if (ownerUid.val() == userUuid){
@@ -101,13 +103,16 @@ function showGroup(groupUid){
       //      var isMember = dataSnapshot.val().members[userUuid];
     }
 
+    isMembership(groupUid);
+
     var turnOff = function () {
       DB.child("groups/"+groupUid+"/subEntities").off("value", showGroupCallback);
+      DB.child("groups/"+groupUid+"/members/"+userUuid).off("value",checkMembershipCallback);
     };
 
     setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
 
-    isMembership();
+
   }).then(function(rendered) {
     subsManager.isUpdatesSet();
   });

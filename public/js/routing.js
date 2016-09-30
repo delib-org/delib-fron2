@@ -44,7 +44,6 @@ function setUrl(type, uid){
 function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff) {
 
 
-  // debugger;
   var previuosEntityType = activeEntity.entityType;
   var previuosUid = activeEntity.uid;
   var previuosEventType = activeEntity.eventType;
@@ -60,12 +59,14 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
      if (previuosEntityType != "main") {
         if (previuosEventType != undefined){
            if (previuosUid != undefined){
-              previuosTurnOff();
+
+             previuosTurnOff();
            } else {
               console.log("Error: no previuos entity to close off previous callback");
            }
         } else if( previuosEntityType == "feed" || previuosEntityType == "adminControl") {
-           previuosTurnOff();
+
+          previuosTurnOff();
         }
      } else {
         switch (previuosUid) {
@@ -203,7 +204,6 @@ function showBreadCrumb(entityType, uid, title){
   DB.child(entityType+"/"+uid).once("value", function(dataP1){
 
     if (dataP1.val().parentEntityUid != null && dataP1.val().parentEntityUid !=""){
-      console.log("has a parent1");
 
       var parent1Type = dataP1.val().parentEntityType;
       var parent1Uid = dataP1.val().parentEntityUid;
