@@ -89,3 +89,12 @@ function removeMember(groupUid, memberUid, userName){
   }
 
 }
+
+function findMemberUid(name){
+  DB.child("users").orderByChild("name").startAt(name).once("value", function(data){
+    data.forEach(function(datum){
+      console.log(datum.val().name, datum.key)
+    })
+
+  })
+}
