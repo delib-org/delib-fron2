@@ -25,6 +25,8 @@ function showGroup(groupUid){
 
     var showGroupCallback = function(subEntities){
 
+      var userOwnedGroups = new Array();
+
       if(subEntities.exists()){
 
         var subEntitiesUnderGroup = subEntities.val();
@@ -46,6 +48,10 @@ function showGroup(groupUid){
 
               var title = data.val().title;
               var description = data.val().description;
+              if (data.val().owner != userUuid){
+                userOwnedGroups.push(subEntity.key);
+                console.log(subEntity.key+ " is not mine :-)")
+              }
 
               preContext = {
                 uuid: subEntity.key,
@@ -64,6 +70,12 @@ function showGroup(groupUid){
               renderTemplate("#groupPage-tmpl", context, "wrapper");
               $("wrapper").hide();
               $("wrapper").fadeIn();
+
+              //hide menus of entities that are not owned by the user
+
+              for (i in userOwnedGroups){
+                $("#groupMenuDots"+userOwnedGroups[i]).hide();
+              }
             }
 
             i++;
@@ -72,6 +84,8 @@ function showGroup(groupUid){
       } else {
         renderTemplate("#groupPage-tmpl",{}, "wrapper");
       }
+
+
     };
 
 
@@ -86,7 +100,7 @@ function showGroup(groupUid){
       DB.child("groups/"+groupUid+"/members/"+userUuid).once("value",function(memberData){
         if (memberData.val() != null){
           //show sub entities
-              DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
+          DB.child("groups/"+groupUid+"/subEntities").on("value", showGroupCallback);
 
         } else {
           DB.child("groups/"+groupUid+"/owner").once("value",function(ownership){
@@ -116,9 +130,6 @@ function showGroup(groupUid){
   }).then(function(rendered) {
     subsManager.isUpdatesSet();
   });
-
-
-
 
 
   if(!back){

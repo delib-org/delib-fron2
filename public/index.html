@@ -229,8 +229,8 @@
         <p>תיאור: {{description}}</p>
             </div>
     <div class="cardsTopicsSubmenu">
-        <div class="cardsTopicsSubmenuDots clickables" onclick=openGroupMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
-        <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=groupsEdit('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
+        <div id=groupMenuDots{{uuid}} class="cardsTopicsSubmenuDots clickables" onclick=openGroupMenu('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+        <div id=groupMenu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" hidden onclick=groupSetting('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
         <div><i class="fa fa-globe"></i></div>
             </div>
             </div>
@@ -327,7 +327,7 @@
         <p>תיאור: {{description}}</p>
             </div>
     <div class="cardsTopicsSubmenu" >
-        <div class="cardsTopicsSubmenuDots clickables" onclick=showEditTab('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
+        <div id=groupMenuDots{{uuid}} class="cardsTopicsSubmenuDots clickables" onclick=showEditTab('{{uuid}}')><i class="fa fa-ellipsis-v" aria-hidden="true"></i></div>
         <div id=menu{{uuid}} class="cardsTopicsSubmenuDotsMenu clickables" style="display:none" onclick={{entityType}}Edit('{{uuid}}')><i class="fa fa-cog" aria-hidden="true"></i> Edit</div>
             </div>
             </div>
@@ -678,10 +678,6 @@ Tow options
     <div class="panelBlock clickables" onclick="showAddGroup()">
         <div class="panelSimbole"><i class="fa fa-users" aria-hidden="true"></i></div>
         <div class="panelText">Group</div>
-            </div>
-    <div class="panelBlock clickables" onclick="showAddTopicScreen()" >
-        <div class="panelSimbole"><i class="fa fa-folder-open" aria-hidden="true"></i></div>
-        <div class="panelText">Topic</div>
             </div>
     <div class="panelBlock clickables" onclick="showAddNewQuestionScreen()">
         <div class="panelSimbole"><i class="fa fa-question-circle" aria-hidden="true"></i></div>

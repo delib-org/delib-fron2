@@ -165,7 +165,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
         // // NEEDED: ownerCall box, and an on/off button
     } else {
         $("#feedSub").css("color", inactiveColor);
-        console.log("inactive feed!");
+
         // if(isOwnerCall)
         // // NEEDED: ownerCall box, and an on/off button
     }

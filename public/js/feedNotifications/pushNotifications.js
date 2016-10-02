@@ -254,7 +254,7 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
         // // NEEDED: ownerCall box, and an on/off button
     } else {
         $("#notificationsSub").css("color", inactiveColor);
-        console.log("inactive notifications!");
+//        console.log("inactive notifications!");
         // if(isOwnerCall)
         // // NEEDED: ownerCall box, and an on/off button
     }

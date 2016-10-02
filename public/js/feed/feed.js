@@ -15,7 +15,7 @@ function showNumberOfFeeds(){
          })
          
       } else {
-         console.log('false')
+
          $("#divCounter").hide();
       }
    })

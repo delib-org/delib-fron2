@@ -33,12 +33,33 @@ function groupsEdit(groupUid){
 }
 
 function updateGroupToDB(groupUid) {
-  
+
   var title=$("#createGroupName").val();
   var description = $("#createGroupDescription").val();
-  if (title !== undefined){
-    DB.child("groups/"+groupUid).update({title:title, description:description });
+  var groupType = $("input[name=type]:checked").val();
+
+  //is the group a pubtype (a group that is public and as no parents)
+  //is it not a secret group
+  //if it don't have parents
+
+  if (groupType != "secret"){
+    DB.child("groups/"+groupUid+"/parentEntityUid").once("value", function(dataSnapshot){
+      var pubtype = false;
+      //check to see if
+      if (dataSnapshot.val() == ""){
+        pubtype = true;
+      }
+      if (title !== undefined){
+        DB.child("groups/"+groupUid).update({title:title, description:description, type: groupType, pubtype: pubtype});
+      }
+    })
+  } else {
+    if (title !== undefined){
+        DB.child("groups/"+groupUid).update({title:title, description:description, type: groupType, puvtype:false });
+      }
   }
+
+
 
   showEntities('groups', groupUid);
 

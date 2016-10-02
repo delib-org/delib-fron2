@@ -26,10 +26,14 @@ function addNewGroup(){
 
   var parentEntityType = activeEntity.entityType;
   var parentEntityUid = activeEntity.uid;
+  var pubtype = false
 
   if(parentEntityType != "groups" && parentEntityType != "topics"){
     parentEntityType = "";
     parentEntityUid = "";
+    if (groupType != "secret"){
+      pubtype = true;
+    }
   }
 
   var newGroup = DB.child("groups").push({
@@ -40,6 +44,7 @@ function addNewGroup(){
     owner: userUuid,
     parentEntityType:parentEntityType,
     parentEntityUid: parentEntityUid,
+    pubtype: pubtype
   });
 
   newGroup.child("members/"+userUuid).update({

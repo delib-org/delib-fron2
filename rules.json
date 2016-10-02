@@ -3,61 +3,61 @@
 
 //prevet other users from writing to other users
 {
-    "rules":{
-        "questions":{
-            ".read":"true",
-            "$question":{
-                ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())",
-                "options":{
-                    "$option":{
-                        ".write":"(auth.uid !== null) && (auth.uid === data.child('ownerUid').val())"
-                    }
-                }
-            }
-        },
-        "groups":{
-            ".read":"true",
-            "$group":{
-                ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())"
-            }
-        },
-        "users":{
-            "$uid":{
-                ".write": "$uid === auth.uid",
-                 ".read": "$uid === auth.uid"
-            }
+  "rules":{
+    "questions":{
+      ".read":"true",
+      "$question":{
+        ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())",
+        "options":{
+          "$option":{
+            ".write":"(auth.uid !== null) && (auth.uid === data.child('ownerUid').val())"
+          }
         }
+      }
+    },
+    "groups":{
+      ".read":"true",
+      "$group":{
+        ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())"
+      }
+    },
+    "users":{
+      "$uid":{
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      }
     }
+  }
 }
 
 //second
 {
-    "rules":{
-        "questions":{
-            ".read":"true",
-            "$question":{
-                ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())",
-                "options":{
-                    "$option":{
-                        ".write":"(auth.uid !== null) && (auth.uid === data.child('ownerUid').val())",
-                        ".read":"true"
-                    }
-                }
-            }
-        },
-        "groups":{
-            ".read":"true",
-            "$group":{
-                ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())"
-            }
-        },
-        "users":{
-            "$uid":{
-                ".write": "$uid === auth.uid",
-                 ".read": "$uid === auth.uid"
-            }
+  "rules":{
+    "questions":{
+      ".read":"true",
+      "$question":{
+        ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())",
+        "options":{
+          "$option":{
+            ".write":"(auth.uid !== null) && (auth.uid === data.child('ownerUid').val())",
+            ".read":"true"
+          }
         }
+      }
+    },
+    "groups":{
+      ".read":"true",
+      "$group":{
+        ".write":"(auth.uid !== null) && (auth.uid === data.child('owner').val())"
+      }
+    },
+    "users":{
+      "$uid":{
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      }
     }
+  }
 }
 
 
@@ -173,6 +173,54 @@
       ".write": false,
       "$user_id": {
         ".write": "$user_id === auth.uid",
+        "role": {
+          ".indexOn":[".value"]
+        }
+      }
+    },
+    "chats": {
+      "$chats":{
+        "messages":{
+          ".indexOn": ["dateAdded"]
+        }
+      }
+    },
+    "topics": {
+      "$topic": {
+        "subEntities":{
+          ".indexOn":["dateAdded"]
+        }
+      }
+    }
+  }
+}
+
+//suggestions
+//chats...
+root.child("chats/"+$chat+"/entity/typeInDB").val()
+
+//only members of entity can chat
+root.child(root.child("chats/"+$chat+"/entity/typeInDB").val()).child("members"+auth.uid).exists()
+
+//vote on question
+{
+  "rules": {
+    "groups": {
+      ".indexOn":["type"],
+      "$group_id": {
+        "owner": {
+          ".write": "data.val() == auth.uid"
+        },
+        "subEntities":{
+          ".indexOn":["dateAdded"]
+        }
+      }
+    },
+    "users": {
+      ".read": "auth !== null",
+      ".write": false,
+      "$user_id": {
+        ".write": "$user_id === auth.uid",
           "role": {
             ".indexOn":[".value"]
           }
@@ -190,6 +238,64 @@
         "subEntities":{
           ".indexOn":["dateAdded"]
         }
+      }
+    },
+    "questions":{
+      "$question":{
+        ".write": "root.child('groups').child(root.child('questions/'+$question+'/parentEntityUid').val()).child('members/'+auth.uid).exists()"
+      }
+    }
+  }
+}
+
+//
+root
+.child(root.child('questions/'+$question+'/parentEntityType').val())
+.child(root.child('questions/'+$question+'/parentEntityUid').val())
+.child('members/'+auth.uid)
+.exists()
+
+//testing limits...
+{
+  "rules": {
+    "groups": {
+      ".indexOn":["type"],
+      "$group_id": {
+        "owner": {
+          ".write": "data.val() == auth.uid"
+        },
+        "subEntities":{
+          ".indexOn":["dateAdded"]
+        }
+      }
+    },
+    "users": {
+      ".read": "auth !== null",
+      ".write": false,
+      "$user_id": {
+        ".write": "$user_id === auth.uid",
+          "role": {
+            ".indexOn":[".value"]
+          }
+      }
+    },
+    "chats": {
+      "$chats":{
+        "messages":{
+          ".indexOn": ["dateAdded"]
+        }
+      }
+    },
+    "topics": {
+      "$topic": {
+        "subEntities":{
+          ".indexOn":["dateAdded"]
+        }
+      }
+    },
+    "questions":{
+      "$question":{
+        ".write": "root.child('groups').child(root.child('questions/'+$question+'/parentEntityUid').val()).child('members/'+auth.uid).exists()"
       }
     }
   }
