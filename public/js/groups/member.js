@@ -1,6 +1,5 @@
 function setMembership(){
   groupUid = activeEntity.uid;
-  console.log("seeting membership to "+ groupUid)
 
   //check if a member already
 
@@ -13,8 +12,7 @@ function setMembership(){
       var groupTypeTemp = "";
       DB.child("groups/"+groupUid+"/type").once("value", function(dataSnapshot){
 
-        groupTypeTemp = dataSnapshot.val()
-        console.log("groupTypeTemp:", groupTypeTemp);
+        groupTypeTemp = dataSnapshot.val();
 
         if (groupTypeTemp == "public"){
 

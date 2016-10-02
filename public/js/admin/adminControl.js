@@ -8,7 +8,7 @@ function showAdminPanel(groupUid){
 
   //Pending Table
   DB.child("groups/"+groupUid+"/pendings").on("value", pendingTableCallback = function(pendings){
-    console.log("panding changed")
+
     var preContext = [];
     if(pendings.val() !== null){
       pendings.forEach(function(pending){
@@ -21,7 +21,6 @@ function showAdminPanel(groupUid){
 
       renderTemplate("#adminControlPending-tmpl",context, "#pendingMembersTable")
     } else {
-      console.log("No pending members");
       $("#pendingMembersTable").html("");
     }
 
@@ -43,7 +42,7 @@ function showAdminPanel(groupUid){
 
       renderTemplate("#adminControlMembers-tmpl",context, "#CurrentMembersTable")
     } else {
-      console.log("No members in group");
+
       $("#CurrentMembersTable").text("There arn't any members in the group")
     }
 
@@ -55,7 +54,6 @@ function showAdminPanel(groupUid){
     var turnOff = function () {
       DB.child("groups/"+groupUid+"/pendings").off("value", pendingTableCallback);
       DB.child("groups/"+groupUid+"/members").off("value", membersTableCallback);
-      console.log("turnOff function:"+pendingTableCallback,membersTableCallback)
     };
 
     setActiveEntity("adminControl", undefined, undefined, undefined, turnOff);
