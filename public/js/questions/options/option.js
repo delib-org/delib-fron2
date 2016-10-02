@@ -235,7 +235,7 @@ function showOption(questionUid, optionUid) {
    //setActive entity
    DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
       var optionKey = dataSnapshot.val().optionKey;
-      setActiveEntity("options", optionKey, "value", updateWrapperOption, turnOff);
+      setActiveEntity("options", optionKey, turnOff);
    })
 
 

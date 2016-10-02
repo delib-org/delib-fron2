@@ -1,6 +1,7 @@
 var chats_cb;
 var entityAdded_cb;
 var ownerCall_cb;
+var pendingAdded_cb;
 
 function initFeedManagerProps () {
 
@@ -84,6 +85,7 @@ function updatesListener() {
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
             entityUpdates.forEach(function (entityUpdate) {
+
                 var isNewSubEntityReg = {
                     feed: entityUpdate.child('feed/newSubEntity').exists(),
                     notifications: entityUpdate.child('notifications/newSubEntity').exists()
@@ -99,10 +101,42 @@ function updatesListener() {
                     notifications: entityUpdate.child('notifications/chats').exists()
                 };
 
+                var isAdminControlNewPending = {
+                    feed: entityUpdate.child('feed/AdminControlNewPending').exists(),
+                    notifications: entityUpdate.child('notifications/AdminControlNewPending').exists()
+                };
+
                 isOwnerCallReg = regFalsify(isOwnerCallReg);
                 isNewSubEntityReg = regFalsify(isNewSubEntityReg);
                 isChatReg = regFalsify(isChatReg);
+                isAdminControlNewPending = regFalsify(isAdminControlNewPending);
 
+                if (isAdminControlNewPending) {
+                    if(!firstRun) {
+                        DB.child("/groups/" + entityUpdate.key + "/pendings").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (NewPending) {
+
+                            // ==== regulation chunk ==== //
+                            // will make sure we will get the latest whatever..
+                            if (mostUpdatedContent == null)
+                                mostUpdatedContent = NewPending;
+                            else if (mostUpdatedContent.val().dateAdded < NewPending.val().dateAdded - 400)
+                                mostUpdatedContent = NewPending;
+                            else
+                                return;
+                            // ============================================================================
+
+                            DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
+                                if(isAdminControlNewPending.notifications)
+                                    pushNotification(actualContent, "adminControlNewPending", NewPending.val().callText);
+
+                                if(isAdminControlNewPending.feed && feedManager.lastEntranceOn)
+                                    feedBuilder(actualContent, "adminControlNewPending", NewPending.val().callText);
+                            });
+                        });
+                    } else {
+                        // just copy-paste the correlative code from other chunks..
+                    }
+                }
 
                 // if subscribed to ownerCalls
                 if (isOwnerCallReg) {
@@ -198,8 +232,8 @@ function updatesListener() {
                                 DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                     // don't bring up notificaions and nor count them if already inside subscribed chat room
                                     if(!(activeEntity.entityType == "chats" && activeEntity.uid == entityUpdate.key)) {
+
                                         // if no such group, get out
-    
                                         if (chatEntityContent == null)
                                             return;
     
@@ -229,8 +263,14 @@ function updatesListener() {
                                         if (messagesSentInc % 5 ===  0) {
                                             if (isChatReg.notifications)
                                                 pushNotification(chatEntityContent, "chats", messagesSentInc);
-                                            if (isChatReg.feed)
-                                                feedBuilder(chatEntityContent,"chats", messagesSentInc);
+                                            if (isChatReg.feed){
+                                                var tempArr =[
+                                                    messagesSentInc,
+                                                    mostUpdatedContent.val()
+                                                ];
+
+                                                feedBuilder(chatEntityContent,"chats", tempArr);
+                                            }
                                         }
                                     }
                                 });
@@ -265,8 +305,14 @@ function updatesListener() {
                                                 DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
 
 
-                                                if (messagesSentInc % 5 ===  0)
-                                                    feedBuilder(chatEntityContent, "chats", messagesSentInc, {on: true, lastRun: false});
+                                                if (messagesSentInc % 5 ===  0) {
+                                                    var tempArr =[
+                                                        messagesSentInc,
+                                                        mostUpdatedContent.val()
+                                                    ];
+
+                                                    feedBuilder(chatEntityContent, "chats", tempArr, {on: true, lastRun: false});
+                                                }
                                             } else {
                                                 flags.chats = true;
                                             }
@@ -321,9 +367,11 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
         switch (entityType) {
             case "chats":
                 feedContentJson = {
+                    feedType: "chats",
                     entityType: entityDatum.val().title,
                     entityUid: entityDatum.key,
-                    chatMessagesCounter: variation,
+                    chatMessagesCounter: variation[0],
+                    laseMessageContent: variation[1],
                     date: entityDatum.val().dateAdded
                 };
 
@@ -338,6 +386,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
 
             case "ownerCalls":
                 feedContentJson = {
+                    feedType: "ownerCalls",
                     roomName: entityDatum.val().title,
                     callText: variation,
                     date: entityDatum.val().dateAdded
@@ -354,6 +403,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
             default:
 
                 feedContentJson = {
+                    feedType: "newSubEntity",
                     title: entityDatum.val().title,
                     description: entityDatum.val().description,
                     date: entityDatum.val().dateAdded,

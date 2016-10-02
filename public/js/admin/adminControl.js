@@ -7,7 +7,7 @@ function showAdminPanel(groupUid){
   renderTemplate("#adminControl-tmpl",{},"#editGroupPages");
 
   //Pending Table
-  DB.child("groups/"+groupUid+"/pendings").on("value", pendingTableCallback = function(pendings){
+  DB.child("groups/"+groupUid+"/pendings").on("value", pendingTableCallback = function(pendings) {
     console.log("panding changed")
     var preContext = [];
     if(pendings.val() !== null){
@@ -29,11 +29,11 @@ function showAdminPanel(groupUid){
   });
 
   //Members Table
-  DB.child("groups/"+groupUid+"/members").on("value", membersTableCallback = function(members){
+  DB.child("groups/"+groupUid+"/members").on("value", membersTableCallback = function(members) {
 
     var preContext = [];
     if(members.val() !== null){
-      members.forEach(function(member){
+      members.forEach(function(member) {
 
         var dateAskedFor = parseDate(member.val().dateAdded,"DDMMYY");
 
@@ -58,7 +58,7 @@ function showAdminPanel(groupUid){
       console.log("turnOff function:"+pendingTableCallback,membersTableCallback)
     };
 
-    setActiveEntity("adminControl", undefined, undefined, undefined, turnOff);
+    setActiveEntity("adminControl", undefined, turnOff);
   });
 
 

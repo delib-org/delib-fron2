@@ -114,7 +114,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
       })
     })
   };
-  setActiveEntity("questions",questionUid,"","",turnOff)
+  setActiveEntity("questions", questionUid, turnOff)
 }
 
 function voteSimple(questionUid, optionUid){

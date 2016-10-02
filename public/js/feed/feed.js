@@ -54,7 +54,7 @@ function showFeed(){
          feedManager.inbox = 0;
          feedManager.lastFeedAccess = firebase.database.ServerValue.TIMESTAMP;
       };
-      setActiveEntity("feed", undefined, undefined, undefined, turnOff)
+      setActiveEntity("feed", undefined, turnOff)
    });
 
 }

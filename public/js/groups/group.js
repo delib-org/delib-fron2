@@ -110,7 +110,7 @@ function showGroup(groupUid){
       DB.child("groups/"+groupUid+"/members/"+userUuid).off("value",checkMembershipCallback);
     };
 
-    setActiveEntity("groups", groupUid, "value", showGroupCallback, turnOff);
+    setActiveEntity("groups", groupUid, turnOff);
 
 
   }).then(function(rendered) {
