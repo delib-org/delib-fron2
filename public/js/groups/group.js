@@ -50,7 +50,6 @@ function showGroup(groupUid){
               var description = data.val().description;
               if (data.val().owner != userUuid){
                 userOwnedGroups.push(subEntity.key);
-                console.log(subEntity.key+ " is not mine :-)")
               }
 
               preContext = {
@@ -136,6 +135,28 @@ function showGroup(groupUid){
     setUrl("group", groupUid);
   }
 
+
+}
+
+function deleteEntity(type, uid){
+
+  //get subEntites and delete them
+  DB.child(type).child(uid).child("subEntities").once("value", function(subEntity){
+    subEntity.forEach(function(dataSnapshot){
+      var entityUid = dataSnapshot.key;
+      var entityType = dataSnapshot.val().entityType;
+
+      deleteEntity(entityType, entityUid);
+    })
+
+    //delete refernce from parent
+    DB.child(type).child(uid).child("parentEntityUid").once("value", function(paerntUid){
+      DB.child("groups").child(paerntUid.val()).child("subEntities").child(uid).remove()
+    })
+
+  });
+
+  DB.child(type).child(uid).remove();
 
 }
 
