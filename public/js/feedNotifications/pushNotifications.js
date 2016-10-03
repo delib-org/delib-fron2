@@ -54,22 +54,31 @@ function pushNotification(EntityData, entityType, variation) {
         Notification.requestPermission(EntityData);
     else {
         var notification;
-        console.log(EntityData.val(), entityType );
-        if (entityType === "chats") {
-            notification = new Notification(EntityData.val().title, {
-                icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                body: variation + " הודעות חדשות"
-            });
-        } else if(entityType === "ownerCalls") {
-            notification = new Notification("קריאת מנהל מ"+EntityData.val().title, {
-                icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                body: variation
-            });
-        } else {
-            notification = new Notification(EntityData.val().title, {
-                icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                body: EntityData.val().description
-            });
+        switch (entityType) {
+            case "chats":
+                notification = new Notification(EntityData.val().title, {
+                    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                    body: variation + " הודעות חדשות"
+                });
+                break;
+            case "ownerCalls":
+                notification = new Notification("קריאת מנהל מ" + EntityData.val().title, {
+                    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                    body: variation
+                });
+                break;
+            case "adminControl":
+                notification = new Notification("הצעת חברות ממשתמש: " + EntityData.val().title, {
+                    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                    body: variation
+                });
+                break;
+
+            default:
+                notification = new Notification(EntityData.val().title, {
+                    icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                    body: EntityData.val().description
+                });
         }
 
         notification.onclick = function () {

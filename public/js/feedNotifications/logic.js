@@ -52,16 +52,16 @@ function initFeedManagerProps () {
         }
     });
 
-    Object.defineProperty(feedManager , 'lastFeedAccess', {
+    Object.defineProperty(feedManager , 'lastEntranceOn', {
         get: function () {
 
-            return DB.child('users/'+userUuid+'/lastFeedAccess').once('value',function (snapshot){
+            return DB.child('users/'+userUuid+'/lastEntranceOn').once('value',function (snapshot){
                 return snapshot;
             });
         },
         set: function (date) {
 
-            DB.child('users/'+userUuid+'/lastFeedAccess').set(date);
+            DB.child('users/'+userUuid+'/lastEntranceOn').set(date);
         }
     });
 }
@@ -101,17 +101,17 @@ function updatesListener() {
                     notifications: entityUpdate.child('notifications/chats').exists()
                 };
 
-                var isAdminControlNewPending = {
-                    feed: entityUpdate.child('feed/AdminControlNewPending').exists(),
-                    notifications: entityUpdate.child('notifications/AdminControlNewPending').exists()
+                var isAdminControlReg = {
+                    feed: entityUpdate.child('feed/adminControl').exists(),
+                    notifications: entityUpdate.child('notifications/adminControl').exists()
                 };
 
                 isOwnerCallReg = regFalsify(isOwnerCallReg);
                 isNewSubEntityReg = regFalsify(isNewSubEntityReg);
                 isChatReg = regFalsify(isChatReg);
-                isAdminControlNewPending = regFalsify(isAdminControlNewPending);
+                isAdminControlReg = regFalsify(isAdminControlReg);
 
-                if (isAdminControlNewPending) {
+                if (isAdminControlReg) {
                     if(!firstRun) {
                         DB.child("/groups/" + entityUpdate.key + "/pendings").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (NewPending) {
 
@@ -126,15 +126,38 @@ function updatesListener() {
                             // ============================================================================
 
                             DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
-                                if(isAdminControlNewPending.notifications)
-                                    pushNotification(actualContent, "adminControlNewPending", NewPending.val().callText);
+                                if(isAdminControlReg.notifications)
+                                    pushNotification(actualContent, "adminControl", NewPending.val().callText);
 
-                                if(isAdminControlNewPending.feed && feedManager.lastEntranceOn)
-                                    feedBuilder(actualContent, "adminControlNewPending", NewPending.val().callText);
+                                if(isAdminControlReg.feed && feedManager.lastEntranceOn)
+                                    feedBuilder(actualContent, "adminControl", NewPending.val().callText);
                             });
                         });
                     } else {
-                        // just copy-paste the correlative code from other chunks..
+                        // feed catch-up chunk
+                        DB.child("/groups/" + entityUpdate.key + "/pendings").orderByChild('dateAdded').once('value',function (pendings) {
+                            feedManager.lastEntranceOn.then(function (lastEntranceOn) {
+                                pendings.forEach(function (NewPending) {
+                                    if(lastEntranceOn.val() == null)
+                                        return;
+
+                                    DB.child(NewPending.val().entityType + "/" + NewPending.key).once('value', function (actualContent) {
+
+                                        if (mostUpdatedContent == null)
+                                            mostUpdatedContent = NewPending;
+                                        else if (mostUpdatedContent.val().dateAdded < NewPending.val().dateAdded - 400)
+                                            mostUpdatedContent = NewPending;
+
+
+                                        if (isNewSubEntityReg.feed && lastEntranceOn.val() < NewPending.val().dateAdded)
+                                            feedBuilder(actualContent, entityUpdates.key, NewPending, {on: true, lastRun: false});
+                                        else {
+                                            flags.adminControl = true;
+                                        }
+                                    });
+                                });
+                            });
+                        });
                     }
                 }
 
@@ -194,9 +217,9 @@ function updatesListener() {
                     } else {
                         // feed catch-up chunk
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
-                            feedManager.lastFeedAccess.then(function (lastFeedAccess) {
+                            feedManager.lastEntranceOn.then(function (lastEntranceOn) {
                                 subEnities.forEach(function (entityAdded) {
-                                    if(lastFeedAccess.val() == null)
+                                    if(lastEntranceOn.val() == null)
                                         return;
 
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
@@ -207,7 +230,7 @@ function updatesListener() {
                                             mostUpdatedContent = entityAdded;
 
 
-                                        if (isNewSubEntityReg.feed && lastFeedAccess.val() < entityAdded.val().dateAdded)
+                                        if (isNewSubEntityReg.feed && lastEntranceOn.val() < entityAdded.val().dateAdded)
                                             feedBuilder(actualContent, entityUpdates.key, entityAdded, {on: true, lastRun: false});
                                         else {
                                             flags.subEntities = true;
@@ -280,10 +303,10 @@ function updatesListener() {
                         // feed catch-up chunk
                         DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('value',function (messages) {
                             DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
-                                feedManager.lastFeedAccess.then(function (lastFeedAccess) {
+                                feedManager.lastEntranceOn.then(function (lastEntranceOn) {
                                     DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                         messages.forEach(function (messageAdded) {
-                                            if(lastFeedAccess == null)
+                                            if(lastEntranceOn == null)
                                                 return;
 
                                             if (mostUpdatedContent == null)
@@ -291,7 +314,7 @@ function updatesListener() {
                                             else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
                                                 mostUpdatedContent = messageAdded;
 
-                                            if (isNewSubEntityReg.feed && lastFeedAccess.val() < messageAdded.val().dateAdded) {
+                                            if (isNewSubEntityReg.feed && lastEntranceOn.val() < messageAdded.val().dateAdded) {
                                                 // create a temporary messagesSentInc to hold inboxMessages.val()
                                                 var messagesSentInc;
 
@@ -328,7 +351,7 @@ function updatesListener() {
 
     });
 
-    if(flags.chats && flags.subEntities)
+    if(flags.chats && flags.subEntities && flags.adminControl)
         $.event.trigger('catchUpDone');
 
     $(document).on('catchUpDone', function () {
@@ -368,6 +391,25 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
             case "chats":
                 feedContentJson = {
                     feedType: "chats",
+                    entityType: entityDatum.val().title,
+                    entityUid: entityDatum.key,
+                    chatMessagesCounter: variation[0],
+                    laseMessageContent: variation[1],
+                    date: entityDatum.val().dateAdded
+                };
+
+                if(catchUpMode.on) {
+                    feedCatchUp(feedContentJson);
+                    $.event.trigger('catchUpDone');
+                    return;
+                }
+
+                feedManager.queue = feedContentJson;
+                break;
+
+            case "adminControl":
+                feedContentJson = {
+                    feedType: "adminControl",
                     entityType: entityDatum.val().title,
                     entityUid: entityDatum.key,
                     chatMessagesCounter: variation[0],

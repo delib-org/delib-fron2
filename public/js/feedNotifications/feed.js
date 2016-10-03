@@ -13,12 +13,12 @@ subsManager.setFeed = function(isOwnerCall) {
         case "adminControl":
 
             userFeed.once("value", function(dataSnapshot) {
-                if (dataSnapshot.child("adminControlNewPending").exists()) {
+                if (dataSnapshot.child("adminControl").exists()) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                     //===================================================//
                     DB.child("groups/" + activeEntity.uid + "/pendings").orderByChild('dateAdded').limitToLast(1).off('child_added', pendingAdded_cb);
-                    userFeed.child("adminControlNewPending").remove();
+                    userFeed.child("adminControl").remove();
                     //===================================================//
 
                     // first line shuts down a specific node listener, even if the listener used also for feed
@@ -28,7 +28,7 @@ subsManager.setFeed = function(isOwnerCall) {
                     $("#feedSub").css("color", inactiveColor);
 
                 } else {
-                    userFeed.child("adminControlNewPending").set(true);
+                    userFeed.child("adminControl").set(true);
                     $("#feedSub").css("color", activeColor);
                 }
             });
