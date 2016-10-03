@@ -77,10 +77,11 @@ function updatesListener() {
         return regObject;
     }
 
-    var flags ={};
+    var flags = {};
 
     // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
+        console.log("on");
         // search inside entities
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
@@ -192,10 +193,13 @@ function updatesListener() {
                 // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
 
                 if (isNewSubEntityReg) {
+                    console.log("newSubENtity");
                     if(!firstRun) {
+                        console.log("!firstRun");
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                             DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
-    
+
+                                console.log("newSubENtity");
                                 // ==== regulation chunk ==== //
                                 // will make sure we will get the latest whatever..
                                 if (mostUpdatedContent == null)
@@ -234,6 +238,8 @@ function updatesListener() {
                                             feedBuilder(actualContent, entityUpdates.key, entityAdded, {on: true, lastRun: false});
                                         else {
                                             flags.subEntities = true;
+                                            if(flags.chats && flags.subEntities)
+                                                $.event.trigger('catchUpDone');
                                         }
                                     });
                                 });
@@ -338,6 +344,8 @@ function updatesListener() {
                                                 }
                                             } else {
                                                 flags.chats = true;
+                                                if(flags.chats && flags.subEntities)
+                                                    $.event.trigger('catchUpDone');
                                             }
                                         });
                                     });
@@ -348,7 +356,6 @@ function updatesListener() {
                 }
             });
         });
-
     });
 
     if(flags.chats && flags.subEntities && flags.adminControl)
@@ -359,6 +366,7 @@ function updatesListener() {
             console.log("true true");
             firstRun = false;
             feedBuilder(undefined, undefined, undefined, {on: true, lastRun: true});
+            updatesListener();
         }
     });
 }
@@ -473,7 +481,6 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
 
         if(catchUpMode.on && catchUpMode.lastRun) {
 
-            console.log(feedManager.catchUpArray[3]);
             console.log(Object.keys(feedManager.catchUpArray).length);
 
             for( var key = 0 ; key <feedManager.catchUpArrayIndex; key++ ) {
