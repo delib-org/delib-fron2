@@ -59,6 +59,8 @@ function showAdminPanel(groupUid){
     };
 
     setActiveEntity("adminControl", undefined, turnOff);
+
+    subsManager.isUpdatesSet();
   });
 
 

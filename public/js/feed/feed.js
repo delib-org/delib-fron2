@@ -52,10 +52,10 @@ function showFeed(){
       var turnOff = function () {
          feedManager.queue = "popAll";
          feedManager.inbox = 0;
-         feedManager.lastEntranceOn = firebase.database.ServerValue.TIMESTAMP;
       };
        
-      setActiveEntity("feed", undefined, turnOff)
+      setActiveEntity("feed", undefined, turnOff);
+
    });
 
 }

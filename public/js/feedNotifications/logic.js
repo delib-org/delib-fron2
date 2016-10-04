@@ -5,6 +5,55 @@ var pendingAdded_cb;
 
 function initFeedManagerProps () {
 
+    Object.defineProperty(updatesRegulator , 'latestContent', {
+        get: function () {
+            return DB.child('users/'+userUuid+'/latestContent').once('value', function (snapshot) {
+
+                return snapshot.val();
+            });
+        },
+        set: function (newLatestContent) {
+debugger;
+            if(!newLatestContent)
+                return null;
+
+
+            console.log( "dont heat up" );
+            if (updatesRegulator.latestContentLocal !== null) {
+                console.log( "dont heat up" );
+
+                if (updatesRegulator.latestContentLocal.dateAdded <= newLatestContent.val().dateAdded - 400) {
+                    DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val().dateAdded);
+                    updatesRegulator.latestContentLocal = newLatestContent.val();
+                } else{
+                    console.log("return null");
+                    return null;
+
+                }
+
+                return;
+            }
+
+
+            console.log( "dont heat up- missed" );
+
+            return updatesRegulator.latestContent.then(function (latestContent) {
+
+                console.log( updatesRegulator.latestContentLocal, latestContent.val(), newLatestContent.val().dateAdded );
+                if(latestContent) {
+                    DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val().dateAdded);
+                    updatesRegulator.latestContentLocal = newLatestContent.val();
+                } else if (latestContent.val().dateAdded <= newLatestContent.val().dateAdded - 400) {
+                    DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val().dateAdded);
+                    updatesRegulator.latestContentLocal = latestContent.val();
+                }
+                else{
+                    console.log("return null");
+                    return null;}
+            });
+        }
+    });
+
     feedManager.catchUpArray = {};
     feedManager.catchUpArrayIndex = 0;
 
@@ -77,7 +126,7 @@ function updatesListener() {
         return regObject;
     }
 
-    var flags = {};
+    var flags = [];
 
     // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
@@ -114,24 +163,22 @@ function updatesListener() {
 
                 if (isAdminControlReg) {
                     if(!firstRun) {
-                        DB.child("/groups/" + entityUpdate.key + "/pendings").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (NewPending) {
+                        DB.child("/groups/" + entityUpdate.key + "/pendings").orderByChild('dateAdded').limitToLast(1).on('child_added', ownerCall_cb = function (NewPending) {
 
                             // ==== regulation chunk ==== //
                             // will make sure we will get the latest whatever..
-                            if (mostUpdatedContent == null)
-                                mostUpdatedContent = NewPending;
-                            else if (mostUpdatedContent.val().dateAdded < NewPending.val().dateAdded - 400)
-                                mostUpdatedContent = NewPending;
-                            else
-                                return;
-                            // ============================================================================
+                            updatesRegulator.set("latestContent", NewPending).then(function (result) {
+                                    if (result == null)
+                                        return;
+                                // ============================================================================
 
-                            DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
-                                if(isAdminControlReg.notifications)
-                                    pushNotification(actualContent, "adminControl", NewPending.val().callText);
+                                DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
+                                    if(isAdminControlReg.notifications)
+                                        pushNotification(actualContent, "adminControl", NewPending.val().callText);
 
-                                if(isAdminControlReg.feed && feedManager.lastEntranceOn)
-                                    feedBuilder(actualContent, "adminControl", NewPending.val().callText);
+                                    if(isAdminControlReg.feed && feedManager.lastEntranceOn)
+                                        feedBuilder(actualContent, "adminControl", NewPending.val().callText);
+                                });
                             });
                         });
                     } else {
@@ -143,18 +190,20 @@ function updatesListener() {
                                         return;
 
                                     DB.child(NewPending.val().entityType + "/" + NewPending.key).once('value', function (actualContent) {
+                                        updatesRegulator.set("latestContent", NewPending).then(function (result) {
+                                            if (result == null)
+                                                return;
 
-                                        if (mostUpdatedContent == null)
-                                            mostUpdatedContent = NewPending;
-                                        else if (mostUpdatedContent.val().dateAdded < NewPending.val().dateAdded - 400)
-                                            mostUpdatedContent = NewPending;
+                                            if (isNewSubEntityReg.feed && lastEntranceOn.val() < NewPending.val().dateAdded)
+                                                feedBuilder(actualContent, entityUpdates.key, NewPending, {
+                                                    on: true,
+                                                    lastRun: false
+                                                });
+                                            else {
+                                                flags.push(Promise.resolve(true));
+                                            }
 
-
-                                        if (isNewSubEntityReg.feed && lastEntranceOn.val() < NewPending.val().dateAdded)
-                                            feedBuilder(actualContent, entityUpdates.key, NewPending, {on: true, lastRun: false});
-                                        else {
-                                            flags.adminControl = true;
-                                        }
+                                        });
                                     });
                                 });
                             });
@@ -165,24 +214,22 @@ function updatesListener() {
                 // if subscribed to ownerCalls
                 if (isOwnerCallReg) {
                     if(!firstRun) {
-                        DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added',ownerCall_cb = function (ownerCall) {
+                        DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added', ownerCall_cb = function (ownerCall) {
 
                             // ==== regulation chunk ==== //
                             // will make sure we will get the latest whatever..
-                            if (mostUpdatedContent == null)
-                                mostUpdatedContent = ownerCall;
-                            else if (mostUpdatedContent.val().dateAdded < ownerCall.val().dateAdded - 400)
-                                mostUpdatedContent = ownerCall;
-                            else
-                                return;
+                            updatesRegulator.set("latestContent", ownerCall ).then(function (result) {
+                                if (result == null)
+                                    return;
                             // ============================================================================
 
-                            DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
-                                if(isOwnerCallReg.notifications)
-                                    pushNotification(actualContent, "ownerCalls", ownerCall.val().callText);
+                                DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
+                                    if (isOwnerCallReg.notifications)
+                                        pushNotification(actualContent, "ownerCalls", ownerCall.val().callText);
 
-                                if(isOwnerCallReg.feed && feedManager.lastEntranceOn)
-                                    feedBuilder(actualContent, "ownerCalls", ownerCall.val().callText);
+                                    if (isOwnerCallReg.feed && feedManager.lastEntranceOn)
+                                        feedBuilder(actualContent, "ownerCalls", ownerCall.val().callText);
+                                });
                             });
                         });
                     } else {
@@ -193,32 +240,30 @@ function updatesListener() {
                 // check if sub-entity added, only if registered to Global or Feed. if not registered fo both - move on
 
                 if (isNewSubEntityReg) {
-                    console.log("newSubENtity");
                     if(!firstRun) {
-                        console.log("!firstRun");
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                             DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
 
                                 console.log("newSubENtity");
                                 // ==== regulation chunk ==== //
                                 // will make sure we will get the latest whatever..
-                                if (mostUpdatedContent == null)
-                                    mostUpdatedContent = entityAddedUid;
-                                else if (mostUpdatedContent.val().dateAdded < entityAddedUid.val().dateAdded - 400)
-                                    mostUpdatedContent = entityAddedUid;
-                                else
-                                    return;
+                               updatesRegulator.set("latestContent", entityAddedUid).then(function (result) {
+                                   if (result == null)
+                                       return;
+
+                                   if (isNewSubEntityReg.notifications)
+                                       pushNotification(actualContent, subEntity[entityUpdates.key]);
+
+                                   if (isNewSubEntityReg.feed)
+                                       feedBuilder(actualContent, entityUpdates.key, entityAddedUid);
+                                    });
                                 // ============================================================================
-    
-                                if (isNewSubEntityReg.notifications)
-                                    pushNotification(actualContent, subEntity[entityUpdates.key]);
-    
-                                if (isNewSubEntityReg.feed)
-                                    feedBuilder(actualContent, entityUpdates.key, entityAddedUid);
+
     
                             }); //.catch(function (error) { console.log(error, "no entity path") })
                         });
                     } else {
+                        console.log("!firstRun");
                         // feed catch-up chunk
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
                             feedManager.lastEntranceOn.then(function (lastEntranceOn) {
@@ -228,19 +273,17 @@ function updatesListener() {
 
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
 
-                                        if (mostUpdatedContent == null)
-                                            mostUpdatedContent = entityAdded;
-                                        else if (mostUpdatedContent.val().dateAdded < entityAdded.val().dateAdded - 400)
-                                            mostUpdatedContent = entityAdded;
+                                        updatesRegulator.set("latestContent", entityAdded).then(function (result) {
+                                            if (result == null)
+                                                return;
 
 
-                                        if (isNewSubEntityReg.feed && lastEntranceOn.val() < entityAdded.val().dateAdded)
-                                            feedBuilder(actualContent, entityUpdates.key, entityAdded, {on: true, lastRun: false});
-                                        else {
-                                            flags.subEntities = true;
-                                            if(flags.chats && flags.subEntities)
-                                                $.event.trigger('catchUpDone');
-                                        }
+                                            if (isNewSubEntityReg.feed && lastEntranceOn.val() < entityAdded.val().dateAdded)
+                                                feedBuilder(actualContent, entityUpdates.key, entityAdded, {on: true, lastRun: false});
+                                            else {
+                                                flags.push(Promise.resolve(true));
+                                            }
+                                        });
                                     });
                                 });
                             });
@@ -268,85 +311,87 @@ function updatesListener() {
     
                                         // ==== regulation chunk ==== //
                                         // will make sure we will get the latest whatever..
-                                        if (mostUpdatedContent == null)
-                                            mostUpdatedContent = lastMessage;
-                                        else if (mostUpdatedContent.val().dateAdded < lastMessage.val().dateAdded - 400)
-                                            mostUpdatedContent = lastMessage;
-                                        else
-                                            return;
-                                        // ============================================================================
-    
-                                        // create a temporary messagesSentInc to hold inboxMessages.val()
-                                        var messagesSentInc;
-    
-                                        // now we need the inboxMessages to get the number of messages not seen
-                                        messagesSentInc = inboxVolume.val();
-    
-                                        // obvious incrementation, is obvious..
-                                        messagesSentInc++;
-    
-                                        //set incremented inbox volume
-                                        DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
+                                        updatesRegulator.set("latestContent", lastMessage).then(function (result) {
+                                                if (result == null)
+                                                    return;
+                                            // ============================================================================
 
-                                        // send notifications in jumps of 5, might want to consider further manipulations. currently unused.
-                                        if (messagesSentInc % 5 ===  0) {
-                                            if (isChatReg.notifications)
-                                                pushNotification(chatEntityContent, "chats", messagesSentInc);
-                                            if (isChatReg.feed){
-                                                var tempArr =[
-                                                    messagesSentInc,
-                                                    mostUpdatedContent.val()
-                                                ];
+                                            // create a temporary messagesSentInc to hold inboxMessages.val()
+                                            var messagesSentInc;
 
-                                                feedBuilder(chatEntityContent,"chats", tempArr);
+                                            // now we need the inboxMessages to get the number of messages not seen
+                                            messagesSentInc = inboxVolume.val();
+
+                                            // obvious incrementation, is obvious..
+                                            messagesSentInc++;
+
+                                            //set incremented inbox volume
+                                            DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
+
+                                            // send notifications in jumps of 5, might want to consider further manipulations. currently unused.
+                                            if (messagesSentInc % 5 ===  0) {
+                                                if (isChatReg.notifications)
+                                                    pushNotification(chatEntityContent, "chats", messagesSentInc);
+                                                if (isChatReg.feed){
+                                                    var tempArr =[
+                                                        messagesSentInc,
+                                                        updatesRegulator.latestContentLocal.val()
+                                                    ];
+
+                                                    feedBuilder(chatEntityContent,"chats", tempArr);
+                                                }
                                             }
-                                        }
+                                        });
                                     }
                                 });
                             });
                         });
                     } else {
+                        console.log("!firstRun");
                         // feed catch-up chunk
                         DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('value',function (messages) {
                             DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
                                 feedManager.lastEntranceOn.then(function (lastEntranceOn) {
                                     DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                         messages.forEach(function (messageAdded) {
+                                            // console.log(lastEntranceOn.val());
                                             if(lastEntranceOn == null)
                                                 return;
 
-                                            if (mostUpdatedContent == null)
-                                                mostUpdatedContent = messageAdded;
-                                            else if (mostUpdatedContent.val().dateAdded < messageAdded.val().dateAdded - 400)
-                                                mostUpdatedContent = messageAdded;
+                                            updatesRegulator.set("latestContent", messageAdded).then(function (result) {
+                                                if (result == null)
+                                                    return;
 
-                                            if (isNewSubEntityReg.feed && lastEntranceOn.val() < messageAdded.val().dateAdded) {
-                                                // create a temporary messagesSentInc to hold inboxMessages.val()
-                                                var messagesSentInc;
+                                                if (isChatReg.feed && lastEntranceOn.val() < messageAdded.val().dateAdded) {
+                                                    // create a temporary messagesSentInc to hold inboxMessages.val()
+                                                    var messagesSentInc;
 
-                                                // now we need the inboxMessages to get the number of messages not seen
-                                                messagesSentInc = inboxVolume.val();
+                                                    // now we need the inboxMessages to get the number of messages not seen
+                                                    messagesSentInc = inboxVolume.val();
 
-                                                // obvious incrementation, is obvious..
-                                                messagesSentInc++;
+                                                    // obvious incrementation, is obvious..
+                                                    messagesSentInc++;
 
-                                                //set incremented inbox volume
-                                                DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
+                                                    //set incremented inbox volume
+                                                    DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
 
 
-                                                if (messagesSentInc % 5 ===  0) {
-                                                    var tempArr =[
-                                                        messagesSentInc,
-                                                        mostUpdatedContent.val()
-                                                    ];
+                                                    if (messagesSentInc % 5 === 0) {
+                                                        var tempArr = [
+                                                            messagesSentInc,
+                                                            updatesRegulator.latestContentLocal
+                                                        ];
 
-                                                    feedBuilder(chatEntityContent, "chats", tempArr, {on: true, lastRun: false});
+                                                        feedBuilder(chatEntityContent, "chats", tempArr, {
+                                                            on: true,
+                                                            lastRun: false
+                                                        });
+                                                    }
+                                                } else {
+                                                    flags.push(Promise.resolve(true));
                                                 }
-                                            } else {
-                                                flags.chats = true;
-                                                if(flags.chats && flags.subEntities)
-                                                    $.event.trigger('catchUpDone');
-                                            }
+
+                                            });
                                         });
                                     });
                                 });
@@ -356,25 +401,27 @@ function updatesListener() {
                 }
             });
         });
-    });
 
-    if(flags.chats && flags.subEntities && flags.adminControl)
-        $.event.trigger('catchUpDone');
-
-    $(document).on('catchUpDone', function () {
-        if(firstRun) {
-            console.log("true true");
-            firstRun = false;
-            feedBuilder(undefined, undefined, undefined, {on: true, lastRun: true});
-            updatesListener();
-        }
+        Promise.all(flags).then(function() {
+            if(firstRun) {
+                console.log("true true");
+                firstRun = false;
+                feedBuilder(undefined, undefined, undefined, {on: true, lastRun: true});
+                updatesListener();
+                feedManager.lastEntranceOn = firebase.database.ServerValue.TIMESTAMP;
+            }
+        });
     });
+    //
+    // if(flags.chats && flags.subEntities && flags.adminControl)
+    //     $.event.trigger('catchUpDone');
+
+
 }
 
 function feedCatchUp (json) {
     console.log("offline feed pushed");
     feedManager.catchUpArray[feedManager.catchUpArrayIndex] = json;
-    feedManager.catchUpArrayIndex++;
 
     console.log(Object.keys(feedManager.catchUpArray).length);
 }
@@ -483,14 +530,16 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
 
             console.log(Object.keys(feedManager.catchUpArray).length);
 
-            for( var key = 0 ; key <feedManager.catchUpArrayIndex; key++ ) {
-                console.dir(feedManager.catchUpArray[key]);
-                feedManager.queue = feedManager.catchUpArray[key];
+            $.each(feedManager.catchUpArray, function (index,item ) {
+                console.dir(item);
+                feedManager.queue = item;
 
                 // if feedVolume got to 20, also remove last feed in feedQueue
-                if(length >= feedManager.volume + 1)
+                if( index >= feedManager.volume + 1 ) {
                     feedManager.queue = "pop";
-            }
+                    console.log("poped");
+                }
+            });
 
             return;
         }
@@ -503,8 +552,11 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
         feedManager.inbox.then(function(val) {
 
             if(catchUpMode.on && catchUpMode.lastRun) {
+                if(val + feedManager.catchUpArrayIndex >= feedManager.volume)
+                    feedManager.inbox = feedManager.volume;
+                else
+                    feedManager.inbox = val + feedManager.catchUpArrayIndex;
 
-                feedManager.inbox = val + feedManager.catchUpArrayIndex;
                 return;
             }
 

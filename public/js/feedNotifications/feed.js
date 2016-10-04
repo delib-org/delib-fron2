@@ -38,7 +38,7 @@ subsManager.setFeed = function(isOwnerCall) {
 
             // re-defining userFeed in chats context
             DB.child("chats/" + activeEntity.uid + "/entity").once('value', function(datasnapshot) {
-                userFeed = DB.child("users/" + userUuid + "/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
+                userFeed = DB.child("users/" + userUuid + "/updates/" + datasnapshot.val().typeInDB + "/" + activeEntity.uid + "/feed");
                 
                 userFeed.once("value", function(dataSnapshot) {
 
@@ -156,6 +156,18 @@ subsManager.isFeedSet = function (isOwnerCall) {
                 
                 userFeed.once('value', function(dataSnapshot) {
     
+                    subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
+                });
+            });
+            break;
+
+        case "chats":
+            // re-defining userFeed in chats context
+            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+                userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
+
+                userFeed.once('value', function(dataSnapshot) {
+
                     subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
                 });
             });
