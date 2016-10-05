@@ -50,11 +50,12 @@ function showFeed(){
       renderTemplate("#feedWrapper-tmpl", context, "wrapper");
 
       var turnOff = function () {
-         feedManager.queue = "popAll";
-         feedManager.inbox = 0;
+            feedManager.queue = "popAll";
+            feedManager.inbox = 0;
       };
        
-      setActiveEntity("feed", undefined, turnOff);
+      setActiveEntity("feed", undefined, turnOff);  
+
 
    });
 
