@@ -19,7 +19,6 @@ function initFeedManagerProps () {
         // updatesRegulator.latestContentLocal = {
         //     dateAdded : 1473512293636
         // };
-        console.log("latestContentLocal: ", updatesRegulator.latestContentLocal);
     });
 
     updatesRegulator.regulate = function (newLatestContent) {
@@ -40,10 +39,7 @@ function initFeedManagerProps () {
             console.log("REGULATED!");
             return false;
         } else {
-            // console.log("return null");
-            // console.log("regulation needed? : ", updatesRegulator.latestContentLocal <= newLatestContent.val().dateAdded - 400 );
-            // console.log("prove it, latestContentLocal: ", updatesRegulator.latestContentLocal );
-            // console.log("prove it, newLatestContent: ", newLatestContent.val().dateAdded );
+            console.log("no regulation needed");
             return true;
         }
     };
@@ -100,7 +96,6 @@ function initFeedManagerProps () {
         get: function () {
 
             return DB.child('users/'+userUuid+'/lastEntranceOn').once('value',function (snapshot){
-                console.log("lastEntranceOn");
                 return snapshot;
             });
         },
@@ -262,9 +257,6 @@ function updatesListener() {
                                    feedBuilder(actualContent, entityUpdates.key, entityAddedUid);
                                 });
                                 // ============================================================================
-
-    
-                            //.catch(function (error) { console.log(error, "no entity path") })
                         });
                     } else {
                         console.log("catch-up subEntities");
@@ -387,7 +379,6 @@ function updatesListener() {
                                                 DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).set(messagesSentInc);
 
                                                 if (messagesSentInc % 5 === 0) {
-                                                    console.log(entityUpdate.key);
                                                     var tempArr = [
                                                         messagesSentInc,
                                                         updatesRegulator.latestContentLocal
@@ -422,7 +413,7 @@ function updatesListener() {
 
 $(document).on('catchUpDone', function () {
     if(firstRun) {
-        console.log("catch-up is DONE, catchUpPromises: ", catchUpPromises[0]);
+        console.log("catch-up is DONE");
         firstRun = false;
         feedBuilder(undefined, undefined, undefined, {on: true, lastRun: true});
         updatesListener();
@@ -439,19 +430,11 @@ function feedCatchUp (json) {
 // feed builder
 function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
 
-    // if(firstRun) {
-    //     firstRun = false;
-    //     // feedManager.queue = [];
-    //     console.log("first Run");
-    //     return;
-    // }
-
     if(catchUpMode == undefined)
         catchUpMode = {on: false, lastRun: false};
 
     var feedContentJson;
 
-    // console.log(entityDatum, entityDatum.val());
     if(!(catchUpMode.on && catchUpMode.lastRun))
         switch (entityType) {
             case "chats":
