@@ -52,7 +52,7 @@ function showFeed(){
            date: entitiesArray[key].date
          });
       }
-
+      console.dir(preContext)
       var context = {feeds: preContext};
 
       renderTemplate("#feedWrapper-tmpl", context, "wrapper");
