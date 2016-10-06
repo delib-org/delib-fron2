@@ -180,9 +180,9 @@ function showEntities(entity, uid){
 
 function showBreadCrumb(entityType1, uid1, title1){
   //get all parents of an entity (by settin it's type and uid)
-  console.log(entityType1, uid1, title1);
+
   if (entityType1 == "chats"){
-    console.log("chats!")
+
     //get entity parent
     DB.child("chats/"+uid1+"/entity/typeInDB").once("value",function(parentData){
       var parentType = parentData.val();
