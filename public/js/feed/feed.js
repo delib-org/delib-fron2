@@ -47,7 +47,8 @@ function showFeed(){
            uid: entitiesArray[key].entityUid,
            title: entitiesArray[key].title,
            description:entitiesArray[key].description,
-           symbol: symbols[entitiesArray[key].entityType]
+           symbol: symbols[entitiesArray[key].entityType],
+           counter: entitiesArray[key].chatMessagesCounter
          });
       }
 
