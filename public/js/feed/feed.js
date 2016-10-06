@@ -42,7 +42,13 @@ function showFeed(){
 
       for (var key in entitiesArray) {
 
-         preContext.push({type: entitiesArray[key].entityType, uid: entitiesArray[key].entityUid, title: entitiesArray[key].title ,symbol: symbols[entitiesArray[key].entityType]});
+         preContext.push({
+           type: entitiesArray[key].entityType,
+           uid: entitiesArray[key].entityUid,
+           title: entitiesArray[key].title,
+           description:entitiesArray[key].description,
+           symbol: symbols[entitiesArray[key].entityType]
+         });
       }
 
       var context = {feeds: preContext};
