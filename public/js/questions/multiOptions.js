@@ -113,7 +113,11 @@ function showMultiOptions(questionUid){
   var turnOff = function (){
 
     DB.child("questions/"+questionUid+"/options").orderByChild("votes").off("child_added", multiOptionsCallback);
-    DB.child("questions/"+questionUid+"/options/"+optionUid).off("child_added", votesCallBack)
+    DB.child("questions/"+questionUid+"/options").once("value", function(optionsDB){
+      optionsDB.forEach(function(optionDB){
+        DB.child("questions/"+questionUid+"/options/"+optionDB.key).off("child_added", votesCallBack)
+      });
+    });
   };
 
   setActiveEntity("questions",questionUid, turnOff);
