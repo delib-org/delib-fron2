@@ -461,7 +461,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
             case "chats":
                 feedContentJson = {
                     feedType: "chats",
-                    entityType: entityDatum.val().typeInDB,
+                    entityType: "chats",
                     entityUid: entityDatum.key,
                     chatMessagesCounter: variation[0],
                     description: variation[1],
