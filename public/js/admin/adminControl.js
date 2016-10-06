@@ -28,11 +28,11 @@ function showAdminPanel(groupUid){
   });
 
   //Members Table
-  DB.child("groups/"+groupUid+"/members").on("value", membersTableCallback = function(members){
+  DB.child("groups/"+groupUid+"/members").on("value", membersTableCallback = function(members) {
 
     var preContext = [];
     if(members.val() !== null){
-      members.forEach(function(member){
+      members.forEach(function(member) {
 
         var dateAskedFor = parseDate(member.val().dateAdded,"DDMMYY");
         var role = member.val().role || "member";
@@ -72,7 +72,9 @@ function showAdminPanel(groupUid){
       DB.child("groups/"+groupUid+"/members").off("value", membersTableCallback);
     };
 
-    setActiveEntity("adminControl", undefined, undefined, undefined, turnOff);
+    setActiveEntity("adminControl", undefined, turnOff);
+
+    subsManager.isUpdatesSet();
   });
 
 

@@ -39,7 +39,6 @@ $(function(){
 var userUuid;
 var userName;
 var userEmail;
-var userName;
 var startingUrl;
 var activeEntity = new Object();
 var firstRun = true;
@@ -64,6 +63,9 @@ var activeColor = "white";
 var pendingColor = "#c78100";
 
 // Updates Variables and Constants
+var updatesRegulator = {
+  latestContentLocal: null
+};
 
 // subsManager Def.
 var subsManager = {
@@ -82,7 +84,6 @@ var subsManager = {
   notificationsIsSet: false
 };
 
-var mostUpdatedContent = null;
 // Feed ========================================================================================
 
 // default feed volume

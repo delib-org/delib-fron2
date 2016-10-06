@@ -7,14 +7,38 @@ subsManager.setFeed = function(isOwnerCall) {
     if(activeEntity.entityType == 'main')
         return;
 
-    var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/feed");
+    var userFeed = DB.child("users/" + userUuid + "/updates/" + activeEntity.entityType + "/" + activeEntity.uid + "/feed");
 
     switch (activeEntity.entityType) {
+        case "adminControl":
+
+            userFeed.once("value", function(dataSnapshot) {
+                if (dataSnapshot.child("adminControl").exists()) {
+
+                    // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
+                    //===================================================//
+                    DB.child("groups/" + activeEntity.uid + "/pendings").orderByChild('dateAdded').limitToLast(1).off('child_added', pendingAdded_cb);
+                    userFeed.child("adminControl").remove();
+                    //===================================================//
+
+                    // first line shuts down a specific node listener, even if the listener used also for feed
+                    // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
+                    // same applies to the opposite.
+
+                    $("#feedSub").css("color", inactiveColor);
+
+                } else {
+                    userFeed.child("adminControl").set(true);
+                    $("#feedSub").css("color", activeColor);
+                }
+            });
+            break;
+        
         case "chats":
 
             // re-defining userFeed in chats context
-            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
-                userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
+            DB.child("chats/" + activeEntity.uid + "/entity").once('value', function(datasnapshot) {
+                userFeed = DB.child("users/" + userUuid + "/updates/" + datasnapshot.val().typeInDB + "/" + activeEntity.uid + "/feed");
                 
                 userFeed.once("value", function(dataSnapshot) {
 
@@ -132,6 +156,18 @@ subsManager.isFeedSet = function (isOwnerCall) {
                 
                 userFeed.once('value', function(dataSnapshot) {
     
+                    subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
+                });
+            });
+            break;
+
+        case "chats":
+            // re-defining userFeed in chats context
+            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+                userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
+
+                userFeed.once('value', function(dataSnapshot) {
+
                     subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
                 });
             });

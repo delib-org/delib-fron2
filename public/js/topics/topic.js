@@ -74,7 +74,7 @@ function showTopic(topicUid){
       DB.child("topics/"+ topicUid.toString()+"/subEntities").off("value", topicCallback);
    };
    
-   setActiveEntity("topics", topicUid, "value", topicCallback, turnOff);
+   setActiveEntity("topics", topicUid, turnOff);
 
 }
 

@@ -102,7 +102,8 @@ function showMultiOptions(questionUid){
       } else {
         $("#"+optionUid+"voteImg").attr("src", "img/thumbUpInactive.png");
       }
-    })
+    });
+    
     //if changes in votes, update text and position
     DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", votesCallBack)
   };
@@ -112,9 +113,10 @@ function showMultiOptions(questionUid){
   var turnOff = function (){
 
     DB.child("questions/"+questionUid+"/options").orderByChild("votes").off("child_added", multiOptionsCallback);
+    DB.child("questions/"+questionUid+"/options/"+optionUid).off("value", votesCallBack)
   };
 
-  setActiveEntity("questions",questionUid, "child_added", multiOptionsCallback, turnOff);
+  setActiveEntity("questions",questionUid, turnOff);
 }
 
 function voteUpOption(questionUid, optionUid){

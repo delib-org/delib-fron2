@@ -41,13 +41,11 @@ function setUrl(type, uid){
   }
 };
 
-function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff) {
+function setActiveEntity (newEntity, newUid, turnOff) {
 
 
   var previuosEntityType = activeEntity.entityType;
   var previuosUid = activeEntity.uid;
-  var previuosEventType = activeEntity.eventType;
-  var previuosCallback = activeEntity.callback;
   var previuosTurnOff = activeEntity.turnOff;
 
   activeEntity.previuosEntity = previuosEntityType;
@@ -55,39 +53,28 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
   checkChatsUpdates(newEntity, newUid);
 
+    // if (previuosEntityType != "main") {
+    //         previuosTurnOff();
+    // } else {
+    //    switch (previuosUid) {
+    //       case "member":
+    //       case "owned":
+    //          DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
+    //          break;
+    //       case "public":
+    //          DB.child("groups").off(previuosEventType, previuosCallback);
+    //          break;
+    //       default:
+    //          console.log("Error: no such groups cluster in main ("+previuosUid+")");
+    //    }
+    // }
 
-     if (previuosEntityType != "main") {
-        if (previuosEventType != undefined){
-           if (previuosUid != undefined){
+    if(previuosTurnOff !== undefined)
+      previuosTurnOff();
 
-             previuosTurnOff();
-           } else {
-              console.log("Error: no previuos entity to close off previous callback");
-           }
-        } else if( previuosEntityType == "feed" || previuosEntityType == "adminControl") {
-
-          previuosTurnOff();
-        }
-     } else {
-        switch (previuosUid) {
-           case "member":
-           case "owned":
-              DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
-              break;
-           case "public":
-              DB.child("groups").off(previuosEventType, previuosCallback);
-              break;
-           default:
-              console.log("Error: no such groups cluster in main ("+previuosUid+")");
-        }
-     }
-   
-   activeEntity.entityType = newEntity;
-   activeEntity.uid = newUid;
-   activeEntity.eventType = newEventType;
-   activeEntity.callback = newCallback;
-   activeEntity.turnOff = turnOff;
-   //activeEntity.previuosEntityType = previuosEntityType;
+    activeEntity.entityType = newEntity;
+    activeEntity.uid = newUid;
+    activeEntity.turnOff = turnOff;
 
 
   setUrl(newEntity, newUid);
@@ -109,8 +96,6 @@ function setActiveEntity (newEntity, newUid, newEventType, newCallback, turnOff)
 
 
   $("#entitiesPanel").slideUp(400);
-
-  var currentEntity = activeEntity.uid;
 
   showNumberOfFeeds();
 }

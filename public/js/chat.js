@@ -35,7 +35,7 @@ function showChat(entityType, uid) {
    DB.child("chats/" + uid).once('value',function(snapshot) {
 
       // setActiveEntity should always be called first
-      setActiveEntity("chats", uid, "child_added", chatsCallback, turnOff);
+      setActiveEntity("chats", uid, turnOff);
 
       // get actual content, create chat header if needed, implement existing header otherwise
       DB.child(entityType + "/" + uid).once('value', function(actualContent) {
