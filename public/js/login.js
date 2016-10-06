@@ -8,19 +8,24 @@ function listenToAuth(currentUrl){
       // User is signed in.
       $("#loginScreen").hide(300);
       userUuid = user.uid;
-      userName = user.displayName;
-      userPhoto = user.photoURL;
+      var userPhoto = user.photoURL;
       userEmail = user.email;
 
-      if (userPhoto == null){ userPhoto = ""};
+      if (userPhoto == null)
+        userPhoto = "";
 
-      DB.child("users/"+user.uid).update({name: user.displayName, email: user.email, userPhoto: userPhoto});
+
+      if(userName == null)
+        userName = "Deliberator";
+      else
+        userName = user.displayName;
+
+      DB.child("users/"+user.uid).update({name: userName, email: user.email, userPhoto: userPhoto});
 
       initFeedManagerProps();
-      
       updatesListener();
 
-      console.log("login: "+ user.displayName);
+      console.log("login: "+ user.email, userName, user.uid);
 
       routTo(currentUrl);
 

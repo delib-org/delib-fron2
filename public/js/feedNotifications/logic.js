@@ -16,6 +16,7 @@ function initFeedManagerProps () {
 
     updatesRegulator.latestContent.then(function (snapshot) {
         updatesRegulator.latestContentLocal = snapshot.val();
+        console.log(snapshot.val());
         // updatesRegulator.latestContentLocal = {
         //     dateAdded : 1473512293636
         // };
@@ -26,21 +27,22 @@ function initFeedManagerProps () {
         if(!newLatestContent)
             return null;
 
-
-        if(updatesRegulator.latestContentLocal == null ) {
-            DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val().dateAdded);
+        if(updatesRegulator.latestContentLocal.dateAdded == undefined || updatesRegulator.latestContentLocal.dateAdded == null) {
+            DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val());
             updatesRegulator.latestContentLocal = newLatestContent.val();
             console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
-            return false;
-        } else if (updatesRegulator.latestContentLocal.dateAdded <= newLatestContent.val().dateAdded - 400) {
+            return true;
+        } else if (updatesRegulator.latestContentLocal.dateAdded < newLatestContent.val().dateAdded - 400) {
             // found a latest content, content should be pushed..
-            DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val().dateAdded);
+            DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val());
             updatesRegulator.latestContentLocal = newLatestContent.val();
             console.log("REGULATED!");
-            return false;
-        } else {
-            console.log("no regulation needed");
             return true;
+        } else {
+
+            console.log(updatesRegulator.latestContentLocal.dateAdded, newLatestContent.val().dateAdded - 400)
+            // console.log("no regulation needed");
+            return false;
         }
     };
 
@@ -163,7 +165,10 @@ function updatesListener() {
 
                             // ==== regulation chunk ==== //
                             // will make sure we will get the latest whatever..
-                            if (updatesRegulator.regulate(NewPending))
+
+                            var regulated = updatesRegulator.regulate(NewPending);
+
+                            if (!regulated)
                                 return;
                                 // ============================================================================
 
@@ -184,12 +189,14 @@ function updatesListener() {
                                     if(lastEntranceOn.val() == null)
                                         return;
 
-                                    if (updatesRegulator.regulate(NewPending))
+                                    var regulated = updatesRegulator.regulate(NewPending);
+
+                                    if (!regulated)
                                         return;
 
                                     DB.child(NewPending.val().entityType + "/" + NewPending.key).once('value', function (actualContent) {
 
-                                        if (isNewSubEntityReg.feed && lastEntranceOn.val() < NewPending.val().dateAdded)
+                                        if (isNewSubEntityReg.feed)
                                             feedBuilder(actualContent, entityUpdates.key, NewPending, {
                                                 on: true,
                                                 lastRun: false
@@ -220,7 +227,10 @@ function updatesListener() {
                             // ==== regulation chunk ==== //
                             // will make sure we will get the latest whatever..
 
-                            if (updatesRegulator.regulate(ownerCall))
+
+                            var regulated = updatesRegulator.regulate(ownerCall);
+
+                            if (!regulated)
                                 return;
                             // ============================================================================
 
@@ -247,7 +257,10 @@ function updatesListener() {
 
                                 // ==== regulation chunk ==== //
                                 // will make sure we will get the latest whatever..
-                                if (updatesRegulator.regulate(entityAddedUid))
+
+                                var regulated = updatesRegulator.regulate(entityAddedUid);
+
+                                if (!regulated)
                                     return;
 
                                if (isNewSubEntityReg.notifications)
@@ -264,16 +277,19 @@ function updatesListener() {
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
                             feedManager.lastEntranceOn.then(function (lastEntranceOn) {
 
+                                if(lastEntranceOn.val() == null)
+                                    return;
+
                                 console.log("inside! catch-up subEntities");
                                 subEnities.forEach(function (entityAdded) {
-                                    if(lastEntranceOn.val() == null)
-                                        return;
 
-                                    if (updatesRegulator.regulate(entityAdded))
+                                    var regulated = updatesRegulator.regulate(entityAdded);
+
+                                    if (!regulated)
                                         return;
 
                                     DB.child(entityAdded.val().entityType + "/" + entityAdded.key).once('value', function (actualContent) {
-                                            if (isNewSubEntityReg.feed && lastEntranceOn.val() < entityAdded.val().dateAdded)
+                                            if (isNewSubEntityReg.feed)
                                                 feedBuilder(actualContent, entityUpdates.key, entityAdded, {
                                                     on: true,
                                                     lastRun: false
@@ -313,7 +329,9 @@ function updatesListener() {
     
                                         // ==== regulation chunk ==== //
                                         // will make sure we will get the latest whatever..
-                                        if (updatesRegulator.regulate(lastMessage))
+                                        var regulated = updatesRegulator.regulate(lastMessage);
+
+                                        if (!regulated)
                                             return;
                                         // ============================================================================
 
@@ -336,7 +354,7 @@ function updatesListener() {
                                             if (isChatReg.feed){
                                                 var tempArr =[
                                                     messagesSentInc,
-                                                    updatesRegulator.latestContentLocal.val()
+                                                    updatesRegulator.latestContentLocal
                                                 ];
 
                                                 feedBuilder(chatEntityContent,"chats", tempArr);
@@ -354,22 +372,25 @@ function updatesListener() {
                                 DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                     feedManager.lastEntranceOn.then(function (lastEntranceOn) {
 
+                                        // create a temporary messagesSentInc to hold inboxMessages.val()
+                                        var messagesSentInc;
+
+                                        // now we need the inboxMessages to get the number of messages not seen
+                                        // messagesSentInc = inboxVolume.val();
+                                        messagesSentInc = inboxVolume.val();
+
                                         console.log("inside! catch-up chats");
                                         messages.forEach(function (messageAdded) {
 
                                             if(lastEntranceOn == null)
                                                 return;
 
-                                            if (updatesRegulator.regulate(messageAdded))
+                                            var regulated = updatesRegulator.regulate(messageAdded);
+
+                                            if (!regulated)
                                                 return;
 
-                                            if (isChatReg.feed && lastEntranceOn.val() < messageAdded.val().dateAdded) {
-                                                // create a temporary messagesSentInc to hold inboxMessages.val()
-                                                var messagesSentInc;
-
-                                                // now we need the inboxMessages to get the number of messages not seen
-                                                // messagesSentInc = inboxVolume.val();
-                                                messagesSentInc = inboxVolume.val();
+                                            if (isChatReg.feed) {
 
                                                 // obvious incrementation, is obvious..
                                                 messagesSentInc++;
