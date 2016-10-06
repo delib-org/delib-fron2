@@ -113,7 +113,7 @@ function showMultiOptions(questionUid){
   var turnOff = function (){
 
     DB.child("questions/"+questionUid+"/options").orderByChild("votes").off("child_added", multiOptionsCallback);
-    DB.child("questions/"+questionUid+"/options/"+optionUid).off("value", votesCallBack)
+    DB.child("questions/"+questionUid+"/options/"+optionUid).off("child_added", votesCallBack)
   };
 
   setActiveEntity("questions",questionUid, turnOff);

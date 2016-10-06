@@ -53,28 +53,28 @@ function setActiveEntity (newEntity, newUid, turnOff) {
 
   checkChatsUpdates(newEntity, newUid);
 
-    // if (previuosEntityType != "main") {
-    //         previuosTurnOff();
-    // } else {
-    //    switch (previuosUid) {
-    //       case "member":
-    //       case "owned":
-    //          DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
-    //          break;
-    //       case "public":
-    //          DB.child("groups").off(previuosEventType, previuosCallback);
-    //          break;
-    //       default:
-    //          console.log("Error: no such groups cluster in main ("+previuosUid+")");
-    //    }
-    // }
+  // if (previuosEntityType != "main") {
+  //         previuosTurnOff();
+  // } else {
+  //    switch (previuosUid) {
+  //       case "member":
+  //       case "owned":
+  //          DB.child("users/"+userUuid+"/role").off(previuosEventType, previuosCallback);
+  //          break;
+  //       case "public":
+  //          DB.child("groups").off(previuosEventType, previuosCallback);
+  //          break;
+  //       default:
+  //          console.log("Error: no such groups cluster in main ("+previuosUid+")");
+  //    }
+  // }
 
-    if(previuosTurnOff !== undefined)
-      previuosTurnOff();
+  if(previuosTurnOff !== undefined)
+    previuosTurnOff();
 
-    activeEntity.entityType = newEntity;
-    activeEntity.uid = newUid;
-    activeEntity.turnOff = turnOff;
+  activeEntity.entityType = newEntity;
+  activeEntity.uid = newUid;
+  activeEntity.turnOff = turnOff;
 
 
   setUrl(newEntity, newUid);
@@ -178,61 +178,83 @@ function showEntities(entity, uid){
 
 };
 
-function showBreadCrumb(entityType, uid, title){
+function showBreadCrumb(entityType1, uid1, title1){
   //get all parents of an entity (by settin it's type and uid)
+  console.log(entityType1, uid1, title1);
+  if (entityType1 == "chats"){
+    console.log("chats!")
+    //get entity parent
+    DB.child("chats/"+uid1+"/entity/typeInDB").once("value",function(parentData){
+      var parentType = parentData.val();
+      var uid = uid1;
+      var title = title1;
+      DB.child(parentType+"/"+uid+"/title").once("value", function(titleDB){
+        var chatBread = {entityType: "chats", uid: uid1, symbol: symbols["chats"], title:"chat"};
+        var chatParent = {entityType: parentType, uid: uid, symbol: symbols[parentType], title:titleDB.val()}
 
-  //child
+        var context = {path: [chatParent, chatBread]}
+        renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
+      })
+    })
+  } else{
+    getBreadCrumb(entityType1, uid1, title1);
+  }
 
-  var currentChild = {entityType: entityType, uid: uid, title:title, symbol: symbols[entityType]};
+  function getBreadCrumb(entityType, uid, title){
+    var currentChild = {entityType: entityType, uid: uid, title:title, symbol: symbols[entityType]};
 
-  //get parent 1
-  DB.child(entityType+"/"+uid).once("value", function(dataP1){
+    //get parent 1
+    DB.child(entityType+"/"+uid).once("value", function(dataP1){
 
-    if (dataP1.val().parentEntityUid != null && dataP1.val().parentEntityUid !=""){
+      if (dataP1.val().parentEntityUid != null && dataP1.val().parentEntityUid !=""){
 
-      var parent1Type = dataP1.val().parentEntityType;
-      var parent1Uid = dataP1.val().parentEntityUid;
-      var parent1Symbol = symbols[parent1Type];
+        var parent1Type = dataP1.val().parentEntityType;
+        var parent1Uid = dataP1.val().parentEntityUid;
+        var parent1Symbol = symbols[parent1Type];
 
-      var parent1 = {entityType: parent1Type, uid: parent1Uid, symbol: parent1Symbol};
+        var parent1 = {entityType: parent1Type, uid: parent1Uid, symbol: parent1Symbol};
 
-      DB.child(parent1Type+"/"+parent1Uid).once("value", function(dataP2){
+        DB.child(parent1Type+"/"+parent1Uid).once("value", function(dataP2){
+          if(dataP2.val() != null){
+            //get parent1 title
+            parent1.title = dataP2.val().title;
 
-        //get parent1 title
-        parent1.title = dataP2.val().title;
+            if (dataP2.val() != null && dataP2.val().parentEntityType != ""){
+              //check if the parent1 have parent2
 
-        if (dataP2.val() != null && dataP2.val().parentEntityType != ""){
-          //check if the parent1 have parent2
+              //get parent2 uid and type
+              var parent2Type = dataP2.val().parentEntityType;
+              var parent2Uid = dataP2.val().parentEntityUid;
+              var parent2Symbol = symbols[parent2Type];
 
-          //get parent2 uid and type
-          var parent2Type = dataP2.val().parentEntityType;
-          var parent2Uid = dataP2.val().parentEntityUid;
-          var parent2Symbol = symbols[parent2Type];
+              var parent2 = {entityType: parent2Type, uid: parent2Uid, symbol: parent2Symbol};
 
-          var parent2 = {entityType: parent2Type, uid: parent2Uid, symbol: parent2Symbol};
+              //get parent 2 title
+              DB.child(parent2Type+"/"+parent2Uid).once("value", function(dataP3){
 
-          //get parent 2 title
-          DB.child(parent2Type+"/"+parent2Uid).once("value", function(dataP3){
+                parent2.title = dataP3.val().title;
+                var context = {path: [parent2, parent1, currentChild]}
+                renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
 
-            parent2.title = dataP3.val().title;
-            var context = {path: [parent2, parent1, currentChild]}
+              })
+            } else {
+
+              var context = {path: [parent1, currentChild]}
+              renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
+            }
+          } else{
+            console.log("Error no parent...  deleting parents records");
+            DB.child(entityType+"/"+uid).update({parentEntityType:"", parentEntityUid:"", pubtype: true});
+            var context = {path: [currentChild]};
             renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
 
-          })
-        } else {
+          }
+        })
+      } else {
 
-          var context = {path: [parent1, currentChild]}
-          renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
-        }
-
-      })
-    } else {
-
-      var context = {path: [currentChild]};
-      renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
-    }
-  })
-
-
-
+        var context = {path: [currentChild]};
+        renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
+      }
+    });
+  }
 }

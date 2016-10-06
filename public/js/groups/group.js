@@ -1,8 +1,25 @@
 function showGroup(groupUid){
 
+
+
   //show footer&header
 
   DB.child("groups/"+groupUid).once("value", function(dataSnapshot){
+
+    //check and see if group exists. if it dosn't exists, delete it from user records
+    if (!dataSnapshot.val() == null){
+      DB.child("users/"+userUuid+"/role/"+groupUid).remove();
+      DB.child("users/"+userUuid+"/membership/"+groupUid).remove();
+      DB.child("users/"+userUuid+"/updates/groups/"+groupUid).remove();
+      DB.child("users/"+userUuid+"/chatInboxes/"+groupUid).remove();
+      console.log("No such group: group removed from user records");
+      alert("Group Does not exists. Going back to home");
+
+      showMain("public");
+      return;
+
+    }
+
     //show header
     var title = dataSnapshot.val().title;
     var groupType = dataSnapshot.val().type;
