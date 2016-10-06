@@ -21,7 +21,8 @@ function showChat(entityType, uid) {
 
    clearChat();
 
-   renderTemplate("#chatMenu-tmpl", {type: entityType, uid:uid}, "#headerMenu")
+   renderTemplate("#chatMenu-tmpl", {type: entityType, uid:uid}, "#headerMenu");
+  subsManager.isUpdatesSet();
 
    var headerContent ={};
 
@@ -71,10 +72,13 @@ function showChat(entityType, uid) {
 
          // footer rendering
          renderTemplate("#chatInput-tmpl",{},"footer");
-         subsManager.isUpdatesSet();
+
 
          // render chat and keep .on() listening for coming messages
          DB.child("chats/"+uid+"/messages").orderByChild("dateAdded").limitToLast(20).on("child_added", chatsCallback);
+
+
+
 
          //listen to enter from input, should be called lastly.
          $("#chatInputTxt").keypress(function (e) {
