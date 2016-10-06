@@ -443,7 +443,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
                     entityType: entityDatum.val().title,
                     entityUid: entityDatum.key,
                     chatMessagesCounter: variation[0],
-                    laseMessageContent: variation[1],
+                    description: variation[1],
                     date: entityDatum.val().dateAdded
                 };
 
