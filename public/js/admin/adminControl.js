@@ -35,8 +35,24 @@ function showAdminPanel(groupUid){
       members.forEach(function(member){
 
         var dateAskedFor = parseDate(member.val().dateAdded,"DDMMYY");
+        var role = member.val().role || "member";
 
-        preContext.push({name: member.val().name, email: member.val().email, date: dateAskedFor, groupUid:groupUid, memberUid: member.key})
+        switch(role){
+          case "member":
+            var selectMember = "selected";
+            var selectManager = null;
+            break;
+          case "manager":
+            var selectMember = null;
+            var selectManager = "selected";
+            break;
+          default:
+            var selectMember = "selected";
+            var selectManager = null;
+
+        }
+
+        preContext.push({name: member.val().name, email: member.val().email, date: dateAskedFor, groupUid:groupUid, memberUid: member.key, selectMember:selectMember, selectManager:selectManager })
       });
       var context = {members: preContext}
 
@@ -92,9 +108,14 @@ function removeMember(groupUid, memberUid, userName){
 
 function findMemberUid(name){
   DB.child("users").orderByChild("name").startAt(name).once("value", function(data){
-    data.forEach(function(datum){
+    data.forEach(function(datum){adminControlMembers
       console.log(datum.val().name, datum.key)
     })
 
   })
+}
+
+function setMemberRole(seleted, memberUid, groupUid){
+  console.log(seleted.value, memberUid, groupUid);
+  DB.child("groups/"+groupUid+"/members/"+memberUid).update({role: seleted.value});
 }

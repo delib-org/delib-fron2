@@ -800,15 +800,20 @@ Tow options
             <table class="membershipTable">
               <tr class="membershipTableHeader">
                 <th>משתמש</th>
-                <th>תאריך</th>
                 <th>דוא"ל</th>
+                <th>תפקיד</th>
                 <th>הסרה</th>
               </tr>
               {{#each members}}
               <tr>
                 <td>{{name}}</td>
-                <td>{{date}}</td>
                 <td>{{email}}</td>
+                <td>
+                  <select onchange="setMemberRole(this, '{{memberUid}}','{{groupUid}}')">
+                     <option value="member" {{selectMember}}>Member</option>
+                      <option value="manager" {{selectManager}}>Manager</option>
+                  </select>
+                </td>
                 <td><button class="approveBtn approveBtnX" onclick="removeMember('{{groupUid}}','{{memberUid}}', '{{name}}')"><i class="fa fa-close" aria-hidden="true"></i></button></td>
               </tr>
               {{/each}}
