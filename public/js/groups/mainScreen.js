@@ -140,7 +140,12 @@ function listenToGeneralGroups (typeOfGroup){
 
   groupsDB.orderByChild("pubtype").equalTo(true).on("value", publicGroups);
 
-  setActiveEntity("main", "public", "value", publicGroups);
+  var turnOff = function () {
+     groupsDB.orderByChild("pubtype").equalTo(true).on("value", publicGroups);
+   };
+
+
+  setActiveEntity("main", "public", turnOff);
 }
 
 function listenToOwned_MemberGroups (role){
@@ -205,9 +210,13 @@ function listenToOwned_MemberGroups (role){
     };
 
     //update groups details every time the user changes his groups
-    var onObject = userDB.child("role").orderByValue().equalTo(role).on("value", groupsOwnedMemberCallback);
+    userDB.child("role").orderByValue().equalTo(role).on("value", groupsOwnedMemberCallback);
 
-    setActiveEntity("main", "owned", "value", groupsOwnedMemberCallback, onObject);
+    var turnOff = function () {
+     userDB.child("role").orderByValue().equalTo(role).off("value", groupsOwnedMemberCallback);
+   };
+
+    setActiveEntity("main", "owned", turnOff);
 
   } else {console.log("type of role is not recognized")}
 }
@@ -234,42 +243,6 @@ function showCreateGroupPopup(){
 var userGroupsArray = new Array();
 var memberContext = new Object();
 
-//function getUserGroups(user){
-//
-//  var userDB = DB.child("users/"+user+"/groups/member");
-//  userDB.on("value", function(groups){
-//    userGroupsArray = [];
-//    groups.forEach(function(group){
-//      userGroupsArray.push(group.val());
-//    })
-//    console.log("1: "+userGroupsArray)
-//
-//    //create Member Context
-//
-//    var groupsArray = new Array();
-//    var groupsDetails = new Object();
-//
-//    for (i in userGroupsArray){
-//      groupsDB.child(userGroupsArray[i]).once("value", function(group){
-//
-//        if (group.exists()){
-//          var newGroup = group.val();
-//          var groupDetials = {
-//            "uuid": group.key(),
-//            "title": newGroup.title,
-//            "description": newGroup.description
-//          };
-//          groupsArray.push(groupDetials);
-//        }
-//      })
-//    }
-//    memberContext = {"groups": groupsArray}
-//    showMemberGroups();
-//    console.log("mc: " + JSON.stringify(memberContext));
-//  })
-//  console.log("2: "+userGroupsArray)
-//
-//}
 
 function goHome(){
   $("#notificationsSub").css("color", inactiveColor)
