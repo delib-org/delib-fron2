@@ -48,7 +48,8 @@ function showFeed(){
            title: entitiesArray[key].title,
            description:entitiesArray[key].description,
            symbol: symbols[entitiesArray[key].entityType],
-           counter: entitiesArray[key].chatMessagesCounter
+           counter: entitiesArray[key].chatMessagesCounter,
+           date: entitiesArray[key].date
          });
       }
 
