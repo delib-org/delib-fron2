@@ -87,7 +87,7 @@ function showMemberGroups(){
 
   DB.child("users/"+userUuid+"/membership").once("value", memberGroupsCallback);
 
-  setActiveEntity("main", "member", "value", memberGroupsCallback);
+  setActiveEntity("main", "member", undefined);
 
 
 
@@ -141,7 +141,7 @@ function listenToGeneralGroups (typeOfGroup){
   groupsDB.orderByChild("pubtype").equalTo(true).on("value", publicGroups);
 
   var turnOff = function () {
-     groupsDB.orderByChild("pubtype").equalTo(true).on("value", publicGroups);
+     groupsDB.orderByChild("pubtype").equalTo(true).off("value", publicGroups);
    };
 
 
