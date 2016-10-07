@@ -258,3 +258,9 @@ function showBreadCrumb(entityType1, uid1, title1){
     });
   }
 }
+
+function linkWhatsapp(){
+  var entityUrl = getUrl();
+
+  window.open("whatsapp://send?text=http://www.delib.org/" + entityUrl);
+}
