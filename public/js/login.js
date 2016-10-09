@@ -8,17 +8,19 @@ function listenToAuth(currentUrl){
       // User is signed in.
       $("#loginScreen").hide(300);
       userUuid = user.uid;
-      var userPhoto = user.photoURL;
+      userPhoto = user.photoURL;
       userEmail = user.email;
 
-      if (userPhoto == null)
+      if (userPhoto == null || userPhoto == undefined){
         userPhoto = "";
+      }
 
 
-      if(userName == null)
+      if(userName == null){
         userName = "Deliberator";
-      else
+      } else {
         userName = user.displayName;
+      }
 
       DB.child("users/"+user.uid).update({name: userName, email: user.email, userPhoto: userPhoto});
 

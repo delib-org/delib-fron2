@@ -39,6 +39,7 @@ $(function(){
 var userUuid;
 var userName;
 var userEmail;
+var userPhoto;
 var startingUrl;
 var activeEntity = new Object();
 var firstRun = true;
