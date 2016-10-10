@@ -160,7 +160,7 @@ function showEntities(entity, uid){
       break;
     case "options":
       DB.child("options/"+uid).once("value", function(dataSnapshot){
-        if (question.exists()){
+        if (dataSnapshot.exists()){
           var questionUid = dataSnapshot.val().questionUid;
           var optionUid = dataSnapshot.val().optionUid;
 
