@@ -13,7 +13,7 @@ $(function(){
     size: 'medium'
   });
 
-  var currentUrl = getUrl();"
+  var currentUrl = getUrl();
     console.log("currentUrl:" + currentUrl);
 
   startingUrl = currentUrl;
