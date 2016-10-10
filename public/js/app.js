@@ -13,7 +13,7 @@ $(function(){
     size: 'medium'
   });
 
-  var currentUrl = getUrl();
+  var currentUrl = decodeURIComponent(getUrl());
     console.log("currentUrl:" + currentUrl);
 
   startingUrl = currentUrl;
