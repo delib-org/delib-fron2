@@ -145,14 +145,14 @@
 
         <script type="text/x-handlebars-template" id="headerMenu-tmpl">
 
-<div class="material-ripple clickables headerMenuBtn" onclick="showMain('public')"><i class="fa fa-home fa-2x"></i></div>
-<div class="material-ripple clickables headerMenuBtn" onclick="showAdminPanel('{{uid}}')"><i class="fa fa-info-circle fa-2x"></i></div>
-<div class="material-ripple clickables headerMenuBtn" onclick="showChat('{{type}}','{{uid}}')"><i class="fa fa-comments-o fa-2x"></i></div>
-<div class="material-ripple clickables headerMenuBtn" onclick="someFunction()"><i class="fa fa-share-alt fa-2x"></i></div>
-<div id="feedSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setFeed()"><i class="fa fa-globe fa-2x"></i></div>
-<div id="notificationsSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
-<div id="isMembership" class="material-ripple clickables headerMenuBtn" onclick="setMembership()"><i class="fa fa-heart fa-2x"></i></div>
-<div id="isMembership" class="material-ripple clickables headerMenuBtn feedButton" onclick="showFeed()"><div class="feedButtonDivs" id="evelopeDiv"><i class="fa fa-envelope-o fa-2x"></i></div><div class="feedButtonDivs" id="divCounter"></div></div></div>
+          <div id="isMembership" class="material-ripple clickables headerMenuBtn" onclick="setMembership()"><i class="fa fa-key fa-2x"></i></div>
+          <!--<div class="material-ripple clickables headerMenuBtn" onclick="showMain('public')"><i class="fa fa-home fa-2x"></i></div>-->
+          <div class="material-ripple clickables headerMenuBtn" onclick="showAdminPanel('{{uid}}')"><i class="fa fa-info-circle fa-2x"></i></div>
+          <div class="material-ripple clickables headerMenuBtn" onclick="showChat('{{type}}','{{uid}}')"><i class="fa fa-comments fa-2x"></i></div>
+          <div class="material-ripple clickables headerMenuBtn" onclick="linkWhatsapp()"><i class="fa fa-whatsapp fa-2x"></i></div>
+          <div id="feedSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setFeed()"><i class="fa fa-globe fa-2x"></i></div>
+          <div id="notificationsSub" class="material-ripple clickables headerMenuBtn" onclick="subsManager.setNotifications()"><i class="fa fa-bell-o fa-2x"> </i></div>
+          <div id="isMembership" class="material-ripple clickables headerMenuBtn feedButton" onclick="showFeed()"><div class="feedButtonDivs" id="evelopeDiv"><i class="fa fa-envelope-o fa-2x"></i></div><div class="feedButtonDivs" id="divCounter"></div></div></div>
 
         </script>
 
@@ -644,7 +644,7 @@ Tow options
 
 <div class="chatInput">
     <textarea id="chatInputTxt" placeholder="כתבו משהו" style="width:98%"></textarea>
-    <button onclick="addChatMessagePre()">אישור</button>
+    <button onclick="addChatMessagePre('{{uid}}')">אישור</button>
             </div>
 
         </script>

@@ -71,7 +71,7 @@ function showChat(entityType, uid) {
          showBreadCrumb("chats", uid, "chat")
 
          // footer rendering
-         renderTemplate("#chatInput-tmpl",{},"footer");
+         renderTemplate("#chatInput-tmpl",{uid:uid},"footer");
 
 
          // render chat and keep .on() listening for coming messages
@@ -93,7 +93,7 @@ function showChat(entityType, uid) {
 
 
 function addChatMessage(chatUid,userUid, text) {
-
+  console.log("chatUid: "+ chatUid);
    if (text != "") {
 
       //get user name

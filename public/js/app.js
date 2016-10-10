@@ -13,7 +13,8 @@ $(function(){
     size: 'medium'
   });
 
-  var currentUrl = getUrl();
+  var currentUrl = decodeURIComponent(getUrl());
+    console.log("currentUrl:" + currentUrl);
 
   startingUrl = currentUrl;
   //   routTo(currentUrl);
@@ -39,6 +40,7 @@ $(function(){
 var userUuid;
 var userName;
 var userEmail;
+var userPhoto;
 var startingUrl;
 var activeEntity = new Object();
 var firstRun = true;

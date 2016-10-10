@@ -160,7 +160,7 @@ function showEntities(entity, uid){
       break;
     case "options":
       DB.child("options/"+uid).once("value", function(dataSnapshot){
-        if (question.exists()){
+        if (dataSnapshot.exists()){
           var questionUid = dataSnapshot.val().questionUid;
           var optionUid = dataSnapshot.val().optionUid;
 
@@ -257,4 +257,10 @@ function showBreadCrumb(entityType1, uid1, title1){
       }
     });
   }
+}
+
+function linkWhatsapp(){
+  var entityUrl = getUrl();
+
+  window.open("whatsapp://send?text=http://www.delib.org/" + entityUrl);
 }
