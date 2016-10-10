@@ -27,7 +27,7 @@ function initFeedManagerProps () {
         if(!newLatestContent)
             return null;
 
-        if(updatesRegulator.latestContentLocal.dateAdded == undefined || updatesRegulator.latestContentLocal.dateAdded == null) {
+        if(updatesRegulator.latestContentLocal.dateAdded === null) {
             DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val());
             updatesRegulator.latestContentLocal = newLatestContent.val();
             console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
