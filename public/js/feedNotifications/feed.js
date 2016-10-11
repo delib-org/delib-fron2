@@ -138,7 +138,7 @@ subsManager.setFeed = function(isOwnerCall) {
 };
 
 subsManager.isFeedSet = function (isOwnerCall) {
-    
+    // debugger;
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
@@ -150,11 +150,11 @@ subsManager.isFeedSet = function (isOwnerCall) {
     
     
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/feed");
-
+    var promise;
     switch (activeEntity.entityType) {
         case "adminControl":
             // re-defining userFeed in chats context
-            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+            promise = DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
                 userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
                 
                 userFeed.once('value', function(dataSnapshot) {
@@ -166,7 +166,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
 
         case "chats":
             // re-defining userFeed in chats context
-            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+            promise = DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
                 userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");
 
                 userFeed.once('value', function(dataSnapshot) {
@@ -179,7 +179,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
         case "groups":
             // get in only if on a group entity and function is called from the ownerCall box
             if (isOwnerCall) {
-                userFeed.once('value', function(dataSnapshot) {
+                promise = userFeed.once('value', function(dataSnapshot) {
 
                     subsManager.feedIsSet = dataSnapshot.child("OwnerCalls").exists();
                 });
@@ -191,23 +191,26 @@ subsManager.isFeedSet = function (isOwnerCall) {
         // please DO NOT put a break; statement here..
 
         default:
-            userFeed.once('value', function(dataSnapshot) {
+            promise = userFeed.once('value', function(dataSnapshot) {
 
                 subsManager.feedIsSet = dataSnapshot.child("newSubEntity").exists();
             });
     }
+    
+    promise.then(function () {
 
-    if (subsManager.feedIsSet) {
-        $("#feedSub").css("color", activeColor);
+        if (subsManager.feedIsSet) {
+            $("#feedSub").css("color", activeColor);
 
-        // if(isOwnerCall)
-        // // NEEDED: ownerCall box, and an on/off button
-    } else {
-        $("#feedSub").css("color", inactiveColor);
+            // if(isOwnerCall)
+            // // NEEDED: ownerCall box, and an on/off button
+        } else {
+            $("#feedSub").css("color", inactiveColor);
 
-        // if(isOwnerCall)
-        // // NEEDED: ownerCall box, and an on/off button
-    }
+            // if(isOwnerCall)
+            // // NEEDED: ownerCall box, and an on/off button
+        }
+    });
 
 };
 

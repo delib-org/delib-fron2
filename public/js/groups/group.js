@@ -145,6 +145,7 @@ function showGroup(groupUid){
 
   }).then(function(rendered) {
     subsManager.isUpdatesSet();
+    console.log('group updates rendered');
   });
 
 

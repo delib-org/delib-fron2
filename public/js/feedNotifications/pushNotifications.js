@@ -86,7 +86,7 @@ function pushNotification(EntityData, entityType, variation) {
                 case "groups": showGroup(EntityData.key); break;
                 case "topics": showTopic(EntityData.key); break;
                 case "questions": showQuestion(EntityData.key); break;
-                case "chats": showChat(EntityData.key); break; //look for change in showChat function... lets talk about it (Tal);
+                case "chats": showChat(EntityData.key); break;
                 case "ownerCalls": showGroup(EntityData.key);
                 // for a later use
                 // case "options": showOptionInfo(EntityData.key); break;
@@ -215,7 +215,7 @@ subsManager.setNotifications = function(isOwnerCall) {
 };
 
 subsManager.isNotificationsSet = function (isOwnerCall) {
-
+    // debugger;
     if(isOwnerCall == undefined)
         isOwnerCall= false;
 
@@ -225,11 +225,11 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
     }
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/notifications");
-
+    var promise;
     switch (activeEntity.entityType) {
         case "chats":
             // re-defining userFeed in chats context
-            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+            promise = DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
                 userNotifications = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/notifications");
                 
                 userNotifications.once('value', function(dataSnapshot) {
@@ -242,7 +242,7 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
         case "groups":
             // get in only if on a group entity and function is called from the ownerCall box
             if (isOwnerCall) {
-                userNotifications.once('value', function(dataSnapshot) {
+                promise = userNotifications.once('value', function(dataSnapshot) {
 
                     subsManager.notificationsIsSet = dataSnapshot.child("OwnerCalls").exists();
                 });
@@ -254,22 +254,24 @@ subsManager.isNotificationsSet = function (isOwnerCall) {
         // please DO NOT put a break; statement here..
 
         default:
-            userNotifications.once('value', function(dataSnapshot) {
+            promise =userNotifications.once('value', function(dataSnapshot) {
 
                 subsManager.notificationsIsSet = dataSnapshot.child("newSubEntity").exists();
             });
     }
 
-    if (subsManager.notificationsIsSet) {
-        $("#notificationsSub").css("color", activeColor);
+    promise.then(function () {
 
-        // if(isOwnerCall)
-        // // NEEDED: ownerCall box, and an on/off button
-    } else {
-        $("#notificationsSub").css("color", inactiveColor);
+        if (subsManager.notificationsIsSet) {
+            $("#notificationsSub").css("color", activeColor);
+
+            // if(isOwnerCall)
+            // // NEEDED: ownerCall box, and an on/off button
+        } else {
+            $("#notificationsSub").css("color", inactiveColor);
 //        console.log("inactive notifications!");
-        // if(isOwnerCall)
-        // // NEEDED: ownerCall box, and an on/off button
-    }
-
+            // if(isOwnerCall)
+            // // NEEDED: ownerCall box, and an on/off button
+        }
+    })
 };
