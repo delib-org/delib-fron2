@@ -19,25 +19,67 @@ function initFeedManagerProps () {
         console.log(snapshot.val());
     });
 
-    updatesRegulator.regulate = function (newLatestContent) {
+    updatesRegulator.regulate = function (newLatestContent, contentType) {
 
         if(!newLatestContent)
             return null;
-        
+
         if(updatesRegulator.latestContentLocal === null) {
-            DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val());
-            updatesRegulator.latestContentLocal = newLatestContent.val();
+            DB.child('users/'+userUuid+'/latestContent/latest').set(newLatestContent.val());
+            DB.child('users/'+userUuid+'/latestContent/'+contentType).set(newLatestContent.val());
+            
+            updatesRegulator.latestContentLocal.latest = newLatestContent.val();
+            updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
+            
             console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
             return true;
-        } else if (updatesRegulator.latestContentLocal.dateAdded < newLatestContent.val().dateAdded - 400) {
+        } else if (updatesRegulator.latestContentLocal.latest.dateAdded < newLatestContent.val().dateAdded - 400) {
             // found a latest content, content should be pushed..
-            DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val());
-            updatesRegulator.latestContentLocal = newLatestContent.val();
+            DB.child('users/'+userUuid+'/latestContent/latest').set(newLatestContent.val());
+            DB.child('users/'+userUuid+'/latestContent/'+contentType).set(newLatestContent.val());
+            
+            updatesRegulator.latestContentLocal.latest = newLatestContent.val();
+            updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
+            
             console.log("REGULATED!");
             return true;
         } else {
 
-            console.log(updatesRegulator.latestContentLocal.dateAdded, newLatestContent.val().dateAdded - 400)
+            console.log(updatesRegulator.latestContentLocal.dateAdded, newLatestContent.val().dateAdded - 400);
+            // console.log("no regulation needed");
+            return false;
+        }
+    };
+
+    updatesRegulator.catchUpModeRegulate = function (newLatestContent, contentType) {
+
+        if(!newLatestContent)
+            return null;
+
+        if(updatesRegulator.latestContentLocal === null) {
+            DB.child('users/'+userUuid+'/latestContent/latest').set(newLatestContent.val());
+            DB.child('users/'+userUuid+'/latestContent/'+contentType).set(newLatestContent.val());
+
+            updatesRegulator.latestContentLocal.latest = newLatestContent.val();
+            updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
+
+            console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
+            return true;
+        } else if (updatesRegulator.latestContentLocal[contentType].dateAdded < newLatestContent.val().dateAdded - 400) {
+            // found a latest content, content should be pushed..
+            if (updatesRegulator.latestContentLocal.latest.dateAdded < newLatestContent.val().dateAdded - 400) {
+                DB.child('users/' + userUuid + '/latestContent/latest').set(newLatestContent.val());
+                updatesRegulator.latestContentLocal.latest = newLatestContent.val();
+            }
+            
+            DB.child('users/'+userUuid+'/latestContent/'+contentType).set(newLatestContent.val());
+            updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
+
+            console.log("REGULATED!");
+            return true;
+        } else {
+
+            console.log(updatesRegulator.latestContentLocal.dateAdded, newLatestContent.val().dateAdded - 400);
             // console.log("no regulation needed");
             return false;
         }
@@ -160,14 +202,10 @@ function updatesListener() {
                     if(!firstRun) {
                         DB.child("/groups/" + entityUpdate.key + "/pendings").orderByChild('dateAdded').limitToLast(1).on('child_added', ownerCall_cb = function (NewPending) {
 
-                            // ==== regulation chunk ==== //
-                            // will make sure we will get the latest whatever..
-
-                            var regulated = updatesRegulator.regulate(NewPending);
+                            var regulated = updatesRegulator.regulate(NewPending, "NewPending");
 
                             if (!regulated)
                                 return;
-                                // ============================================================================
 
                             DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
                                 if(isAdminControlReg.notifications)
@@ -186,7 +224,7 @@ function updatesListener() {
                                     if(lastEntranceOn.val() == null)
                                         return;
 
-                                    var regulated = updatesRegulator.regulate(NewPending);
+                                    var regulated = updatesRegulator.catchUpModeRegulate(NewPending, "NewPending");
 
                                     if (!regulated)
                                         return;
@@ -221,15 +259,10 @@ function updatesListener() {
                     if(!firstRun) {
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/ownerCalls").orderByChild('dateAdded').limitToLast(1).on('child_added', ownerCall_cb = function (ownerCall) {
 
-                            // ==== regulation chunk ==== //
-                            // will make sure we will get the latest whatever..
-
-
-                            var regulated = updatesRegulator.regulate(ownerCall);
+                            var regulated = updatesRegulator.regulate(ownerCall, "NewOwnerCall");
 
                             if (!regulated)
                                 return;
-                            // ============================================================================
 
                             DB.child(entityUpdates.key + "/" + entityUpdate.key).once('value', function (actualContent) {
                                 if (isOwnerCallReg.notifications)
@@ -252,10 +285,7 @@ function updatesListener() {
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').limitToLast(1).on('child_added', entityAdded_cb = function (entityAddedUid) {
                             DB.child(entityAddedUid.val().entityType + "/" + entityAddedUid.key).once('value', function (actualContent) {
 
-                                // ==== regulation chunk ==== //
-                                // will make sure we will get the latest whatever..
-
-                                var regulated = updatesRegulator.regulate(entityAddedUid);
+                                var regulated = updatesRegulator.regulate(entityAddedUid, "newSubEntity");
 
                                 if (!regulated)
                                     return;
@@ -266,7 +296,6 @@ function updatesListener() {
                                if (isNewSubEntityReg.feed)
                                    feedBuilder(actualContent, entityUpdates.key, entityAddedUid);
                                 });
-                                // ============================================================================
                         });
                     } else {
                         console.log("catch-up subEntities");
@@ -280,7 +309,7 @@ function updatesListener() {
                                 console.log("inside! catch-up subEntities");
                                 subEnities.forEach(function (entityAdded) {
 
-                                    var regulated = updatesRegulator.regulate(entityAdded);
+                                    var regulated = updatesRegulator.catchUpModeRegulate(entityAdded, "newSubEntity");
 
                                     if (!regulated)
                                         return;
@@ -323,14 +352,11 @@ function updatesListener() {
                                         // if no such group, get out
                                         if (chatEntityContent == null)
                                             return;
-    
-                                        // ==== regulation chunk ==== //
-                                        // will make sure we will get the latest whatever..
-                                        var regulated = updatesRegulator.regulate(lastMessage);
+
+                                        var regulated = updatesRegulator.regulate(lastMessage, "chats");
 
                                         if (!regulated)
                                             return;
-                                        // ============================================================================
 
                                         // create a temporary messagesSentInc to hold inboxMessages.val()
                                         var messagesSentInc;
@@ -349,7 +375,7 @@ function updatesListener() {
                                             if (isChatReg.notifications)
                                                 pushNotification(chatEntityContent, "chats", messagesSentInc);
                                             if (isChatReg.feed){
-                                                var tempArr =[
+                                                var tempArr = [
                                                     messagesSentInc,
                                                     updatesRegulator.latestContentLocal
                                                 ];
@@ -369,20 +395,19 @@ function updatesListener() {
                                 DB.child("/groups/" + entityUpdate.key).once('value', function (chatEntityContent) {
                                     feedManager.lastEntranceOn.then(function (lastEntranceOn) {
 
+                                        if(lastEntranceOn == null)
+                                            return;
+
                                         // create a temporary messagesSentInc to hold inboxMessages.val()
                                         var messagesSentInc;
 
                                         // now we need the inboxMessages to get the number of messages not seen
-                                        // messagesSentInc = inboxVolume.val();
                                         messagesSentInc = inboxVolume.val();
 
                                         console.log("inside! catch-up chats");
                                         messages.forEach(function (messageAdded) {
 
-                                            if(lastEntranceOn == null)
-                                                return;
-
-                                            var regulated = updatesRegulator.regulate(messageAdded);
+                                            var regulated = updatesRegulator.catchUpModeRegulate(messageAdded, "chats");
 
                                             if (!regulated)
                                                 return;
@@ -414,7 +439,7 @@ function updatesListener() {
                                         catchUpPromises[2] = true;
                                         if(catchUpPromises.every(Boolean))
                                             $.event.trigger('catchUpDone');
-                                });
+                                    });
                                 });
                             });
                         });

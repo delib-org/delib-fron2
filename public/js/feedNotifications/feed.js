@@ -8,11 +8,12 @@ subsManager.setFeed = function(isOwnerCall) {
         return;
 
     var userFeed = DB.child("users/" + userUuid + "/updates/" + activeEntity.entityType + "/" + activeEntity.uid + "/feed");
+    var promise;
 
     switch (activeEntity.entityType) {
         case "adminControl":
 
-            userFeed.once("value", function(dataSnapshot) {
+            promise = userFeed.once("value", function(dataSnapshot) {
                 if (dataSnapshot.child("adminControl").exists()) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
@@ -37,10 +38,10 @@ subsManager.setFeed = function(isOwnerCall) {
         case "chats":
 
             // re-defining userFeed in chats context
-            DB.child("chats/" + activeEntity.uid + "/entity").once('value', function(datasnapshot) {
+            promise =DB.child("chats/" + activeEntity.uid + "/entity").once('value', function(datasnapshot) {
                 userFeed = DB.child("users/" + userUuid + "/updates/" + datasnapshot.val().typeInDB + "/" + activeEntity.uid + "/feed");
-                
-                userFeed.once("value", function(dataSnapshot) {
+
+                 return userFeed.once("value", function(dataSnapshot) {
 
                     if (dataSnapshot.child("chats").exists()) {
                         // remove and listener inbox only if not registered to anything else
@@ -78,7 +79,7 @@ subsManager.setFeed = function(isOwnerCall) {
 
             // get in only if on a group entity and function is called from the ownerCall box
             if (isOwnerCall) {
-                userFeed.once("value", function(dataSnapshot) {
+                promise = userFeed.once("value", function(dataSnapshot) {
                     if (dataSnapshot.child("OwnerCalls").exists()) {
 
                         // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
@@ -110,7 +111,7 @@ subsManager.setFeed = function(isOwnerCall) {
 
         default:
 
-            userFeed.once("value", function(dataSnapshot) {
+            promise = userFeed.once("value", function(dataSnapshot) {
                 if (dataSnapshot.child("newSubEntity").exists()) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
@@ -133,8 +134,9 @@ subsManager.setFeed = function(isOwnerCall) {
 
     }
 
-
-    subsManager.isUpdatesSet();
+    promise.then(function () {
+        subsManager.isUpdatesSet();
+    })
 };
 
 subsManager.isFeedSet = function (isOwnerCall) {
@@ -196,7 +198,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
                 subsManager.feedIsSet = dataSnapshot.child("newSubEntity").exists();
             });
     }
-    
+
     promise.then(function () {
 
         if (subsManager.feedIsSet) {

@@ -66,7 +66,9 @@ var pendingColor = "#c78100";
 
 // Updates Variables and Constants
 var updatesRegulator = {
-  latestContentLocal: null
+  latestContentLocal: {
+    latest: null
+  }
 };
 
 // subsManager Def.

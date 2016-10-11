@@ -106,15 +106,16 @@ subsManager.setNotifications = function(isOwnerCall) {
         return;
 
     var userNotifications = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/notifications");
-
+    var promise;
+    
     switch (activeEntity.entityType) {
         case "chats":
 
             // re-defining userFeed in chats context
-            DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
+            promise =  DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
                 userNotifications = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/notifications");
 
-                userNotifications.once("value", function(dataSnapshot) {
+                return userNotifications.once("value", function(dataSnapshot) {
 
                     if (dataSnapshot.child("chats").exists()) {
 
@@ -157,7 +158,7 @@ subsManager.setNotifications = function(isOwnerCall) {
 
             // get in only if on a group entity and function is called from the ownerCall box
             if (isOwnerCall) {
-                userNotifications.once("value", function(dataSnapshot) {
+                promise = userNotifications.once("value", function(dataSnapshot) {
                     if (dataSnapshot.child("OwnerCalls").exists()) {
 
                         // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
@@ -188,7 +189,7 @@ subsManager.setNotifications = function(isOwnerCall) {
         // please DO NOT put a break; statement here..
 
         default:
-            userNotifications.once("value", function(dataSnapshot) {
+            promise = userNotifications.once("value", function(dataSnapshot) {
                 if (dataSnapshot.child("newSubEntity").exists()) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
@@ -210,8 +211,9 @@ subsManager.setNotifications = function(isOwnerCall) {
             });
     }
 
-
-    subsManager.isUpdatesSet();
+    promise.then(function () {
+        subsManager.isUpdatesSet();
+    })
 };
 
 subsManager.isNotificationsSet = function (isOwnerCall) {
