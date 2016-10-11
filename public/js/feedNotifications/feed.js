@@ -132,6 +132,9 @@ subsManager.setFeed = function(isOwnerCall) {
             });
 
     }
+
+
+    subsManager.isUpdatesSet();
 };
 
 subsManager.isFeedSet = function (isOwnerCall) {

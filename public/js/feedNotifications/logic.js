@@ -17,17 +17,14 @@ function initFeedManagerProps () {
     updatesRegulator.latestContent.then(function (snapshot) {
         updatesRegulator.latestContentLocal = snapshot.val();
         console.log(snapshot.val());
-        // updatesRegulator.latestContentLocal = {
-        //     dateAdded : 1473512293636
-        // };
     });
 
     updatesRegulator.regulate = function (newLatestContent) {
 
         if(!newLatestContent)
             return null;
-
-        if(updatesRegulator.latestContentLocal.dateAdded === null) {
+        
+        if(updatesRegulator.latestContentLocal === null) {
             DB.child('users/'+userUuid+'/latestContent').set(newLatestContent.val());
             updatesRegulator.latestContentLocal = newLatestContent.val();
             console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");

@@ -126,13 +126,14 @@ subsManager.setNotifications = function(isOwnerCall) {
                             // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                             //===================================================//
 
-                            DB.child("chats/"+activeEntity.uid+"/messages").orderByChild("dateAdded").limitToLast(1).off("value", chats_cb);
-                            userNotifications.child("chats").remove();
+                                DB.child("chats/"+activeEntity.uid+"/messages").orderByChild("dateAdded").limitToLast(1).off("value", chats_cb);
+                                userNotifications.child("chats").remove();
                             //===================================================//
 
                             // first line shuts down a specific node listener, even if the listener used also for feed
                             // seconed line lunches line 12 in logic.js and re-establishes the listener, causing feed to be re-functional once again
                             // same applies to the opposite.
+
                             DB.child("users/"+userUuid+"/chatInboxes/"+activeEntity.uid).remove();
                         } else {
                             userNotifications.child("chats").remove();
@@ -208,6 +209,9 @@ subsManager.setNotifications = function(isOwnerCall) {
                 }
             });
     }
+
+
+    subsManager.isUpdatesSet();
 };
 
 subsManager.isNotificationsSet = function (isOwnerCall) {
