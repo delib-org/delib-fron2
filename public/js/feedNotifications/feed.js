@@ -152,7 +152,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
     var userFeed = DB.child("users/"+userUuid+"/updates/"+activeEntity.entityType+"/"+activeEntity.uid+"/feed");
 
     switch (activeEntity.entityType) {
-        case "chats":
+        case "adminControl":
             // re-defining userFeed in chats context
             DB.child("chats/"+activeEntity.uid+"/entity").once('value', function(datasnapshot) {
                 userFeed = DB.child("users/"+userUuid+"/updates/"+datasnapshot.val().typeInDB+"/"+activeEntity.uid+"/feed");

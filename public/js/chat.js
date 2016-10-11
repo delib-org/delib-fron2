@@ -68,7 +68,7 @@ function showChat(entityType, uid) {
 
          // header rendering
          renderTemplate("#chatsHeader-tmpl",headerContent,"#headerTitle");
-         showBreadCrumb("chats", uid, "chat")
+         showBreadCrumb("chats", uid, "chat");
 
          // footer rendering
          renderTemplate("#chatInput-tmpl",{uid:uid},"footer");
