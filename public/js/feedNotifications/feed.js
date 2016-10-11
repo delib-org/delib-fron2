@@ -159,7 +159,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
                 
                 userFeed.once('value', function(dataSnapshot) {
     
-                    subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
+                    subsManager.feedIsSet = dataSnapshot.child("chats").exists();
                 });
             });
             break;
@@ -171,7 +171,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
 
                 userFeed.once('value', function(dataSnapshot) {
 
-                    subsManager.feedUpdatesSet = dataSnapshot.child("chats").exists();
+                    subsManager.feedIsSet = dataSnapshot.child("chats").exists();
                 });
             });
             break;
@@ -181,7 +181,7 @@ subsManager.isFeedSet = function (isOwnerCall) {
             if (isOwnerCall) {
                 userFeed.once('value', function(dataSnapshot) {
 
-                    subsManager.feedUpdatesSet = dataSnapshot.child("OwnerCalls").exists();
+                    subsManager.feedIsSet = dataSnapshot.child("OwnerCalls").exists();
                 });
                 // no need to keep on checking if were inside a group.
                 break;
@@ -193,11 +193,11 @@ subsManager.isFeedSet = function (isOwnerCall) {
         default:
             userFeed.once('value', function(dataSnapshot) {
 
-                subsManager.feedUpdatesSet = dataSnapshot.child("newSubEntity").exists();
+                subsManager.feedIsSet = dataSnapshot.child("newSubEntity").exists();
             });
     }
 
-    if (subsManager.feedUpdatesSet) {
+    if (subsManager.feedIsSet) {
         $("#feedSub").css("color", activeColor);
 
         // if(isOwnerCall)
