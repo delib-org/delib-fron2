@@ -57,6 +57,10 @@ function initFeedManagerProps () {
             return null;
 
         if(updatesRegulator.latestContentLocal === null) {
+            // basically latestContent can't be null in catch up mode because, catch up mode relies on updates subscriptions that
+            // have been made online, so latestContent will already be defined... this section might be deleted in the future
+            // but leave it be for now..
+            
             DB.child('users/'+userUuid+'/latestContent/latest').set(newLatestContent.val());
             DB.child('users/'+userUuid+'/latestContent/'+contentType).set(newLatestContent.val());
 
@@ -78,9 +82,7 @@ function initFeedManagerProps () {
             console.log("REGULATED!");
             return true;
         } else {
-
-            console.log(updatesRegulator.latestContentLocal.dateAdded, newLatestContent.val().dateAdded - 400);
-            // console.log("no regulation needed");
+            console.log("no regulation needed");
             return false;
         }
     };
