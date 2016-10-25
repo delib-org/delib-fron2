@@ -156,208 +156,214 @@
 
 
 function showOption(questionUid, optionUid) {
-    console.log("showOption: " + questionUid, optionUid)
-        //show header
-    DB.child("questions/" + questionUid + "/options/" + optionUid + "/title").once("value", function (titleInDB) {
-        renderTemplate("#optionHeaderTitle-tmpl", {
-            title: titleInDB.val()
-        }, "#headerTitle")
-    })
+  console.log("showOption: " + questionUid, optionUid)
 
-    renderTemplate("#headerMenu-tmpl", {
-        chatUid: optionUid,
-        entityType: "options"
-    }, "#headerMenu");
+  //render header
+  DB.child("questions/" + questionUid + "/options/" + optionUid + "/title").once("value", function (titleInDB) {
+    renderTemplate("#optionHeaderTitle-tmpl", {
+      title: titleInDB.val()
+    }, "#headerTitle")
+  })
 
-    //show footer
-    renderTemplate("#optionFooter-tmpl", {
-        questionUid: questionUid
-    }, "footer");
+  //render menu
+  renderTemplate("#headerMenu-tmpl", {
+    chatUid: optionUid,
+    entityType: "options"
+  }, "#headerMenu");
 
-   //show wrapper
-   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
+  //render footer
+  renderTemplate("#optionFooter-tmpl", {
+    questionUid: questionUid
+  }, "footer");
 
-        var description = dataSnapshot.val().description;
+  //render wrapper
+  DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
 
-        renderTemplate("#optionWrapper-tmpl", {
-            questionUid: questionUid,
-            optionUid: optionUid,
-            description: description
-        }, "wrapper");
-//        $('wrapper').html("<div id='" + optionUid + "DivOpt' class='card' contenteditable='true' >"+description+"</div>")
-        $('wrapper').html("<div id='"+optionUid+"DivOpt' class='card'>"+description+"</div>")
+    var description = dataSnapshot.val().description;
 
-        createQuillEditor("#" + optionUid + "DivOpt");
+    renderTemplate("#optionWrapper-tmpl", {
+      questionUid: questionUid,
+      optionUid: optionUid,
+      description: description
+    }, "wrapper");
 
+    //render description
+    $('wrapper').html("<div id='"+optionUid+"DivOpt' class='card'>"+description+"</div>")
+
+    createQuillEditor("#" + optionUid + "DivOpt");
+
+  });
+
+
+  $(".ql-toolbar span").click(function () {
+    var description = $("#" + optionUid + "DivOpt").html();
+    console.log("\n\n-Toolbar click: " + description);
+
+    DB.child("questions/" + questionUid + "/options/" + optionUid).update({
+      description: description,
+      writer: userUuid
     });
+  });
 
-   $("#"+optionUid+"DivOpt").keyup(function(e) {
-      //
-      var description = $("#"+optionUid+"DivOpt").html();
-      console.log("text: "+description);
+  //listen to changes
+  //  $("#"+optionUid+"DivOpt").keyup(function(e) {
+  $("wrapper").keyup(function(e) {
 
-        DB.child("questions/" + questionUid + "/options/" + optionUid).update({
-            description: description,
-            writer: userUuid
-        });
+    var description = $(".ql-editor").html();
+//    var description = $("#"+optionUid+"DivOpt").html();
+
+    DB.child("questions/" + questionUid + "/options/" + optionUid).update({
+      description: description,
+      writer: userUuid
     });
+  });
 
-    $(".ql-toolbar span").click(function () {
-        var description = $("#" + optionUid + "DivOpt").html();
-        console.log("\n\n-Toolbar click: " + description);
+  //update wrapper
 
-        DB.child("questions/" + questionUid + "/options/" + optionUid).update({
-            description: description,
-            writer: userUuid
-        });
-    });
+  var updateWrapperOption = function(optionDB){
 
-   //update wrapper
+    var descriptionFromDB = optionDB.val().description;
+    var writer = optionDB.val().writer;
 
-   var updateWrapperOption = function(optionDB){
+    if (writer != userUuid) {
 
-      var descriptionFromDB = optionDB.val().description;
-      var writer = optionDB.val().writer;
-
-        if (writer != userUuid) {
-            console.log("write");
-            $("#" + optionUid + "DivOpt").html(descriptionFromDB);
-        }
+      $("#" + optionUid + "DivOpt").html(descriptionFromDB);
     }
+  }
 
-   DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption);
+  DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", updateWrapperOption);
 
-   var turnOff = function () {
-      DB.child("questions/"+questionUid+"/options/"+optionUid).off("value", updateWrapperOption);
-   };
+  var turnOff = function () {
+    DB.child("questions/"+questionUid+"/options/"+optionUid).off("value", updateWrapperOption);
+  };
 
 
-   //setActive entity
-   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
-      var optionKey = dataSnapshot.val().optionKey;
-      setActiveEntity("options", optionKey, turnOff);
-   })
+  //setActive entity
+  DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
+    var optionKey = dataSnapshot.val().optionKey;
+    setActiveEntity("options", optionKey, turnOff);
+  })
 
 
 }
 
 function updateOptionDescription(questionUid, optionUid) {
-    var description = $("#" + optionUid + "DivOpt").text();
-    console.log(this, questionUid, optionUid, description);
-    DB.child("questions/" + questionUid + "/options/" + optionUid).update({
-        description: description,
-        writer: userUuid
-    });
+  var description = $("#" + optionUid + "DivOpt").text();
+  console.log(this, questionUid, optionUid, description);
+  DB.child("questions/" + questionUid + "/options/" + optionUid).update({
+    description: description,
+    writer: userUuid
+  });
 }
 
 //create option
 function createOption(questionUid, title, description, explanation){
 
-   var color = getRandomColor();
+  var color = getRandomColor();
 
-   if(description == "" || description == undefined){
-      description = "";
-   }
-   if(explanation == "" || explanation == undefined){
-      explanation = "";
-   }
+  if(description == "" || description == undefined){
+    description = "";
+  }
+  if(explanation == "" || explanation == undefined){
+    explanation = "";
+  }
 
-    if (title == "" || title == undefined) {
-        console.log("Eror: title = " + title);
-    } else {
-        var optionUidDB = DB.child("questions/" + questionUid + "/options").push({
-            title: title,
-            description: description,
-            explanation: explanation,
-            color: color,
-            ownerUid: userUuid
-        });
+  if (title == "" || title == undefined) {
+    console.log("Eror: title = " + title);
+  } else {
+    var optionUidDB = DB.child("questions/" + questionUid + "/options").push({
+      title: title,
+      description: description,
+      explanation: explanation,
+      color: color,
+      ownerUid: userUuid
+    });
 
-        var optionKeyDB = DB.child("options").push({
-            questionUid: questionUid,
-            optionUid: optionUidDB.key
-        });
+    var optionKeyDB = DB.child("options").push({
+      questionUid: questionUid,
+      optionUid: optionUidDB.key
+    });
 
-        DB.child("questions/" + questionUid + "/options/" + optionUidDB.key).update({
-            optionKey: optionKeyDB.key
-        });
-    }
+    DB.child("questions/" + questionUid + "/options/" + optionUidDB.key).update({
+      optionKey: optionKeyDB.key
+    });
+  }
 }
 
 function openOptionMenu(optionUid){
-   if ($("#optionMenu"+optionUid).is(":visible")){
-      $("#optionMenu"+optionUid).hide(400);
-   } else {
-      $("#optionMenu"+optionUid).show(400);
-   }
+  if ($("#optionMenu"+optionUid).is(":visible")){
+    $("#optionMenu"+optionUid).hide(400);
+  } else {
+    $("#optionMenu"+optionUid).show(400);
+  }
 
 }
 
 function editOption(questionUid, optionUid){
 
-    renderTemplate("#editMultiOptionFooter-tmpl", {
-        questionUid: questionUid,
-        optionUid: optionUid
-    }, "footer");
-    renderTemplate("#createMultiOption-tmpl", {}, "wrapper");
+  renderTemplate("#editMultiOptionFooter-tmpl", {
+    questionUid: questionUid,
+    optionUid: optionUid
+  }, "footer");
+  renderTemplate("#createMultiOption-tmpl", {}, "wrapper");
 
-   DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
-      var title = dataSnapshot.val().title;
-      var description = dataSnapshot.val().description;
-      $("#createMultiOptionName").val(title);
-      $("#createMultiOptionDescription").text(description);
-   })
+  DB.child("questions/"+questionUid+"/options/"+optionUid).once("value", function(dataSnapshot){
+    var title = dataSnapshot.val().title;
+    var description = dataSnapshot.val().description;
+    $("#createMultiOptionName").val(title);
+    $("#createMultiOptionDescription").text(description);
+  })
 
 
 }
 
 function editMultiOptionToDB (questionUid, optionUid){
 
-   var title =  $("#createMultiOptionName").val();
-   var description = $("#createMultiOptionDescription").val();
+  var title =  $("#createMultiOptionName").val();
+  var description = $("#createMultiOptionDescription").val();
 
-    console.log(title, description);
-    DB.child("questions/" + questionUid + "/options/" + optionUid).update({
-        title: title,
-        description: description
-    });
+  console.log(title, description);
+  DB.child("questions/" + questionUid + "/options/" + optionUid).update({
+    title: title,
+    description: description
+  });
 
-   showMultiOptions(questionUid);
+  showMultiOptions(questionUid);
 }
 
 //show option info in limited options
 
 function showOptionInfo(question, option){
 
-   if ($("#info").is(":visible")){
-      $("#info").hide(400);
-   } else{
+  if ($("#info").is(":visible")){
+    $("#info").hide(400);
+  } else{
 
-      DB.child("questions/"+question+"/options/"+option).once("value", function(dataSnapshot){
+    DB.child("questions/"+question+"/options/"+option).once("value", function(dataSnapshot){
 
-         var title = dataSnapshot.val().title;
-         var description = dataSnapshot.val().description;
-         var explanation = dataSnapshot.val().explanation;
+      var title = dataSnapshot.val().title;
+      var description = dataSnapshot.val().description;
+      var explanation = dataSnapshot.val().explanation;
 
-            var context = {
-                title: title,
-                description: description,
-                explanation: explanation
-            }
+      var context = {
+        title: title,
+        description: description,
+        explanation: explanation
+      }
 
-         renderTemplate("#optionsInfo-tmpl", context, "#info");
+      renderTemplate("#optionsInfo-tmpl", context, "#info");
 
-         //get wrapper dimentions
-         var headerHeight = $("header").height();
-         var wrapperHeight = $("wrapper").height();
-         var footerHeight = $("footer").height();
-         var infoHeight = wrapperHeight-footerHeight;
-         var headerWidth = $("header").width();
+      //get wrapper dimentions
+      var headerHeight = $("header").height();
+      var wrapperHeight = $("wrapper").height();
+      var footerHeight = $("footer").height();
+      var infoHeight = wrapperHeight-footerHeight;
+      var headerWidth = $("header").width();
 
-         $("#info").css("top", headerHeight).css("height", infoHeight).css("width", headerWidth).show(400);
+      $("#info").css("top", headerHeight).css("height", infoHeight).css("width", headerWidth).show(400);
 
-      })
+    })
 
 
-   }
+  }
 }

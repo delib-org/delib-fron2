@@ -7,9 +7,10 @@
 + voteSimple doplicte problem
 + delete: option, question, topic, group
 + ft:opt - set correct height
-- ft:opt - setactive enttit and routing
++ ft:opt - setactive enttit and routing
 + solve: vote send to option
 + solve line break
 + send ajar flexbox example
-- clean css
++ clean css
+- chats in deed + text
 
