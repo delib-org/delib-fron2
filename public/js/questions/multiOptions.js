@@ -51,9 +51,7 @@ function showMultiOptions(questionUid){
 
     var optionUid = option.key;
     var description = option.val().description;
-    description = replaceAll(description, "<br>", ". ");
-    description = replaceAll(description, "<div>", ". ");
-    description = replaceAll(description, "</div>", ". ");
+    description = stripHTML(description);
 
     var title = option.val().title;
     var optionColor = option.val().color;
