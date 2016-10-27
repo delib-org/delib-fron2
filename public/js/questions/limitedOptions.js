@@ -3,28 +3,28 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
   var questionDB = DB.child("questions/"+questionUid+"/options"); questionDB.orderByChild("votes").limitToLast(numberOfOptions).once("value",function(options){
 
     //adjust the votes to a counting of votes
-    DB.child("questions/"+questionUid+"/simpleVoting").once("value", function(voters){
-
-      var counts = new Object();
-      //get all options
-      DB.child("questions/"+questionUid+"/options").once("value", function(options){
-        options.forEach(function(option){
-          counts[option.key] = 0;
-        })
-
-        voters.forEach(function(voter){
-          if (!counts[voter.val()]){counts[voter.val()] = 0};
-          counts[voter.val()]++;
-        });
-
-        for (i in counts){
-          questionDB.child(i).update({votes:counts[i]});
-        }
-
-      })
-
-
-    })
+//    DB.child("questions/"+questionUid+"/simpleVoting").once("value", function(voters){
+//
+//      var counts = new Object();
+//      //get all options
+//      DB.child("questions/"+questionUid+"/options").once("value", function(options){
+//        options.forEach(function(option){
+//          counts[option.key] = 0;
+//        })
+//
+//        voters.forEach(function(voter){
+//          if (!counts[voter.val()]){counts[voter.val()] = 0};
+//          counts[voter.val()]++;
+//        });
+//
+//        for (i in counts){
+//          questionDB.child(i).update({votes:counts[i]});
+//        }
+//
+//      })
+//
+//
+//    })
 
     var optionsObject = new Object();
     options.forEach(function(option){
@@ -41,6 +41,7 @@ function showLimitedOptionsQuestion(questionUid, numberOfOptions){
       preContext.push({questionUuid: questionUid ,uuid: optionsObject[i].uuid, title: optionsObject[i].title, votes: optionsObject[i].votes , color: optionsObject[i].color});
     };
     var context = {options: preContext};
+    console.dir(context)
 
     //member permisions votes
     //check groups types
