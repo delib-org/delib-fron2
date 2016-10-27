@@ -192,31 +192,34 @@ function showOption(questionUid, optionUid) {
 
     createQuillEditor("#" + optionUid + "DivOpt");
 
-  });
+    $(".ql-toolbar span").click(function () {
+      var description = $("#" + optionUid + "DivOpt").html();
+      console.log("\n\n-Toolbar click: " + description);
 
-
-  $(".ql-toolbar span").click(function () {
-    var description = $("#" + optionUid + "DivOpt").html();
-    console.log("\n\n-Toolbar click: " + description);
-
-    DB.child("questions/" + questionUid + "/options/" + optionUid).update({
-      description: description,
-      writer: userUuid
+      DB.child("questions/" + questionUid + "/options/" + optionUid).update({
+        description: description,
+        writer: userUuid
+      });
     });
-  });
 
-  //listen to changes
-  //  $("#"+optionUid+"DivOpt").keyup(function(e) {
-  $("wrapper").keyup(function(e) {
+    //listen to changes
 
-    var description = $(".ql-editor").html();
-//    var description = $("#"+optionUid+"DivOpt").html();
+    //  $('.ql-editor').attr('contenteditable','true');
+    $("wrapper").keyup(function(e) {
 
-    DB.child("questions/" + questionUid + "/options/" + optionUid).update({
-      description: description,
-      writer: userUuid
+      var description = $(".ql-editor").html();
+      //    var description = $("#"+optionUid+"DivOpt").html();
+
+      DB.child("questions/" + questionUid + "/options/" + optionUid).update({
+        description: description,
+        writer: userUuid
+      });
     });
+
   });
+
+
+
 
   //update wrapper
 

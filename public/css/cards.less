@@ -13,11 +13,16 @@
   left: 0px;
   width: 95%;
 
+  display: -webkit-box;
+
+  display: -ms-flexbox;
+
   display: flex;
-  display: -webkit-flex;
   display: -webkit-box-flex;
   display: -moz-box-flex;
   display: -ms-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   flex-direction: column;
   -webkit-flex-direction: column;
   -webkit-box-flex-direction: column;
@@ -27,11 +32,14 @@
 }
 
 .mainOption {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  display: -webkit-flex;
   display: -webkit-box-flex;
   display: -moz-box-flex;
   display: -ms-flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
   flex-direction: row;
   -webkit-flex-direction: row;
   -webkit-box-flex-direction: row;
@@ -48,6 +56,8 @@
 //    display: inline-block !important;
   }
   .optionDetails {
+    -webkit-box-flex: 10;
+    -ms-flex-positive: 10;
     flex-grow: 10;
     -webkit-flex-grow: 10;
     -webkit-box-flex-grow: 10;
@@ -69,6 +79,8 @@
       }
   }
   .interactionOption {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
     flex-grow: 1;
     -webkit-flex-grow: 1;
     -webkit-box-flex-grow: 1;
@@ -81,16 +93,21 @@
 }
 
 .multiOptionsFooter {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  display: -webkit-flex;
   display: -webkit-box-flex;
   display: -moz-box-flex;
   display: -ms-flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
   flex-direction: row;
   -webkit-flex-direction: row;
   -webkit-box-flex-direction: row;
   -moz-box-flex-direction: row;
   -ms-flex-direction: row;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   -webkit-justify-content: space-between;
   -webkit-box-justify-content: space-between;
@@ -99,16 +116,21 @@
 }
 
 .footerOption {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  display: -webkit-flex;
   display: -webkit-box-flex;
   display: -moz-box-flex;
   display: -ms-flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
   flex-direction: row;
   -webkit-flex-direction: row;
   -webkit-box-flex-direction: row;
   -moz-box-flex-direction: row;
   -ms-flex-direction: row;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   -webkit-justify-content: space-between;
   -webkit-box-justify-content: space-between;
