@@ -1,5 +1,6 @@
-function setMembership(){
-  groupUid = activeEntity.uid;
+
+function setMembership(groupUid){
+  if (groupUid == undefined){groupUid = activeEntity.uid;}
 
   //check if a member already
 

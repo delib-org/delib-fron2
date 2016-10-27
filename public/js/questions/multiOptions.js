@@ -101,7 +101,7 @@ function showMultiOptions(questionUid){
         $("#"+optionUid+"voteImg").attr("src", "img/thumbUpInactive.png");
       }
     });
-    
+
     //if changes in votes, update text and position
     DB.child("questions/"+questionUid+"/options/"+optionUid).on("value", votesCallBack)
   };
@@ -122,31 +122,48 @@ function showMultiOptions(questionUid){
 }
 
 function voteUpOption(questionUid, optionUid){
+  var d = new Date(); var n = d.getTime();
+  console.log("pressed vote", n);
   //check if member of group
   DB.child("questions/"+questionUid+"/parentEntityUid").once("value", function(parentEntityUidDB){
+    var d = new Date(); var n = d.getTime();
+    console.log("get parent", n);
     //if question has a parent
     if (parentEntityUidDB.val() != null) {
 
-      DB.child("groups/"+parentEntityUidDB.val()+"/members/"+userUuid).once("value", function(userMember){
-        //if user is a member
-        if (userMember.val() != null){
-          //vote and devote
-          DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).once("value", function(thumbUp){
-            if (thumbUp.val()){
-              DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(false);
-              DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-                return currentVote -1;
-              });
-              $("#"+optionUid+"voteImg").attr("src", "img/thumbUpInactive.png");
-            } else {
-              DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(true);
-              DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-                return currentVote +1;
-              });
-              $("#"+optionUid+"voteImg").attr("src", "img/thumbUpActive.png");
-            }
-          })
-        } else { alert("You have to be a member in this group to vote")}
+      var isOpenGroup = false;
+      DB.child("groups/"+parentEntityUidDB.val()+"/type").once("value", function(parentType){
+        var d = new Date(); var n = d.getTime();
+        console.log("get parent Type", n);
+        if (parentType.val() == "public"){isOpenGroup = true};
+
+        DB.child("groups/"+parentEntityUidDB.val()+"/members/"+userUuid).once("value", function(userMember){
+          var d = new Date(); var n = d.getTime();
+          console.log("get user membership", n);
+          //if user is a member or the group is open
+          if (userMember.val() != null || isOpenGroup){
+            //vote and devote
+            DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).once("value", function(thumbUp){
+              var d = new Date(); var n = d.getTime();
+              console.log("change to DB1", n);
+              if (thumbUp.val()){
+                DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(false);
+                DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+                  return currentVote -1;
+                });
+                $("#"+optionUid+"voteImg").attr("src", "img/thumbUpInactive.png");
+              } else {
+                DB.child("questions/"+questionUid+"/options/"+optionUid+"/thumbUp/"+userUuid).set(true);
+                DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+                  return currentVote +1;
+                });
+                $("#"+optionUid+"voteImg").attr("src", "img/thumbUpActive.png");
+                var d = new Date(); var n = d.getTime();
+                console.log("change to DB2", n);
+              }
+            })
+          } else { alert("You have to be a member in this group to vote")}
+        })
       })
     }
   })

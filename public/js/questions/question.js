@@ -6,8 +6,19 @@ function showQuestion(questionUid){
       var description = dataSnapshot.val().description;
 
       renderTemplate("#questionHeaderTitle-tmpl", {question: title, uid:questionUid}, "#headerTitle");
-      renderTemplate("#headerMenu-tmpl",{type:"questions", uid:questionUid},"#headerMenu");
       showBreadCrumb("questions", questionUid,title)
+
+      //check if member
+      DB.child("groups/"+dataSnapshot.val().parentEntityUid).once("value", function(isMember){
+
+        renderTemplate("#headerMenuQuestions-tmpl",{type:"questions", uid:questionUid, parentUid:isMember.key},"#headerMenu");
+
+        if(isMember.val().members[userUuid] != null){
+          $("#isMembership").css("color",activeColor);
+        } else {
+          $("#isMembership").css("color",inactiveColor);
+        }
+      })
 
       //if owner -> show edit menu
       DB.child("questions/"+questionUid+"/owner").once("value", function(ownerUid){
