@@ -56,10 +56,10 @@ function setNumberOfOptions(numberOfOptions){
   $("#numberOfOptions"+numberOfOptions).css("background", "linear-gradient(to top,  #cc0000 0%,#cc3535 52%,#6d0000 100%)");
 
   for (i=1; i<9;i++){
-    if (i<numberOfOptions){
-      $("#"+i+"_optionOrder").show();
+    if (i<=numberOfOptions){
+      $("[option-number='"+i+"']").show();
     } else {
-      $("#"+i+"_optionOrder").hide();
+      $("[option-number='"+i+"']").hide();
     }
   }
 }
@@ -99,7 +99,7 @@ function addNewQuestion(questionUid){
         limitiedOptionsArray["option"+i]= {title: optionTitle, description: optionDescription, color:color} ;
       }
     }
-
+    console.log(limitiedOptionsArray)
     if (Object.keys(limitiedOptionsArray).length <2){
       alert("Not enough options. Please add more options bellow");
       return;

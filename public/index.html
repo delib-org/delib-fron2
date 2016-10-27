@@ -505,13 +505,26 @@ Tow options
         </script>
         <!--   options for Limited options -->
         <script type="text/x-handlebars-template" id="questionOption-tmpl">
-{{#each options}}
-<div id={{optionOrder}}_optionOrder>
-    <label>אפשרות</label>
-    <br>
-    <input type="text" id={{optionUid}}_limitedOptions placeholder="שם האופציה" value='{{title}}'>
-    <textarea id={{optionUid}}_limitedOptionsDesc class="inputErea" name="description" placeholder="הסבר">{{description}}</textarea>
-            </div> {{/each}}
+          {{#each options}}
+            <div id={{optionOrder}}_optionOrder>
+              <label>אפשרות</label>
+              <br>
+              <input type="text" id={{optionUid}}_limitedOptions placeholder="שם האופציה" value='{{title}}'>
+              <textarea id={{optionUid}}_limitedOptionsDesc class="inputErea" name="description" placeholder="הסבר">{{description}}</textarea>
+            </div>
+          {{/each}}
+        </script>
+
+      <!--   options for Limited options -->
+        <script type="text/x-handlebars-template" id="questionOptionSingle-tmpl">
+
+            <div id={{optionUid}} option-number={{optionNumber}}>
+              <label>אפשרות</label>
+              <br>
+              <input type="text" id={{optionUid}}_limitedOptions optNmbTitle={{optionNumber}} placeholder="שם האופציה" value='{{title}}'>
+              <textarea id={{optionUid}}_limitedOptionsDesc class="inputErea" optNmbDecription={{optionNumber}} name="description" placeholder="הסבר">{{description}}</textarea>
+            </div>
+
         </script>
 
         <!--  question footer  -->
@@ -525,7 +538,7 @@ Tow options
 
         <script type="text/x-handlebars-template" id="editQuestionFooter-tmpl">
 <div class="footer-btn material-ripple" onclick="back()"><span>ביטול</span></div>
-<div class="footer-btn material-ripple action" onclick=addNewQuestion('{{uid}}')><span>אישור</span></div>
+<div class="footer-btn material-ripple action" onclick=updateQuestion('{{uid}}')><span>אישור</span></div>
         </script>
 
         <!-- simpleVoting wrapper -->

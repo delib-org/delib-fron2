@@ -12,7 +12,7 @@
 + solve line break
 + send ajar flexbox example
 + clean css
-- limitedOptions - bug
++ limitedOptions - bug
 - easy registery
 - better position
 

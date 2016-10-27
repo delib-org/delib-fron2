@@ -115,47 +115,47 @@ function showQuestion(questionUid){
 //  lightCheckedBtn(questionUid);
 //}
 
-function voteSimple(questionUid, optionUid){
-
-   $("#info").hide(400);
-   var optionUidStr = JSON.stringify(optionUid);
-   //check to see what have the user voted last
-
-   DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).once("value", function(vote){
-      var isExists = vote.exists();
-
-      if (!isExists){
-         DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
-
-         DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-            return currentVote +1;
-         })
-         $(".voteBtn").css("border" , "0px solid black");
-         $("#"+optionUid+"_btn").css("border" , "3px solid black");
-      } else {
-         var lastVoted = vote.val();
-         if (optionUid == lastVoted){
-            DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-               return currentVote -1;
-            })
-            DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).remove();
-
-            $(".voteBtn").css("border" , "0px solid black");
-         } else {
-            DB.child("questions/"+questionUid+"/options/"+lastVoted+"/votes").transaction(function(currentVote){
-               return currentVote -1;
-            });
-            DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
-               return currentVote +1;
-            })
-            DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
-            $(".voteBtn").css("border" , "0px solid black");
-            $("#"+optionUid+"_btn").css("border" , "3px solid black");
-         }
-
-      }
-   })
-}
+//function voteSimple(questionUid, optionUid){
+//
+//   $("#info").hide(400);
+//   var optionUidStr = JSON.stringify(optionUid);
+//   //check to see what have the user voted last
+//
+//   DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).once("value", function(vote){
+//      var isExists = vote.exists();
+//
+//      if (!isExists){
+//         DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
+//
+//         DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+//            return currentVote +1;
+//         })
+//         $(".voteBtn").css("border" , "0px solid black");
+//         $("#"+optionUid+"_btn").css("border" , "3px solid black");
+//      } else {
+//         var lastVoted = vote.val();
+//         if (optionUid == lastVoted){
+//            DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+//               return currentVote -1;
+//            })
+//            DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).remove();
+//
+//            $(".voteBtn").css("border" , "0px solid black");
+//         } else {
+//            DB.child("questions/"+questionUid+"/options/"+lastVoted+"/votes").transaction(function(currentVote){
+//               return currentVote -1;
+//            });
+//            DB.child("questions/"+questionUid+"/options/"+optionUid+"/votes").transaction(function(currentVote){
+//               return currentVote +1;
+//            })
+//            DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).set(optionUid);
+//            $(".voteBtn").css("border" , "0px solid black");
+//            $("#"+optionUid+"_btn").css("border" , "3px solid black");
+//         }
+//
+//      }
+//   })
+//}
 
 function lightCheckedBtn(questionUid){
    DB.child("questions/"+questionUid+"/simpleVoting/"+userUuid).once("value", function(checkedOption){
