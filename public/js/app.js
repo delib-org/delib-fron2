@@ -14,7 +14,7 @@ $(function(){
   });
 
   var currentUrl = decodeURIComponent(getUrl());
-    console.log("currentUrl:" + currentUrl);
+  console.log("currentUrl:" + currentUrl);
 
   startingUrl = currentUrl;
   //   routTo(currentUrl);
@@ -109,8 +109,8 @@ const symbols = {
   chats:"fa fa-comments-o"
 }
 
-  //============// Initialize Firebase
-  var config = {
+//============// Initialize Firebase
+var config = {
   apiKey: "AIzaSyAjyyjWM63PSjyRoDI-87MpRtfOFnOO0aA",
   authDomain: "delib21-aaeb0.firebaseapp.com",
   databaseURL: "https://delib21-aaeb0.firebaseio.com",
@@ -120,3 +120,6 @@ const symbols = {
 firebase.initializeApp(config);
 var DB = firebase.database().ref();
 var storage = firebase.storage();
+
+
+

@@ -131,3 +131,25 @@ function findSelfParent(){
     })
   })
 }
+
+function testSpeedOfFirebase(){
+  var dStart = new Date(); var n = dStart.getTime();
+  console.log("start running", n);
+
+  DB.child("questions/"+"-KUvB0T6KxAhOxTwh2U_"+"/options/option0/thumbUp").once("value", function(data1){
+    console.dir (data1.val());
+    var d2 = new Date(); var n = d2.getTime();
+    console.log("got thumbUp information", n);
+    DB.child("questions/"+"-KUvB0T6KxAhOxTwh2U_"+"/parentEntities/groups").once("value", function(data2){
+      console.dir (data2.val());
+      var d3 = new Date(); var n = d3.getTime();
+      console.log("got parents information", n);
+    })
+  })
+
+  DB.child("questions/"+"-KUvB0T6KxAhOxTwh2U_").once("value", function(data){
+    console.dir (data.val());
+    var d1 = new Date(); var n = d1.getTime();
+    console.log("got all the information", n);
+  })
+}
