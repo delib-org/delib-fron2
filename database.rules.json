@@ -4,6 +4,7 @@
     ".write": "auth !== null",
 
     "groups": {
+      ".indexOn": "pubtype",
       "$group_id": {
         "owner": {
           ".write": "data.val() == auth.uid"
@@ -18,6 +19,13 @@
       ".write": false,
       "$user_id": {
         ".write": "$user_id === auth.uid"
+      }
+    },
+    "chats":{
+      "$chat":{
+        "messages":{
+          ".indexOn": "dateAdded"
+        }
       }
     }
   }

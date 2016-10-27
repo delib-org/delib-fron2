@@ -16,7 +16,7 @@ function initFeedManagerProps () {
 
     updatesRegulator.latestContent.then(function (snapshot) {
         updatesRegulator.latestContentLocal = snapshot.val();
-        console.log(snapshot.val());
+        //console.log(snapshot.val());
     });
 
     updatesRegulator.regulate = function (newLatestContent, contentType) {
@@ -31,7 +31,7 @@ function initFeedManagerProps () {
             updatesRegulator.latestContentLocal.latest = newLatestContent.val();
             updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
             
-            console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
+            //console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
             return true;
         } else if (updatesRegulator.latestContentLocal.latest.dateAdded < newLatestContent.val().dateAdded - 400) {
             // found a latest content, content should be pushed..
@@ -41,12 +41,12 @@ function initFeedManagerProps () {
             updatesRegulator.latestContentLocal.latest = newLatestContent.val();
             updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
             
-            console.log("REGULATED!");
+            //console.log("REGULATED!");
             return true;
         } else {
 
-            console.log(updatesRegulator.latestContentLocal.dateAdded, newLatestContent.val().dateAdded - 400);
-            // console.log("no regulation needed");
+            //console.log(updatesRegulator.latestContentLocal.dateAdded, newLatestContent.val().dateAdded - 400);
+            // //console.log("no regulation needed");
             return false;
         }
     };
@@ -67,7 +67,7 @@ function initFeedManagerProps () {
             updatesRegulator.latestContentLocal.latest = newLatestContent.val();
             updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
 
-            console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
+            //console.log(updatesRegulator.latestContentLocal, "latestContentLocal de-nulled");
             return true;
         } else if (updatesRegulator.latestContentLocal[contentType].dateAdded < newLatestContent.val().dateAdded - 400) {
             // found a latest content, content should be pushed..
@@ -79,10 +79,10 @@ function initFeedManagerProps () {
             DB.child('users/'+userUuid+'/latestContent/'+contentType).set(newLatestContent.val());
             updatesRegulator.latestContentLocal[contentType] = newLatestContent.val();
 
-            console.log("REGULATED!");
+            //console.log("REGULATED!");
             return true;
         } else {
-            console.log("no regulation needed");
+            //console.log("no regulation needed");
             return false;
         }
     };
@@ -115,7 +115,7 @@ function initFeedManagerProps () {
         },
         set: function (json) {
 
-            console.log(json);
+            //console.log(json);
             switch (json){
                 case 'pop':
 
@@ -169,7 +169,7 @@ function updatesListener() {
 
     // listen to Updates
     DB.child("users/"+userUuid+"/updates").on('value', function (entitiesUpdates) {
-        console.log("on");
+        //console.log("on");
         // search inside entities
         entitiesUpdates.forEach(function (entityUpdates) {
             // search inside entity
@@ -242,7 +242,7 @@ function updatesListener() {
                                 });
                             })
                                 .then(function () {
-                                    console.log('resolved?');
+                                    //console.log('resolved?');
                                     catchUpPromises[0] = true;
                                     if(catchUpPromises.every(Boolean))
                                         $.event.trigger('catchUpDone');
@@ -250,7 +250,7 @@ function updatesListener() {
                         });
                     }
                 } else if(firstRun) {
-                    console.log('resolved?');
+                    //console.log('resolved?');
                     catchUpPromises[0] = true;
                     if(catchUpPromises.every(Boolean))
                         $.event.trigger('catchUpDone');
@@ -300,7 +300,7 @@ function updatesListener() {
                                 });
                         });
                     } else {
-                        console.log("catch-up subEntities");
+                        //console.log("catch-up subEntities");
                         // feed catch-up chunk
                         DB.child(entityUpdates.key + "/" + entityUpdate.key + "/subEntities").orderByChild('dateAdded').once('value',function (subEnities) {
                             feedManager.lastEntranceOn.then(function (lastEntranceOn) {
@@ -308,7 +308,7 @@ function updatesListener() {
                                 if(lastEntranceOn.val() == null)
                                     return;
 
-                                console.log("inside! catch-up subEntities");
+                                //console.log("inside! catch-up subEntities");
                                 subEnities.forEach(function (entityAdded) {
 
                                     var regulated = updatesRegulator.catchUpModeRegulate(entityAdded, "newSubEntity");
@@ -325,7 +325,7 @@ function updatesListener() {
                                     });
                                 });
                             }).then(function () {
-                                console.log("resolved?");
+                                //console.log("resolved?");
                                     catchUpPromises[1] = true;
                                     if(catchUpPromises.every(Boolean))
                                         $.event.trigger('catchUpDone');
@@ -390,7 +390,7 @@ function updatesListener() {
                             });
                         });
                     } else {
-                        console.log("catch-up chats");
+                        //console.log("catch-up chats");
                         // feed catch-up chunk
                         DB.child("chats/" + entityUpdate.key + "/messages").orderByChild('dateAdded').once('value',function (messages) {
                             DB.child("users/" + userUuid + "/chatInboxes/" + entityUpdate.key).once('value', function (inboxVolume) {
@@ -406,7 +406,7 @@ function updatesListener() {
                                         // now we need the inboxMessages to get the number of messages not seen
                                         messagesSentInc = inboxVolume.val();
 
-                                        console.log("inside! catch-up chats");
+                                        //console.log("inside! catch-up chats");
                                         messages.forEach(function (messageAdded) {
 
                                             var regulated = updatesRegulator.catchUpModeRegulate(messageAdded, "chats");
@@ -437,7 +437,7 @@ function updatesListener() {
                                             }
                                         });
                                     }).then(function () {
-                                        console.log("resolved?");
+                                        //console.log("resolved?");
                                         catchUpPromises[2] = true;
                                         if(catchUpPromises.every(Boolean))
                                             $.event.trigger('catchUpDone');
@@ -458,7 +458,7 @@ function updatesListener() {
 
 $(document).on('catchUpDone', function () {
     if(firstRun) {
-        console.log("catch-up is DONE");
+        //console.log("catch-up is DONE");
         firstRun = false;
         feedBuilder(undefined, undefined, undefined, {on: true, lastRun: true});
         updatesListener();
@@ -467,7 +467,7 @@ $(document).on('catchUpDone', function () {
 });
 
 function feedCatchUp (json) {
-    console.log("offline feed pushed");
+    //console.log("offline feed pushed");
     feedManager.catchUpArray[feedManager.catchUpArrayIndex] = json;
     feedManager.catchUpArrayIndex++;
 }
@@ -494,7 +494,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
                 };
 
                 if(catchUpMode.on) {
-                    console.log('catchup chats');
+                    //console.log('catchup chats');
                     feedCatchUp(feedContentJson);
                     return;
                 }
@@ -513,7 +513,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
                 };
 
                 if(catchUpMode.on) {
-                    console.log('catchup adminControl');
+                    //console.log('catchup adminControl');
                     feedCatchUp(feedContentJson);
                     return;
                 }
@@ -549,7 +549,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
                 };
 
                 if(catchUpMode.on) {
-                    console.log('catchup newSubEntity');
+                    //console.log('catchup newSubEntity');
                     feedCatchUp(feedContentJson);
                     return;
                 }
@@ -569,7 +569,7 @@ function feedBuilder (entityDatum, entityType, variation, catchUpMode) {
 
         if(catchUpMode.on && catchUpMode.lastRun) {
 
-            console.log("catch-up array sizez: ", Object.keys(feedManager.catchUpArray).length, feedManager.catchUpArrayIndex);
+            //console.log("catch-up array sizez: ", Object.keys(feedManager.catchUpArray).length, feedManager.catchUpArrayIndex);
 
             $.each(feedManager.catchUpArray, function (index,item ) {
                 console.dir(item);

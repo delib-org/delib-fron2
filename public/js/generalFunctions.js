@@ -115,3 +115,19 @@ function stripHTML(html)
    tmp.innerHTML = html;
    return tmp.textContent || tmp.innerText || "";
 }
+
+function findSelfParent(){
+  DB.once("value",function(data){
+    data.forEach(function(data2){
+      console.log(data2.key)
+      DB.child(data2.key).once("value",function(data3){
+        data3.forEach(function(data4){
+//          console.log(data4.val().parentEntityUid,data4.key, data2.key)
+          if (data4.val().parentEntityUid == data4.key){
+            console.log(data4.val().parentEntityUid,data4.key, data2.key);
+          }
+        })
+      })
+    })
+  })
+}

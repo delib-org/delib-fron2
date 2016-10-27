@@ -117,17 +117,17 @@ function addNewQuestion(questionUid){
   } else {
     //updating question
     console.log("updateing question")
-    var parentEntityType = activeEntity.entityType;
-    var parentUid = activeEntity.uid;
+//    var parentEntityType = activeEntity.entityType;
+//    var parentUid = activeEntity.uid;
 
     if (questionType == "limitedOptions"){
       //if question type = limitedOptions
 
-      DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g, options:limitiedOptionsArray, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+      DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g, options:limitiedOptionsArray});
 
     } else {
 
-      DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g, parentEntityType: parentEntityType, parentEntityUid: parentUid});
+      DB.child("questions/"+questionUid).update({title: questionName, description: questionDescription, type: questionType, numberOfOptions: numberOfOptions_g});
     }
   }
   console.log(activeEntity.entityType, activeEntity.uid);

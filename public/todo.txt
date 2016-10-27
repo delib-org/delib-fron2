@@ -12,5 +12,7 @@
 + solve line break
 + send ajar flexbox example
 + clean css
-- chats in deed + text
+- limitedOptions - bug
+- easy registery
+- better position
 
