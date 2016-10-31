@@ -18,7 +18,7 @@ function createQuillEditor(elementUid){
           toolbar: toolbarOptions
     },
       theme: 'snow',
-      readOnly: false,
+      readOnly: false
     };
 
     var editor = new Quill(elementUid, options);
