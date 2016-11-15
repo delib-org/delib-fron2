@@ -273,4 +273,5 @@ function linkWhatsapp(){
   var entityUrl = getUrl();
 
   window.open("whatsapp://send?text=http://www.delib.org/?" + entityUrl);
+  console.log("whatsapp: "+"whatsapp://send?text=http://www.delib.org/?" + entityUrl);
 }
