@@ -6,7 +6,7 @@ function listenToAuth(currentUrl){
     if (user) {
 
       // User is signed in.
-      $("#loginScreen").hide(300);
+      $("#loginScreen").hide();
       userUuid = user.uid;
       userPhoto = user.photoURL;
       userEmail = user.email;

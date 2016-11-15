@@ -1,0 +1,29 @@
+// THIS file should be placed in project root
+
+// if true, concatenates the list of files when saving one of them or when saving this file
+concatOnSave = false;
+
+// the output path of the concatenated file, directories will be created if necessary
+output = build/build.0.1.js;
+
+// if true, minifies the concatenated file
+minify = true;
+
+// the list of files (paths relative to project root) to concatenate
+-js/helpers/handlebars-v4.0.5.js;
+-js/admin/;
+-js/feed/;
+-js/feedNotifications/;
+-js/groups/;
+-js/liveTalks/;
+-js/panels/;
+-js/questions/;
+-js/topics/;
+-templates/functions.js;
+-js/app.js;
+-js/routing.js;
+-js/chat.js;
+-js/generalFunctions.js;
+-js/login.js;
+-js/editor.js;
+

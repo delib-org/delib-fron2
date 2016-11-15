@@ -161,9 +161,6 @@ function voteUpOption(questionUid, optionUid){
       })
     }
   })
-
-
-
 }
 function orderAcccordingToVotes(questionUid){
   DB.child("questions/"+questionUid+"/options/").once("value",function(options){

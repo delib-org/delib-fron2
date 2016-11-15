@@ -45,14 +45,14 @@ var startingUrl;
 var activeEntity = new Object();
 var firstRun = true;
 
-const subEntity = {
+var subEntityLib = {
   groups: "topics"
   , topics: "questions"
   , questions: "options"
   , chat: "room"
   , liveTalks: "live Talk"
 };
-const toHebrew = {
+var toHebrew = {
   groups: "קבוצה חדשה: "
   , topics: "נושא חדש: "
   , questions: "שאלה חדשה: "
@@ -91,7 +91,7 @@ var subsManager = {
 // Feed ========================================================================================
 
 // default feed volume
-const defaultFeedVolume = 10;
+var defaultFeedVolume = 10;
 // entrance 
 // queue and inbox getters and setters defined in logic.js
 var feedManager = {
@@ -100,7 +100,7 @@ var feedManager = {
 
 //==================================================================================
 
-const symbols = {
+var symbols = {
   groups: "fa fa-users",
   topics: "fa fa-folder-open",
   questions: "fa fa-question-circle",

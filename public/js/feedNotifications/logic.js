@@ -293,7 +293,7 @@ function updatesListener() {
                                     return;
 
                                if (isNewSubEntityReg.notifications)
-                                   pushNotification(actualContent, subEntity[entityUpdates.key]);
+                                   pushNotification(actualContent, subEntityLib[entityUpdates.key]);
 
                                if (isNewSubEntityReg.feed)
                                    feedBuilder(actualContent, entityUpdates.key, entityAddedUid);

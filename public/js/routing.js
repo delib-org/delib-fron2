@@ -201,6 +201,9 @@ function showBreadCrumb(entityType1, uid1, title1){
   }
 
   function getBreadCrumb(entityType, uid, title){
+    if (title.length >14){
+      title = title.substring(0,14)+"..";
+    }
     var currentChild = {entityType: entityType, uid: uid, title:title, symbol: symbols[entityType]};
 
     //get parent 1
@@ -217,7 +220,11 @@ function showBreadCrumb(entityType1, uid1, title1){
         DB.child(parent1Type+"/"+parent1Uid).once("value", function(dataP2){
           if(dataP2.val() != null){
             //get parent1 title
+
             parent1.title = dataP2.val().title;
+            if (parent1.title.length >14){
+              parent1.title = parent1.title.substring(0,14)+"..";
+            }
 
             if (dataP2.val() != null && dataP2.val().parentEntityType != ""){
               //check if the parent1 have parent2
@@ -233,6 +240,9 @@ function showBreadCrumb(entityType1, uid1, title1){
               DB.child(parent2Type+"/"+parent2Uid).once("value", function(dataP3){
 
                 parent2.title = dataP3.val().title;
+                console.log(parent2.title);
+                parent2.title = parent2.title.substring(0,14);
+                console.log(parent2.title);
                 var context = {path: [parent2, parent1, currentChild]}
                 renderTemplate("#headerBreadCrumbs-tmpl",context,"#headerBreadCrumbs");
 
@@ -262,5 +272,5 @@ function showBreadCrumb(entityType1, uid1, title1){
 function linkWhatsapp(){
   var entityUrl = getUrl();
 
-  window.open("whatsapp://send?text=http://www.delib.org/" + entityUrl);
+  window.open("whatsapp://send?text=http://www.delib.org/?" + entityUrl);
 }

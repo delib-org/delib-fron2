@@ -27,6 +27,13 @@
           ".indexOn": "dateAdded"
         }
       }
+    },
+    "questions":{
+      "$question":{
+        "subEntities":{
+          ".indexOn": "dateAdded"
+        }
+      }
     }
   }
 }

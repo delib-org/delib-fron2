@@ -111,9 +111,9 @@ function moveFbRecord(oldRef, newRef) {
 
 function stripHTML(html)
 {
-   var tmp = document.createElement("DIV");
-   tmp.innerHTML = html;
-   return tmp.textContent || tmp.innerText || "";
+  var tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
 }
 
 function findSelfParent(){
@@ -122,7 +122,7 @@ function findSelfParent(){
       console.log(data2.key)
       DB.child(data2.key).once("value",function(data3){
         data3.forEach(function(data4){
-//          console.log(data4.val().parentEntityUid,data4.key, data2.key)
+          //          console.log(data4.val().parentEntityUid,data4.key, data2.key)
           if (data4.val().parentEntityUid == data4.key){
             console.log(data4.val().parentEntityUid,data4.key, data2.key);
           }
@@ -133,23 +133,66 @@ function findSelfParent(){
 }
 
 function testSpeedOfFirebase(){
-  var dStart = new Date(); var n = dStart.getTime();
-  console.log("start running", n);
+  var dStart = new Date(); var nStart = dStart.getTime();
+  console.log("start running", 0);
+
+  DB.once("value", function(dataQuestions){
+    console.dir (dataQuestions.val());
+    var d2 = new Date(); var n = d2.getTime()-nStart;
+    console.log("got all data", n/1000);
+  })
+
 
   DB.child("questions/"+"-KUvB0T6KxAhOxTwh2U_"+"/options/option0/thumbUp").once("value", function(data1){
     console.dir (data1.val());
-    var d2 = new Date(); var n = d2.getTime();
-    console.log("got thumbUp information", n);
+    var d2 = new Date(); var n = d2.getTime()-nStart;
+    console.log("got thumbUp information", n/1000);
     DB.child("questions/"+"-KUvB0T6KxAhOxTwh2U_"+"/parentEntities/groups").once("value", function(data2){
       console.dir (data2.val());
-      var d3 = new Date(); var n = d3.getTime();
-      console.log("got parents information", n);
+      var d3 = new Date(); var n = d3.getTime()-nStart;
+      console.log("got parents information", n/1000);
     })
   })
 
   DB.child("questions/"+"-KUvB0T6KxAhOxTwh2U_").once("value", function(data){
     console.dir (data.val());
-    var d1 = new Date(); var n = d1.getTime();
-    console.log("got all the information", n);
+    var d1 = new Date(); var n = d1.getTime()-nStart;
+    console.log("got all the information", n/1000);
   })
+
+
+  DB.child("questions").once("value", function(dataAll){
+    console.dir (dataAll.val());
+    var d2 = new Date(); var n = d2.getTime()-nStart;
+    console.log("got all Questions Data", n/1000);
+        dataAll.forEach(function(datumAll){
+          console.dir (datumAll.val());
+          var d2 = new Date(); var n = d2.getTime()-nStart;
+          console.log("got all subData", n/1000);
+        })
+  })
+
+  DB.once("value", function(dataQuestions){
+    console.dir (dataQuestions.val());
+    var d2 = new Date(); var n = d2.getTime()-nStart;
+    console.log("got all data", n/1000);
+  })
+
+  var openList = function(testDB){
+    var d2 = new Date(); var n = d2.getTime()-nStart;
+    console.log("somthing changed in question",n/1000)
+  }
+
+  DB.child("questions/-KTSkU66XAaYE1S39BK2/options").on("value",openList );
+  closeListen(openList)
+
+}
+
+function closeListen(callBack){
+//  var openList = function(testDB){
+//    var d2 = new Date(); var n = d2.getTime()-nStart;
+//    console.log("somthing changed in question",n/1000)
+//  }
+
+  DB.child("questions/-KTSkU66XAaYE1S39BK2/options").off("child_added", callBack);
 }

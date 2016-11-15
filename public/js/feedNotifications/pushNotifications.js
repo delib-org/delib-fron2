@@ -194,7 +194,7 @@ subsManager.setNotifications = function(isOwnerCall) {
 
                     // !!!!!!! NEVER EVER SHOULD THE NEXT LINES SWITCH THEIR ORDER !!!!!!!
                     //===================================================//
-                        DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/" + subEntity[activeEntity.entityType]).off('child_added');
+                        DB.child(activeEntity.entityType + "/" + activeEntity.uid + "/" + subEntityLib[activeEntity.entityType]).off('child_added');
                         userNotifications.child("newSubEntity").remove();
                     //===================================================//
 
