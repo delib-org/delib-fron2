@@ -5,12 +5,12 @@ function renderTemplate (template, context, destination){
   $(destination).html(groupPublicHTML);
 }
 
-function convertTemplateTxt (template, context, destination){
-  var groupsPublicTmpl = template;
-  var groupPublicHandl = Handlebars.compile(groupsPublicTmpl);
-  var groupPublicHTML = groupPublicHandl(context);
-  $(destination).html(groupPublicHTML);
-}
+//function convertTemplateTxt (template, context, destination){
+//  var groupsPublicTmpl = template;
+//  var groupPublicHandl = Handlebars.compile(groupsPublicTmpl);
+//  var groupPublicHTML = groupPublicHandl(context);
+//  $(destination).html(groupPublicHTML);
+//}
 
 function appendTemplate (template, context, destination){
   var groupsPublicTmpl = $(template).html();

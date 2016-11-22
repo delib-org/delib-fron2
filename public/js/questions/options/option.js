@@ -181,23 +181,26 @@ function showOption(questionUid, optionUid) {
 
     var description = dataSnapshot.val().description;
 
-    renderTemplate("#optionWrapper-tmpl", {
-      questionUid: questionUid,
-      optionUid: optionUid,
-      description: description
-    }, "wrapper");
+//    renderTemplate("#optionWrapper-tmpl", {
+//      questionUid: questionUid,
+//      optionUid: optionUid,
+//      description: description
+//    }, "wrapper");
 
     //render description
     $('wrapper').html("<div id='"+optionUid+"DivOpt' class='card'>"+description+"</div>")
+    console.log("wrapper ready")
 
     createQuillEditor("#" + optionUid + "DivOpt");
+    console.log("editor created ready");
 
     $(".ql-toolbar span").click(function () {
-      var description = $("#" + optionUid + "DivOpt").html();
-      console.log("\n\n-Toolbar click: " + description);
+
+      var descriptionQ = $("#" + optionUid + "DivOpt").html();
+      console.log("\n\n-Toolbar click: " + descriptionQ);
 
       DB.child("questions/" + questionUid + "/options/" + optionUid).update({
-        description: description,
+        description: descriptionQ,
         writer: userUuid
       });
     });
@@ -217,9 +220,6 @@ function showOption(questionUid, optionUid) {
     });
 
   });
-
-
-
 
   //update wrapper
 

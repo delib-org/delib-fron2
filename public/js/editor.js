@@ -1,5 +1,5 @@
 function createQuillEditor(elementUid){
-
+    console.log("create quill editor")
     var checkConsole = function(){
         console.log("\n\nclickEvent");
     }
@@ -22,6 +22,7 @@ function createQuillEditor(elementUid){
     };
 
     var editor = new Quill(elementUid, options);
+    console.dir(editor)
 
 }
 
