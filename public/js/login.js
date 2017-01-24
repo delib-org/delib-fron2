@@ -11,7 +11,7 @@ function listenToAuth(currentUrl){
       userPhoto = user.photoURL;
       userEmail = user.email;
       userName = user.displayName;
-      console.log(userName, userUuid)
+
       //write last login time
       DB.child("users/"+userUuid).update({lastLogin: firebase.database.ServerValue.TIMESTAMP, name: userName})
 

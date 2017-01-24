@@ -21,26 +21,17 @@ function showMultiOptions(questionUid){
     //get new order
     DB.child("questions/"+questionUid+"/options").orderByChild("votes").once("value", function(options){
       var newOrder = new Array();
+      var divsTotalHeight = 20;
+
       options.forEach(function(option){
-        newOrder.push(option.key);
+        newOrder.unshift(option.key);
       })
 
-      var isDifference = false;
-      var newOrderLength = newOrder.length;
 
       for (i in newOrder){
-        if(newOrder[i] == optionsPosition[i]){
-
-        } else {
-          isDifference = true;
-          var oldPostionLocation = $("#"+optionsPosition[i]+"Div").position();
-        }
-      }
-      if (isDifference){
-        var numberOfNewDivs = newOrder.length;
-        for (i in newOrder){
-          $("#"+newOrder[i]+"Div").animate({top:((numberOfNewDivs-i)*87)-70},1500, "easeOutElastic");
-        }
+        $("#"+newOrder[i]+"Div").animate({top:(divsTotalHeight)},1500, "easeOutElastic");
+        divsTotalHeight += $("#"+newOrder[i]+"Div").height()+15;
+        console.log(divsTotalHeight);
       }
       optionsPosition = newOrder;
     })
@@ -90,7 +81,7 @@ function showMultiOptions(questionUid){
     prependTemplate("#multiOption-tmpl",{title:title, description: description, questionUid: questionUid, optionUid: optionUid, optionColor:optionColor, votes:votes, userVote: userVote}, "wrapper");
     $("#optionMenu"+optionUid).hide();
 
-    $("#"+optionUid+"Div").css("top", (indexDiv*87)+17);
+    //    $("#"+optionUid+"Div").css("top", (indexDiv*87)+17);
     indexDiv++;
 
     //check user update voteSimoble
