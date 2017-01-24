@@ -196,3 +196,15 @@ function closeListen(callBack){
 
   DB.child("questions/-KTSkU66XAaYE1S39BK2/options").off("child_added", callBack);
 }
+
+function getLastLogin (lastDays){
+  var currentDate = new Date();
+var curentTime = currentDate.getTime();
+
+  var fromTime = curentTime - (lastDays*24*60*60000)
+  DB.child("users").orderByChild("lastEntranceOn").startAt(fromTime).endAt(curentTime).once("value", function(snap){
+    snap.forEach(function(snapUser){
+      console.log(snapUser.val().name+",",snapUser.val().email, parseDate(snapUser.val().lastEntranceOn, "cc"))
+    })
+  })
+}
