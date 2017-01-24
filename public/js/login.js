@@ -10,6 +10,7 @@ function listenToAuth(currentUrl){
       userUuid = user.uid;
       userPhoto = user.photoURL;
       userEmail = user.email;
+      userName = user.displayName;
 
       if (userPhoto == null || userPhoto == undefined){
         userPhoto = "";
